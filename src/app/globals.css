@@ -1,26 +1,880 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --navy: #0A2540;
+  --navy-light: #102A43;
+  --navy-muted: #3E5C76;
+  --navy-faded: #7B8794;
+  --navy-border: #E4DCCB;
+  --navy-bg-subtle: #FFFDF8;
+  --bg-page: #FAF8F2;
+  --accent: #B58A45;
+  --accent-hover: #A87C3A;
+  
+  --font-stack: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+  --font-serif: var(--font-playfair), "Georgia", serif;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-navy: var(--navy);
+  --color-navy-light: var(--navy-light);
+  --color-navy-muted: var(--navy-muted);
+  --color-navy-faded: var(--navy-faded);
+  --color-navy-border: var(--navy-border);
+  --color-navy-bg-subtle: var(--navy-bg-subtle);
+  --color-bg-page: var(--bg-page);
+  --color-accent: var(--accent);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ─── Base Reset & Typography ─────────────────────── */
+
+body {
+  background: var(--bg-page);
+  color: var(--navy);
+  font-family: var(--font-stack);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  color: var(--navy);
+  font-family: var(--font-stack);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+/* ─── Layout Grid & Spacing ───────────────────────── */
+
+.browse-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media (min-width: 768px) {
+  .browse-layout {
+    grid-template-columns: 280px 1fr;
+    gap: 36px;
+    align-items: start;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ─── Sidebar Filter Design ───────────────────────── */
+
+.browse-sidebar {
+  display: none;
 }
+
+@media (min-width: 768px) {
+  .browse-sidebar {
+    display: block;
+    position: sticky;
+    top: 76px !important; /* Sticky top spacing directly below header */
+    height: calc(100vh - 76px) !important; /* Spans from bottom of header to bottom of screen */
+    max-height: calc(100vh - 76px) !important;
+    overflow: hidden;
+    background: #0A2540; /* Match header and footer color */
+    border: 1px solid #14355a;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 10px 28px rgba(10, 37, 64, 0.04);
+  }
+}
+
+.filter-section-card {
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  margin-bottom: 0;
+}
+
+.filter-section-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent); /* Premium gold header */
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+
+/* ─── Custom Premium Checkboxes ───────────────────── */
+
+.filter-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #C7DDF2; /* readable light blue text */
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.15s ease;
+}
+
+.filter-checkbox-label:hover {
+  background-color: #102A43; /* slightly lighter navy hover highlight */
+  color: #ffffff;
+}
+
+.filter-checkbox-label.is-checked {
+  background-color: #14355a; /* active filter item background */
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.filter-checkbox-input {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid #3E5C76;
+  border-radius: 5px;
+  background-color: #102A43;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: all 0.15s ease;
+}
+
+.filter-checkbox-input:checked {
+  background-color: var(--accent);
+  border-color: var(--accent);
+}
+
+.filter-checkbox-input:checked::after {
+  content: "✓";
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 900;
+  position: absolute;
+}
+
+/* Scrollable check box panels */
+.filter-scroll-list {
+  max-height: 155px; /* Fits around 5 options cleanly */
+  overflow-y: auto;
+  padding-right: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* ─── Sticky Search Header ────────────────────────── */
+
+.browse-sticky-header {
+  position: sticky;
+  top: 76px !important; /* Matches website header height */
+  z-index: 30; /* Stays above row hover states */
+  background: var(--bg-page);
+  padding-top: 8px;
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+}
+
+/* Heading with Accent Underline */
+.title-accent-underline {
+  display: block;
+  width: 38px;
+  height: 2px;
+  background-color: var(--accent);
+  border-radius: 2px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Search Input styling */
+.browse-search-input {
+  width: 100%;
+  height: 54px;
+  padding-left: 48px;
+  padding-right: 20px;
+  border: 1px solid var(--navy-border);
+  border-radius: 6px;
+  background: #ffffff;
+  color: var(--navy);
+  font-size: 0.95rem;
+  font-family: var(--font-stack);
+  box-shadow: 0 8px 24px rgba(10, 37, 64, 0.03);
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.browse-search-input::placeholder {
+  color: var(--navy-faded);
+  opacity: 0.8;
+}
+
+.browse-search-input:focus,
+.browse-search-input:hover {
+  border-color: var(--accent);
+  box-shadow: 0 8px 28px rgba(10, 37, 64, 0.05);
+}
+
+/* ─── Alphabet Buttons ────────────────────────────── */
+
+.browse-alpha-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 6px;
+  border: 1px solid var(--navy-border);
+  background: #ffffff;
+  color: var(--navy);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.browse-alpha-btn:hover:not(.browse-alpha-active):not(.browse-alpha-disabled) {
+  border-color: var(--accent);
+  background-color: #FAF8F2;
+}
+
+.browse-alpha-active {
+  background: var(--navy);
+  color: #ffffff;
+  border-color: var(--navy);
+  box-shadow: 0 4px 10px rgba(10, 37, 64, 0.1);
+}
+
+.browse-alpha-disabled {
+  color: var(--navy-faded);
+  border-color: #FAF8F2;
+  background: #FAF8F2;
+  cursor: default;
+  opacity: 0.4;
+}
+
+.browse-divider {
+  height: 1px;
+  background-color: var(--navy-border);
+  border: none;
+  margin-block: 20px;
+}
+
+/* ─── Compact Grouped Song List Rows ───────────────── */
+
+.browse-letter-heading {
+  font-family: var(--font-stack);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--navy);
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+
+.browse-song-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px; /* Compact height */
+  border-bottom: 1px solid #F0F7FD; /* Subtle divider */
+  background-color: transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  gap: 16px;
+}
+.browse-song-row:last-child {
+  border-bottom: none;
+}
+
+.browse-song-row:hover {
+  background-color: var(--navy-bg-subtle);
+}
+
+.browse-song-row:hover .song-title-link {
+  text-decoration: underline;
+}
+
+/* Song Title, Artist and Category inline block */
+.song-row-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.song-title-link {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--navy);
+  text-decoration: none;
+}
+
+.song-artist-txt {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--navy-muted);
+  margin-left: 6px;
+}
+
+.song-category-pill {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--navy-light);
+  background-color: var(--navy-bg-subtle);
+  border: 1px solid var(--navy-border);
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+/* ─── Active Filter Pills ─────────────────────────── */
+
+.active-filters-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.active-filter-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #FFFDF8;
+  border: 1px solid #E4DCCB;
+  color: var(--navy);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 20px;
+}
+
+.active-filter-remove {
+  background: none;
+  border: none;
+  color: var(--navy-muted);
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s ease;
+}
+
+.active-filter-remove:hover {
+  color: var(--accent);
+}
+
+.clear-all-filters-btn {
+  background: none;
+  border: none;
+  color: var(--navy-muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 4px 8px;
+  transition: color 0.15s ease;
+}
+
+.clear-all-filters-btn:hover {
+  color: var(--accent);
+}
+
+/* ─── Side Navigation Drawer ─────────────────────── */
+
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background-color: rgba(10, 37, 64, 0.4);
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.25s ease-out;
+}
+
+.side-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 360px;
+  max-width: 100%;
+  z-index: 110;
+  background-color: #0A2540;
+  border-left: 1px solid #14355a;
+  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.25);
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transform: translateX(0);
+  transition: transform 0.3s ease;
+  animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.side-drawer-closed {
+  transform: translateX(100%);
+}
+
+.drawer-close-btn {
+  align-self: flex-end;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #C7DDF2;
+  cursor: pointer;
+  padding: 4px;
+  transition: all 0.15s ease;
+}
+
+.drawer-close-btn:hover {
+  color: #ffffff;
+}
+
+.drawer-link-premium {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  text-decoration: none;
+  color: #C7DDF2;
+  font-size: 1.25rem;
+  font-weight: 600;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.drawer-link-premium:hover {
+  background-color: #102A43;
+  color: #ffffff;
+  padding-left: 24px;
+}
+
+.drawer-link-premium::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 0%;
+  background-color: var(--accent);
+  transition: height 0.2s ease;
+  border-radius: 0 4px 4px 0;
+}
+
+.drawer-link-premium:hover::after {
+  height: 60%;
+}
+
+.drawer-phone-link {
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.drawer-phone-link:hover {
+  color: var(--accent) !important;
+  transform: translateX(4px);
+}
+
+.drawer-social-icon-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #102A43;
+  color: #C7DDF2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid #14355a;
+}
+
+.drawer-social-icon-btn:hover {
+  transform: translateY(-4px) scale(1.1);
+  color: #ffffff;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.drawer-social-icon-btn.whatsapp-btn:hover {
+  background-color: #25D366;
+  border-color: #25D366;
+}
+
+.drawer-social-icon-btn.facebook-btn:hover {
+  background-color: #1877F2;
+  border-color: #1877F2;
+}
+
+.drawer-social-icon-btn.youtube-btn:hover {
+  background-color: #FF0000;
+  border-color: #FF0000;
+}
+
+/* ─── Mobile Filters Drawer Layout ────────────────── */
+
+.mobile-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+@media (min-width: 768px) {
+  .mobile-filter-bar {
+    display: none;
+  }
+}
+
+.mobile-filter-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #ffffff;
+  border: 1px solid #E4DCCB;
+  border-radius: 12px;
+  padding: 10px 18px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--navy);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mobile-filter-toggle-btn:hover {
+  border-color: var(--accent);
+  background: #FAF8F2;
+  color: var(--accent);
+}
+
+.mobile-filter-drawer {
+  background: #0A2540;
+  border: 1px solid #14355a;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 30px rgba(10, 37, 64, 0.04);
+}
+
+.hamburger-btn-light {
+  transition: all 0.2s ease;
+}
+.hamburger-btn-light:hover {
+  background-color: #FAF8F2 !important;
+  border-color: var(--accent) !important;
+  box-shadow: 0 4px 12px rgba(10, 37, 64, 0.03);
+  color: var(--accent) !important;
+}
+
+.filter-search-input {
+  width: 100%;
+  height: 34px;
+  padding-left: 28px;
+  padding-right: 10px;
+  border: 1px solid #3E5C76;
+  border-radius: 8px;
+  background-color: #102A43;
+  color: #ffffff;
+  font-size: 0.8rem;
+  outline: none;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+.filter-search-input::placeholder {
+  color: #7B8794;
+  opacity: 0.8;
+}
+.filter-search-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(181, 138, 69, 0.25);
+}
+
+/* ─── Empty State ─────────────────────────────────── */
+
+.browse-empty {
+  text-align: center;
+  padding: 48px 24px;
+  border: 1.5px dashed var(--navy-border);
+  border-radius: 16px;
+  background: #ffffff;
+}
+
+.browse-empty p {
+  color: var(--navy-muted);
+}
+
+/* ─── Scroll/Animations Keyframes ─────────────────── */
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideIn {
+  from { transform: translateX(100%); }
+  to { transform: translateX(0); }
+}
+
+.back-to-top-btn {
+  transition: all 0.2s ease;
+}
+.back-to-top-btn:hover {
+  transform: translateY(-2px);
+  background-color: var(--navy-light) !important;
+}
+
+/* Custom scrollbar track mappings */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg-page);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--navy-border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--navy-faded);
+}
+
+/* Utility compatibility mappings */
+.glass, .glass-strong {
+  background: #ffffff !important;
+  border: 1px solid var(--navy-border) !important;
+  box-shadow: 0 8px 24px rgba(8, 43, 102, 0.04) !important;
+  color: var(--navy) !important;
+}
+.text-foreground-dim {
+  color: var(--navy-muted) !important;
+}
+.text-muted {
+  color: var(--navy-muted) !important;
+}
+.bg-section {
+  background: #ffffff !important;
+}
+.btn-glow {
+  background: var(--navy) !important;
+  color: #ffffff !important;
+  border: 1px solid var(--navy) !important;
+  transition: all 0.2s ease !important;
+}
+.btn-glow:hover {
+  background: var(--navy-light) !important;
+  box-shadow: 0 4px 12px rgba(8, 43, 102, 0.12) !important;
+}
+
+/* ─── Premium Refinements V1 ──────────────────────── */
+
+.hamburger-btn {
+  transition: all 0.2s ease;
+}
+.hamburger-btn:hover {
+  background-color: var(--navy-bg-subtle) !important;
+  border-color: var(--navy-light) !important;
+  box-shadow: 0 4px 12px rgba(8, 43, 102, 0.08);
+}
+
+.clear-filters-btn {
+  background-color: #FFFDF8 !important;
+  color: var(--accent) !important;
+  border: 1px solid #E4DCCB !important;
+  border-radius: 8px !important;
+  padding: 5px 12px !important;
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1.2 !important;
+}
+.clear-filters-btn:hover {
+  background-color: var(--accent) !important;
+  border-color: var(--accent) !important;
+  color: #ffffff !important;
+}
+
+.form-input-premium {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1.5px solid var(--navy-border);
+  border-radius: 12px;
+  background-color: #ffffff;
+  color: var(--navy);
+  font-size: 1.05rem;
+  font-family: var(--font-stack);
+  box-shadow: 0 4px 12px rgba(8, 43, 102, 0.02);
+  outline: none;
+  transition: all 0.2s ease;
+}
+.form-input-premium::placeholder {
+  color: var(--navy-faded);
+  opacity: 0.8;
+}
+.form-input-premium:hover {
+  border-color: var(--navy-light);
+  box-shadow: 0 6px 16px rgba(8, 43, 102, 0.05);
+}
+.form-input-premium:focus {
+  border-color: var(--navy);
+  box-shadow: 0 0 0 4px rgba(199, 221, 242, 0.4), 0 6px 16px rgba(8, 43, 102, 0.05);
+}
+
+.song-category-txt {
+  font-size: 0.85rem;
+  color: var(--navy-muted);
+  font-weight: 500;
+}
+
+/* Custom thin scrollbar for sidebar lists */
+.filter-scroll-list::-webkit-scrollbar {
+  width: 5px;
+}
+.filter-scroll-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+.filter-scroll-list::-webkit-scrollbar-thumb {
+  background: var(--navy-border);
+  border-radius: 10px;
+}
+.filter-scroll-list::-webkit-scrollbar-thumb:hover {
+  background: var(--navy-faded);
+}
+
+.footer-link:hover {
+  color: #ffffff !important;
+  text-decoration: underline;
+}
+
+/* ─── Premium Songs Table Design ──────────────────── */
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  background: #ffffff;
+  border: 1px solid #C7DDF2;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(10, 37, 64, 0.02);
+  margin-bottom: 24px;
+}
+
+.songs-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.songs-table th {
+  background: #F8FBFF;
+  color: var(--navy);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 14px 18px;
+  border-bottom: 2px solid #C7DDF2;
+}
+
+.songs-table td {
+  padding: 14px 18px;
+  font-size: 0.95rem;
+  color: var(--navy);
+  border-bottom: 1px solid rgba(199, 221, 242, 0.4);
+  vertical-align: middle;
+}
+
+.songs-table tr:last-child td {
+  border-bottom: none;
+}
+
+.songs-table tr {
+  transition: background-color 0.15s ease;
+}
+
+.songs-table tr:hover {
+  background-color: #F4F8FC;
+}
+
+.song-table-title-link {
+  font-weight: 700;
+  color: var(--navy);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.song-table-title-link:hover {
+  color: var(--accent);
+}
+
+.song-table-artist {
+  color: var(--navy-muted);
+  font-weight: 500;
+}
+
+.song-table-category {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--navy-muted);
+}
+
+.song-table-lang {
+  color: var(--navy-muted);
+  font-weight: 500;
+}
+
+.footer-social-link {
+  color: #8fa8c4 !important;
+  transition: color 0.15s ease, transform 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+}
+
+.footer-social-link:hover {
+  color: #ffffff !important;
+  transform: scale(1.1);
+}
+
+/* ─── Sticky WhatsApp Floating Button ──────────────── */
+
+.whatsapp-float-btn {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 90;
+  width: 48px;
+  height: 48px;
+  background-color: #25D366; /* WhatsApp Brand Green */
+  color: #ffffff !important;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(37, 211, 102, 0.3);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.whatsapp-float-btn:hover {
+  transform: translateY(-3px) scale(1.05);
+  background-color: #20ba59;
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+}
+
+
+

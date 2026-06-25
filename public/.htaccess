@@ -1,0 +1,17 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # 1. Clean URLs (e.g., /about to /about.html)
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{DOCUMENT_ROOT}/$1.html -f
+  RewriteRule ^(.*)$ $1.html [L]
+
+  # 2. Rewrite dynamic admin edit routes to the static placeholder.html
+  # This allows client-side useParams to read the actual URL (e.g. /admin/songs/123/edit) correctly.
+  RewriteCond %{REQUEST_URI} !^/admin/songs/new/edit$
+  RewriteCond %{REQUEST_URI} !^/admin/songs/placeholder/edit$
+  RewriteRule ^admin/songs/([^/]+)/edit$ admin/songs/placeholder/edit.html [L]
+
+</IfModule>

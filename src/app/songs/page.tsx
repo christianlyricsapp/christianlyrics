@@ -3,12 +3,12 @@ import { Suspense } from "react";
 import BrowseSongs from "@/components/BrowseSongs";
 
 export const metadata: Metadata = {
-  title: "Christian Lyrics - Browse Songs",
+  title: "Browse Songs - Christian Lyrics",
   description:
-    "Find and explore Christian praise, worship, and communion song lyrics easily. Search and browse songs alphabetically.",
+    "Search and browse Christian worship, praise, communion, and festival song lyrics by alphabet, language, category, and artist.",
 };
 
-export default function HomePage() {
+export default function SongsPage() {
   return (
     <Suspense
       fallback={
