@@ -2,16 +2,14 @@
   RewriteEngine On
   RewriteBase /
 
-  # 1. Clean URLs (e.g., /about to /about.html)
-  RewriteCond %{REQUEST_FILENAME} !-d
+  # 1. Force trailing slashes for static export directories to prevent 403 Forbidden
   RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{DOCUMENT_ROOT}/$1.html -f
-  RewriteRule ^(.*)$ $1.html [L]
+  RewriteCond %{REQUEST_URI} !(.*)/$
+  RewriteRule ^(.*)$ /$1/ [R=301,L]
 
-  # 2. Rewrite dynamic admin edit routes to the static placeholder.html
-  # This allows client-side useParams to read the actual URL (e.g. /admin/songs/123/edit) correctly.
-  RewriteCond %{REQUEST_URI} !^/admin/songs/new/edit$
-  RewriteCond %{REQUEST_URI} !^/admin/songs/placeholder/edit$
-  RewriteRule ^admin/songs/([^/]+)/edit$ admin/songs/placeholder/edit.html [L]
+  # 2. Rewrite dynamic admin edit routes to the static placeholder edit index.html
+  RewriteCond %{REQUEST_URI} !^/admin/songs/new/edit/?$
+  RewriteCond %{REQUEST_URI} !^/admin/songs/placeholder/edit/?$
+  RewriteRule ^admin/songs/([^/]+)/edit/?$ admin/songs/placeholder/edit/index.html [L]
 
 </IfModule>
