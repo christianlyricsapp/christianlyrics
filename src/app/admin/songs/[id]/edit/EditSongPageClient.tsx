@@ -13,7 +13,7 @@ function EditSongContent() {
 
   useEffect(() => {
     if (id) {
-      setSong(getAdminSongById(id) ?? null);
+      getAdminSongById(id).then((s) => setSong(s ?? null));
     }
   }, [id]);
 

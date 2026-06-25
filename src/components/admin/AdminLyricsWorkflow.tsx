@@ -157,13 +157,13 @@ export default function AdminLyricsWorkflow({ song }: AdminLyricsWorkflowProps) 
       status,
     };
 
-    if (song) {
-      updateAdminSong(song.id, data);
-    } else {
-      createAdminSong(data);
-    }
+    const action = song
+      ? updateAdminSong(song.id, data)
+      : createAdminSong(data);
 
-    router.push("/admin/songs");
+    action.then(() => {
+      router.push("/admin/songs");
+    });
   }
 
   return (

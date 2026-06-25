@@ -3,7 +3,7 @@
 import { useMemo, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { songs, getCategoryName, getLanguageName, type Song } from "@/lib/demo-data";
+import { getCategoryName, getLanguageName, type Song } from "@/lib/demo-data";
 
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 const ALL_KEY = "*";
@@ -99,7 +99,7 @@ function MusicIcon({ className, style }: { className?: string; style?: React.CSS
   );
 }
 
-export default function BrowseSongs() {
+export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song[] }) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -152,18 +152,18 @@ export default function BrowseSongs() {
   /* Build alphabet sets representing items available in the total dataset */
   const availableLetters = useMemo(() => {
     const set = new Set<string>();
-    songs.forEach((s) => set.add(getFirstChar(s.title)));
+    initialSongs.forEach((s) => set.add(getFirstChar(s.title)));
     return set;
-  }, []);
+  }, [initialSongs]);
 
   /* Extract unique artists list dynamically */
   const allArtists = useMemo(() => {
     const set = new Set<string>();
-    songs.forEach((s) => {
+    initialSongs.forEach((s) => {
       if (s.artist) set.add(s.artist);
     });
     return Array.from(set).sort((a, b) => a.localeCompare(b));
-  }, []);
+  }, [initialSongs]);
 
   /* Filter artists dynamically inside the filter section search box */
   const filteredUniqueArtists = useMemo(() => {
@@ -190,7 +190,7 @@ export default function BrowseSongs() {
   const filteredSongs = useMemo(() => {
     const query = searchQuery.toLowerCase().trim();
 
-    return songs.filter((song: Song) => {
+    return initialSongs.filter((song: Song) => {
       // Letter filter
       if (activeLetter !== ALL_KEY) {
         const songChar = getFirstChar(song.title);

@@ -24,11 +24,13 @@ export default function AdminLayout({
       return;
     }
 
-    if (!isAdminLoggedIn()) {
-      router.replace("/admin/login");
-    } else {
-      setReady(true);
-    }
+    isAdminLoggedIn().then((loggedIn) => {
+      if (!loggedIn) {
+        router.replace("/admin/login");
+      } else {
+        setReady(true);
+      }
+    });
   }, [isLoginPage, router]);
 
   if (isLoginPage) {

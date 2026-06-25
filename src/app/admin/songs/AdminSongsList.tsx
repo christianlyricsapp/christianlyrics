@@ -10,7 +10,7 @@ export default function AdminSongsList() {
   const [songs, setSongs] = useState<AdminSong[]>([]);
 
   useEffect(() => {
-    setSongs(getAdminSongs());
+    getAdminSongs().then(setSongs);
   }, []);
 
   return (

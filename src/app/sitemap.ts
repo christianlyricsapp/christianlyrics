@@ -1,10 +1,12 @@
 import type { MetadataRoute } from "next";
-import { songs, categories, languages } from "@/lib/demo-data";
+import { categories, languages } from "@/lib/demo-data";
+import { getAllSongs } from "@/lib/supabase-db";
 
 export const dynamic = "force-static";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://christianlyrics.app";
+  const songs = await getAllSongs();
 
   // 1. Core pages
   const corePages = [

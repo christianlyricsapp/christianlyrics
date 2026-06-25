@@ -14,7 +14,7 @@ export default function AdminDashboard() {
   });
 
   useEffect(() => {
-    setStats(getAdminStats());
+    getAdminStats().then(setStats);
   }, []);
 
   const statCards = [

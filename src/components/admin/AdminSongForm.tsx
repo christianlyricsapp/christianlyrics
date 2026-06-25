@@ -131,13 +131,13 @@ export default function AdminSongForm({
     setRightsWarning(false);
     const data: AdminSongFormData = { ...form, status };
 
-    if (song) {
-      updateAdminSong(song.id, data);
-    } else {
-      createAdminSong(data);
-    }
+    const action = song
+      ? updateAdminSong(song.id, data)
+      : createAdminSong(data);
 
-    router.push("/admin/songs");
+    action.then(() => {
+      router.push("/admin/songs");
+    });
   }
 
   const publishBlocked = !canPublish(form.rightsStatus);

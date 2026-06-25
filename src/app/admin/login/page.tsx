@@ -19,11 +19,13 @@ export default function AdminLoginPage() {
       return;
     }
 
-    if (adminLogin(email.trim(), password)) {
-      router.push("/admin/dashboard");
-    } else {
-      setError("Invalid email or password. Please try again.");
-    }
+    adminLogin(email.trim(), password).then((success) => {
+      if (success) {
+        router.push("/admin/dashboard");
+      } else {
+        setError("Invalid email or password. Please try again.");
+      }
+    });
   }
 
   return (

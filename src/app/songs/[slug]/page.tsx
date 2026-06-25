@@ -2,24 +2,25 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import LyricsDisplay from "@/components/LyricsDisplay";
+import { getCategoryName } from "@/lib/demo-data";
 import {
-  getRelatedSongs,
+  getAllSongs,
   getSongBySlug,
-  songs,
-  getCategoryName,
-} from "@/lib/demo-data";
+  getRelatedSongs,
+} from "@/lib/supabase-db";
 
 type Props = {
   params: Promise<{ slug: string }>;
 };
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const songs = await getAllSongs();
   return songs.map((song) => ({ slug: song.slug }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const song = getSongBySlug(slug);
+  const song = await getSongBySlug(slug);
 
   if (!song) {
     return { title: "Song Not Found" };
@@ -35,13 +36,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function SongPage({ params }: Props) {
   const { slug } = await params;
-  const song = getSongBySlug(slug);
+  const song = await getSongBySlug(slug);
 
   if (!song) {
     notFound();
   }
 
-  const relatedSongs = getRelatedSongs(song);
+  const allSongs = await getAllSongs();
+  const relatedSongs = getRelatedSongs(song, allSongs);
 
   const jsonLd = {
     "@context": "https://schema.org",

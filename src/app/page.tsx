@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import BrowseSongs from "@/components/BrowseSongs";
+import { getAllSongs } from "@/lib/supabase-db";
 
 export const metadata: Metadata = {
   title: "Christian Lyrics - Browse Songs",
@@ -8,7 +9,9 @@ export const metadata: Metadata = {
     "Find and explore Christian praise, worship, and communion song lyrics easily. Search and browse songs alphabetically.",
 };
 
-export default function HomePage() {
+export default async function HomePage() {
+  const initialSongs = await getAllSongs();
+
   return (
     <Suspense
       fallback={
@@ -24,7 +27,7 @@ export default function HomePage() {
         </div>
       }
     >
-      <BrowseSongs />
+      <BrowseSongs initialSongs={initialSongs} />
     </Suspense>
   );
 }

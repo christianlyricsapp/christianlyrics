@@ -8,11 +8,13 @@ export default function AdminRedirectPage() {
   const router = useRouter();
 
   useEffect(() => {
-    if (isAdminLoggedIn()) {
-      router.replace("/admin/dashboard");
-    } else {
-      router.replace("/admin/login");
-    }
+    isAdminLoggedIn().then((loggedIn) => {
+      if (loggedIn) {
+        router.replace("/admin/dashboard");
+      } else {
+        router.replace("/admin/login");
+      }
+    });
   }, [router]);
 
   return (

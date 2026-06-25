@@ -12,8 +12,9 @@ export default function AdminHeader({ onMenuOpen }: AdminHeaderProps) {
   const router = useRouter();
 
   function handleLogout() {
-    adminLogout();
-    router.push("/admin/login");
+    adminLogout().then(() => {
+      router.push("/admin/login");
+    });
   }
 
   return (
