@@ -19,11 +19,36 @@ const SACRED_WORDS: Record<string, string> = {
   "holy spirit": "Holy Spirit",
 };
 
+const GARBAGE_PATTERNS = [
+  /ads\s*by\s*google/i,
+  /advertisement/i,
+  /share\s*this/i,
+  /follow\s*us/i,
+  /submit\s*corrections/i,
+  /browse\s*more\s*lyrics/i,
+  /you\s*might\s*also\s*like/i,
+  /lyrics\s*powered\s*by/i,
+  /reproduction\s*without\s*permission/i,
+  /copyright\s*@/i,
+  /all\s*rights\s*reserved/i,
+];
+
 export function cleanRawLyrics(raw: string): string {
-  return raw
+  // Strip HTML tags first
+  const cleanHtml = raw.replace(/<\/?[^>]+(>|$)/g, "");
+
+  return cleanHtml
     .replace(/\r\n/g, "\n")
     .split("\n")
     .map((line) => line.replace(/\s+/g, " ").trim())
+    .filter((line) => {
+      if (!line) return true; // keep empty lines for segment splitting
+      return !GARBAGE_PATTERNS.some((pattern) => pattern.test(line));
+    })
+    .map((line) => {
+      // Remove starting numbers like "1. " or "1) " or "1 - "
+      return line.replace(/^\d+[\s.\-)]+\s*/, "");
+    })
     .join("\n")
     .replace(/\n{3,}/g, "\n\n")
     .trim();

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import LyricsFormatStep from "./LyricsFormatStep";
 import LyricsPasteStep, { type PasteStepData } from "./LyricsPasteStep";
 import LyricsReviewStep from "./LyricsReviewStep";
-import { createAdminSong, updateAdminSong } from "@/lib/admin-store";
+import { createAdminSong, updateAdminSong, getAdminRole } from "@/lib/admin-store";
 import {
   autoFormatLyrics,
   cleanRawLyrics,
@@ -38,6 +38,11 @@ const STEPS: { num: Step; label: string }[] = [
 export default function AdminLyricsWorkflow({ song }: AdminLyricsWorkflowProps) {
   const router = useRouter();
   const [step, setStep] = useState<Step>(1);
+  const [role, setRole] = useState<"admin" | "volunteer">("volunteer");
+
+  useEffect(() => {
+    getAdminRole().then(setRole);
+  }, []);
 
   const [pasteData, setPasteData] = useState<PasteStepData>({
     title: song?.title ?? "",
@@ -136,7 +141,9 @@ export default function AdminLyricsWorkflow({ song }: AdminLyricsWorkflowProps) 
       return;
     }
 
-    if (status === "published" && !canPublish(pasteData.rightsStatus)) {
+    const finalStatus = role === "volunteer" ? "needs-review" : status;
+
+    if (finalStatus === "published" && !canPublish(pasteData.rightsStatus)) {
       setRightsWarning(true);
       return;
     }
@@ -150,11 +157,11 @@ export default function AdminLyricsWorkflow({ song }: AdminLyricsWorkflowProps) 
       language: pasteData.language,
       lyrics,
       rawLyrics: pasteData.rawLyrics,
-      seoTitle,
-      seoDescription,
-      sourceUrl: pasteData.sourceUrl,
-      rightsStatus: pasteData.rightsStatus,
-      status,
+      seoTitle: role === "volunteer" ? "" : seoTitle,
+      seoDescription: role === "volunteer" ? "" : seoDescription,
+      sourceUrl: role === "volunteer" ? "" : pasteData.sourceUrl,
+      rightsStatus: role === "volunteer" ? "unknown" : pasteData.rightsStatus,
+      status: finalStatus,
     };
 
     const action = song
@@ -210,6 +217,7 @@ export default function AdminLyricsWorkflow({ song }: AdminLyricsWorkflowProps) 
           }}
           onAutoFormat={runAutoFormat}
           onContinue={continueWithoutFormat}
+          hideSourceFields={role === "volunteer"}
         />
       )}
 
@@ -243,6 +251,7 @@ export default function AdminLyricsWorkflow({ song }: AdminLyricsWorkflowProps) 
           onSeoDescriptionChange={setSeoDescription}
           onBack={() => setStep(2)}
           onSave={handleSave}
+          hideAdvancedFields={role === "volunteer"}
         />
       )}
     </div>

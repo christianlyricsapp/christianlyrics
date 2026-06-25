@@ -9,8 +9,11 @@ import {
 } from "./admin-types";
 
 const AUTH_KEY = "christian-lyrics-admin-auth";
+const ROLE_KEY = "christian-lyrics-admin-role";
 const DEMO_EMAIL = "admin@christianlyrics.app";
 const DEMO_PASSWORD = "admin123";
+const VOLUNTEER_EMAIL = "volunteer@christianlyrics.app";
+const VOLUNTEER_PASSWORD = "volunteer123";
 
 function isBrowser(): boolean {
   return typeof window !== "undefined";
@@ -164,6 +167,19 @@ export async function updateAdminSong(
   return mapDbSongToAdminSong(updatedData);
 }
 
+export async function getAdminRole(): Promise<"admin" | "volunteer"> {
+  if (!isBrowser()) return "volunteer";
+  try {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (session && session.user) {
+      return session.user.email === DEMO_EMAIL ? "admin" : "volunteer";
+    }
+  } catch {}
+  
+  const role = localStorage.getItem(ROLE_KEY);
+  return role === "admin" ? "admin" : "volunteer";
+}
+
 export async function isAdminLoggedIn(): Promise<boolean> {
   if (!isBrowser()) return false;
   try {
@@ -180,6 +196,11 @@ export async function adminLogin(email: string, password: string): Promise<boole
       password,
     });
     if (!error && data.session) {
+      if (isBrowser()) {
+        const role = email === DEMO_EMAIL ? "admin" : "volunteer";
+        localStorage.setItem(AUTH_KEY, "true");
+        localStorage.setItem(ROLE_KEY, role);
+      }
       return true;
     }
   } catch (e) {
@@ -189,6 +210,15 @@ export async function adminLogin(email: string, password: string): Promise<boole
   if (email === DEMO_EMAIL && password === DEMO_PASSWORD) {
     if (isBrowser()) {
       localStorage.setItem(AUTH_KEY, "true");
+      localStorage.setItem(ROLE_KEY, "admin");
+    }
+    return true;
+  }
+
+  if (email === VOLUNTEER_EMAIL && password === VOLUNTEER_PASSWORD) {
+    if (isBrowser()) {
+      localStorage.setItem(AUTH_KEY, "true");
+      localStorage.setItem(ROLE_KEY, "volunteer");
     }
     return true;
   }
@@ -202,5 +232,22 @@ export async function adminLogout(): Promise<void> {
   } catch {}
   if (isBrowser()) {
     localStorage.removeItem(AUTH_KEY);
+    localStorage.removeItem(ROLE_KEY);
+  }
+}
+
+export async function triggerRebuild(): Promise<boolean> {
+  try {
+    const { error } = await supabase
+      .from("rebuilds")
+      .insert([{}]);
+    if (error) {
+      console.error("Error inserting rebuild trigger:", error);
+      return false;
+    }
+    return true;
+  } catch (err) {
+    console.error("Failed to trigger rebuild:", err);
+    return false;
   }
 }

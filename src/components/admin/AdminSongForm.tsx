@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import LyricsPreview from "./LyricsPreview";
 import { categories, languages } from "@/lib/demo-data";
-import { createAdminSong, updateAdminSong } from "@/lib/admin-store";
+import { createAdminSong, updateAdminSong, getAdminRole } from "@/lib/admin-store";
 import {
   RIGHTS_STATUSES,
   SONG_STATUSES,
@@ -68,6 +68,11 @@ export default function AdminSongForm({
   const [errors, setErrors] = useState<FormErrors>({});
   const [rightsWarning, setRightsWarning] = useState(false);
   const [showMobilePreview, setShowMobilePreview] = useState(showPreviewOnLoad);
+  const [role, setRole] = useState<"admin" | "volunteer">("volunteer");
+
+  useEffect(() => {
+    getAdminRole().then(setRole);
+  }, []);
 
   useEffect(() => {
     if (!slugManual && form.title) {
@@ -123,13 +128,22 @@ export default function AdminSongForm({
       return;
     }
 
-    if (status === "published" && !canPublish(form.rightsStatus)) {
+    const finalStatus = role === "volunteer" ? "needs-review" : status;
+
+    if (finalStatus === "published" && !canPublish(form.rightsStatus)) {
       setRightsWarning(true);
       return;
     }
 
     setRightsWarning(false);
-    const data: AdminSongFormData = { ...form, status };
+    const data: AdminSongFormData = {
+      ...form,
+      seoTitle: role === "volunteer" ? "" : form.seoTitle,
+      seoDescription: role === "volunteer" ? "" : form.seoDescription,
+      sourceUrl: role === "volunteer" ? "" : form.sourceUrl,
+      rightsStatus: role === "volunteer" ? "unknown" : form.rightsStatus,
+      status: finalStatus,
+    };
 
     const action = song
       ? updateAdminSong(song.id, data)
@@ -283,104 +297,109 @@ export default function AdminSongForm({
             )}
           </div>
 
-          {/* SEO Title */}
-          <div>
-            <label htmlFor="seoTitle" className={labelClass}>
-              SEO Title
-            </label>
-            <input
-              id="seoTitle"
-              type="text"
-              value={form.seoTitle}
-              onChange={(e) => updateField("seoTitle", e.target.value)}
-              placeholder="Optional — shown in search results"
-              className={inputClass}
-            />
-            <p className={helperClass}>
-              Leave blank to use the song title.
-            </p>
-          </div>
+          {/* Advanced Meta Settings (Admins only) */}
+          {role !== "volunteer" && (
+            <>
+              {/* SEO Title */}
+              <div>
+                <label htmlFor="seoTitle" className={labelClass}>
+                  SEO Title
+                </label>
+                <input
+                  id="seoTitle"
+                  type="text"
+                  value={form.seoTitle}
+                  onChange={(e) => updateField("seoTitle", e.target.value)}
+                  placeholder="Optional — shown in search results"
+                  className={inputClass}
+                />
+                <p className={helperClass}>
+                  Leave blank to use the song title.
+                </p>
+              </div>
 
-          {/* SEO Description */}
-          <div>
-            <label htmlFor="seoDescription" className={labelClass}>
-              SEO Description
-            </label>
-            <textarea
-              id="seoDescription"
-              value={form.seoDescription}
-              onChange={(e) => updateField("seoDescription", e.target.value)}
-              rows={3}
-              placeholder="Short description for search engines"
-              className={inputClass}
-            />
-          </div>
+              {/* SEO Description */}
+              <div>
+                <label htmlFor="seoDescription" className={labelClass}>
+                  SEO Description
+                </label>
+                <textarea
+                  id="seoDescription"
+                  value={form.seoDescription}
+                  onChange={(e) => updateField("seoDescription", e.target.value)}
+                  rows={3}
+                  placeholder="Short description for search engines"
+                  className={inputClass}
+                />
+              </div>
 
-          {/* Source URL */}
-          <div>
-            <label htmlFor="sourceUrl" className={labelClass}>
-              Source Website / Link
-            </label>
-            <input
-              id="sourceUrl"
-              type="url"
-              value={form.sourceUrl}
-              onChange={(e) => updateField("sourceUrl", e.target.value)}
-              placeholder="https://example.com/song-source"
-              className={inputClass}
-            />
-            <p className={helperClass}>
-              Where the lyrics came from, if applicable.
-            </p>
-          </div>
+              {/* Source URL */}
+              <div>
+                <label htmlFor="sourceUrl" className={labelClass}>
+                  Source Website / Link
+                </label>
+                <input
+                  id="sourceUrl"
+                  type="url"
+                  value={form.sourceUrl}
+                  onChange={(e) => updateField("sourceUrl", e.target.value)}
+                  placeholder="https://example.com/song-source"
+                  className={inputClass}
+                />
+                <p className={helperClass}>
+                  Where the lyrics came from, if applicable.
+                </p>
+              </div>
 
-          {/* Rights Status */}
-          <div>
-            <label htmlFor="rightsStatus" className={labelClass}>
-              Rights / Permission Status
-            </label>
-            <select
-              id="rightsStatus"
-              value={form.rightsStatus}
-              onChange={(e) => {
-                updateField("rightsStatus", e.target.value as RightsStatus);
-                setRightsWarning(false);
-              }}
-              className={inputClass}
-            >
-              {RIGHTS_STATUSES.map((r) => (
-                <option key={r.value} value={r.value}>
-                  {r.label}
-                </option>
-              ))}
-            </select>
-            {publishBlocked && (
-              <p className="mt-2 rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-800">
-                Please verify that you have permission to publish these lyrics.
-              </p>
-            )}
-          </div>
+              {/* Rights Status */}
+              <div>
+                <label htmlFor="rightsStatus" className={labelClass}>
+                  Rights / Permission Status
+                </label>
+                <select
+                  id="rightsStatus"
+                  value={form.rightsStatus}
+                  onChange={(e) => {
+                    updateField("rightsStatus", e.target.value as RightsStatus);
+                    setRightsWarning(false);
+                  }}
+                  className={inputClass}
+                >
+                  {RIGHTS_STATUSES.map((r) => (
+                    <option key={r.value} value={r.value}>
+                      {r.label}
+                    </option>
+                  ))}
+                </select>
+                {publishBlocked && (
+                  <p className="mt-2 rounded-xl bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                    Please verify that you have permission to publish these lyrics.
+                  </p>
+                )}
+              </div>
 
-          {/* Status */}
-          <div>
-            <label htmlFor="status" className={labelClass}>
-              Status
-            </label>
-            <select
-              id="status"
-              value={form.status}
-              onChange={(e) =>
-                updateField("status", e.target.value as SongStatus)
-              }
-              className={inputClass}
-            >
-              {SONG_STATUSES.map((s) => (
-                <option key={s.value} value={s.value}>
-                  {s.label}
-                </option>
-              ))}
-            </select>
-          </div>
+              {/* Status */}
+              <div>
+                <label htmlFor="status" className={labelClass}>
+                  Status
+                </label>
+                <select
+                  id="status"
+                  value={form.status}
+                  onChange={(e) =>
+                    updateField("status", e.target.value as SongStatus)
+                  }
+                  className={inputClass}
+                >
+                  {SONG_STATUSES.map((s) => (
+                    <option key={s.value} value={s.value}>
+                      {s.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </>
+          )}
 
           {rightsWarning && (
             <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-base text-red-700">
@@ -413,28 +432,40 @@ export default function AdminSongForm({
       {/* Sticky bottom action bar */}
       <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-card/95 p-4 backdrop-blur-sm md:static md:mt-8 md:border-0 md:bg-transparent md:p-0">
         <div className="mx-auto flex max-w-5xl flex-col gap-3 sm:flex-row">
-          <button
-            type="button"
-            onClick={() => handleSave("draft")}
-            className="flex-1 rounded-xl border border-border bg-card px-4 py-3.5 text-base font-medium transition-colors hover:bg-section"
-          >
-            Save Draft
-          </button>
-          <button
-            type="button"
-            onClick={() => handleSave("needs-review")}
-            className="flex-1 rounded-xl bg-accent px-4 py-3.5 text-base font-medium text-foreground transition-opacity hover:opacity-90"
-          >
-            Submit for Review
-          </button>
-          <button
-            type="button"
-            onClick={() => handleSave("published")}
-            disabled={publishBlocked}
-            className="flex-1 rounded-xl bg-primary px-4 py-3.5 text-base font-medium text-white transition-colors hover:bg-primary-light disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            Publish
-          </button>
+          {role === "volunteer" ? (
+            <button
+              type="button"
+              onClick={() => handleSave("needs-review")}
+              className="w-full rounded-xl bg-primary px-5 py-4 text-lg font-bold text-white transition-opacity hover:opacity-90"
+            >
+              Submit for Review
+            </button>
+          ) : (
+            <>
+              <button
+                type="button"
+                onClick={() => handleSave("draft")}
+                className="flex-1 rounded-xl border border-border bg-card px-4 py-3.5 text-base font-medium transition-colors hover:bg-section"
+              >
+                Save Draft
+              </button>
+              <button
+                type="button"
+                onClick={() => handleSave("needs-review")}
+                className="flex-1 rounded-xl bg-accent px-4 py-3.5 text-base font-medium text-foreground transition-opacity hover:opacity-90"
+              >
+                Submit for Review
+              </button>
+              <button
+                type="button"
+                onClick={() => handleSave("published")}
+                disabled={publishBlocked}
+                className="flex-1 rounded-xl bg-primary px-4 py-3.5 text-base font-medium text-white transition-colors hover:bg-primary-light disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Publish
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>

@@ -28,6 +28,7 @@ type LyricsReviewStepProps = {
   onSeoDescriptionChange: (value: string) => void;
   onBack: () => void;
   onSave: (status: SongStatus) => void;
+  hideAdvancedFields?: boolean;
 };
 
 export default function LyricsReviewStep({
@@ -47,6 +48,7 @@ export default function LyricsReviewStep({
   onSeoDescriptionChange,
   onBack,
   onSave,
+  hideAdvancedFields = false,
 }: LyricsReviewStepProps) {
   const formattedLyrics = blocksToLyricsString(blocks);
   const publishBlocked = !canPublish(rightsStatus);
@@ -122,75 +124,83 @@ export default function LyricsReviewStep({
         </div>
       </div>
 
-      {/* SEO fields */}
-      <div className="space-y-5">
-        <h3 className="text-lg font-semibold text-foreground">SEO Settings</h3>
-        <div>
-          <label htmlFor="seoTitle" className={labelClass}>
-            SEO Title
-          </label>
-          <input
-            id="seoTitle"
-            type="text"
-            value={seoTitle}
-            onChange={(e) => onSeoTitleChange(e.target.value)}
-            placeholder="Leave blank to use song title"
-            className={inputClass}
-          />
-          <p className={helperClass}>Shown in search engine results.</p>
-        </div>
-        <div>
-          <label htmlFor="seoDescription" className={labelClass}>
-            SEO Description
-          </label>
-          <textarea
-            id="seoDescription"
-            value={seoDescription}
-            onChange={(e) => onSeoDescriptionChange(e.target.value)}
-            rows={3}
-            placeholder="Short description for search engines"
-            className={inputClass}
-          />
-        </div>
-      </div>
+      {/* SEO fields (Admins only) */}
+      {!hideAdvancedFields && (
+        <>
+          <div className="space-y-5">
+            <h3 className="text-lg font-semibold text-foreground">SEO Settings</h3>
+            <div>
+              <label htmlFor="seoTitle" className={labelClass}>
+                SEO Title
+              </label>
+              <input
+                id="seoTitle"
+                type="text"
+                value={seoTitle}
+                onChange={(e) => onSeoTitleChange(e.target.value)}
+                placeholder="Leave blank to use song title"
+                className={inputClass}
+              />
+              <p className={helperClass}>Shown in search engine results.</p>
+            </div>
+            <div>
+              <label htmlFor="seoDescription" className={labelClass}>
+                SEO Description
+              </label>
+              <textarea
+                id="seoDescription"
+                value={seoDescription}
+                onChange={(e) => onSeoDescriptionChange(e.target.value)}
+                rows={3}
+                placeholder="Short description for search engines"
+                className={inputClass}
+              />
+            </div>
+          </div>
 
-      {/* SEO preview card */}
-      <div className="rounded-2xl border border-dashed border-border bg-card p-5">
-        <p className="text-xs font-medium uppercase text-muted">SEO Preview</p>
-        <p className="mt-2 text-lg font-medium text-primary">
-          {displaySeoTitle} | Christian Lyrics
-        </p>
-        <p className="mt-1 text-sm text-green-700">
-          christianlyrics.app/songs/{slug || "..."}
-        </p>
-        <p className="mt-1 text-sm text-muted">
-          {seoDescription ||
-            "No description set. Add one for better search results."}
-        </p>
-      </div>
+          {/* SEO preview card */}
+          <div className="rounded-2xl border border-dashed border-border bg-card p-5">
+            <p className="text-xs font-medium uppercase text-muted">SEO Preview</p>
+            <p className="mt-2 text-lg font-medium text-primary">
+              {displaySeoTitle} | Christian Lyrics
+            </p>
+            <p className="mt-1 text-sm text-green-700">
+              christianlyrics.app/songs/{slug || "..."}
+            </p>
+            <p className="mt-1 text-sm text-muted">
+              {seoDescription ||
+                "No description set. Add one for better search results."}
+            </p>
+          </div>
+        </>
+      )}
 
       {/* Meta info */}
       <div className="grid gap-4 rounded-2xl border border-border bg-card p-5 sm:grid-cols-2">
+        {!hideAdvancedFields && (
+          <>
+            <div>
+              <p className="text-sm text-muted">Source URL</p>
+              <p className="mt-1 text-base font-medium break-all">
+                {sourceUrl || "Not provided"}
+              </p>
+            </div>
+            <div>
+              <p className="text-sm text-muted">Rights / Permission</p>
+              <p className="mt-1 text-base font-medium">
+                {getRightsStatusLabel(rightsStatus)}
+              </p>
+            </div>
+            <div>
+              <p className="text-sm text-muted">Review Status</p>
+              <p className="mt-2">
+                <ReviewStatusBadge status={status} />
+              </p>
+            </div>
+          </>
+        )}
         <div>
-          <p className="text-sm text-muted">Source URL</p>
-          <p className="mt-1 text-base font-medium break-all">
-            {sourceUrl || "Not provided"}
-          </p>
-        </div>
-        <div>
-          <p className="text-sm text-muted">Rights / Permission</p>
-          <p className="mt-1 text-base font-medium">
-            {getRightsStatusLabel(rightsStatus)}
-          </p>
-        </div>
-        <div>
-          <p className="text-sm text-muted">Review Status</p>
-          <p className="mt-2">
-            <ReviewStatusBadge status={status} />
-          </p>
-        </div>
-        <div>
-          <p className="text-sm text-muted">Blocks</p>
+          <p className="text-sm text-muted">Blocks / Sections</p>
           <p className="mt-1 text-base font-medium">
             {blocks.length} section{blocks.length !== 1 ? "s" : ""}
           </p>
@@ -222,28 +232,40 @@ export default function LyricsReviewStep({
       {/* Sticky bottom actions */}
       <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-border bg-card/95 p-4 backdrop-blur-sm md:static md:border-0 md:bg-transparent md:p-0">
         <div className="mx-auto flex max-w-5xl flex-col gap-3 sm:flex-row">
-          <button
-            type="button"
-            onClick={() => onSave("draft")}
-            className="flex-1 rounded-xl border border-border bg-card px-4 py-3.5 text-base font-medium transition-colors hover:bg-section"
-          >
-            Save Draft
-          </button>
-          <button
-            type="button"
-            onClick={() => onSave("needs-review")}
-            className="flex-1 rounded-xl bg-accent px-4 py-3.5 text-base font-medium text-foreground transition-opacity hover:opacity-90"
-          >
-            Submit for Review
-          </button>
-          <button
-            type="button"
-            onClick={() => onSave("published")}
-            disabled={publishBlocked}
-            className="flex-1 rounded-xl bg-primary px-4 py-3.5 text-base font-medium text-white transition-colors hover:bg-primary-light disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            Publish
-          </button>
+          {hideAdvancedFields ? (
+            <button
+              type="button"
+              onClick={() => onSave("needs-review")}
+              className="w-full rounded-xl bg-primary px-5 py-4 text-lg font-bold text-white transition-opacity hover:opacity-90"
+            >
+              Submit for Review
+            </button>
+          ) : (
+            <>
+              <button
+                type="button"
+                onClick={() => onSave("draft")}
+                className="flex-1 rounded-xl border border-border bg-card px-4 py-3.5 text-base font-medium transition-colors hover:bg-section"
+              >
+                Save Draft
+              </button>
+              <button
+                type="button"
+                onClick={() => onSave("needs-review")}
+                className="flex-1 rounded-xl bg-accent px-4 py-3.5 text-base font-medium text-foreground transition-opacity hover:opacity-90"
+              >
+                Submit for Review
+              </button>
+              <button
+                type="button"
+                onClick={() => onSave("published")}
+                disabled={publishBlocked}
+                className="flex-1 rounded-xl bg-primary px-4 py-3.5 text-base font-medium text-white transition-colors hover:bg-primary-light disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Publish
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>

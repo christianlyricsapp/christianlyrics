@@ -4,6 +4,7 @@ import { categories, languages } from "@/lib/demo-data";
 import type { RightsStatus } from "@/lib/admin-types";
 import LyricsSourceFields from "./LyricsSourceFields";
 import { helperClass, inputClass, labelClass } from "./LyricsSourceFields";
+import { cleanRawLyrics } from "@/lib/lyrics-formatting";
 
 export type PasteStepData = {
   title: string;
@@ -22,6 +23,7 @@ type LyricsPasteStepProps = {
   onChange: (data: PasteStepData) => void;
   onAutoFormat: () => void;
   onContinue: () => void;
+  hideSourceFields?: boolean;
 };
 
 export default function LyricsPasteStep({
@@ -30,6 +32,7 @@ export default function LyricsPasteStep({
   onChange,
   onAutoFormat,
   onContinue,
+  hideSourceFields = false,
 }: LyricsPasteStepProps) {
   function update<K extends keyof PasteStepData>(key: K, value: PasteStepData[K]) {
     onChange({ ...data, [key]: value });
@@ -126,17 +129,42 @@ export default function LyricsPasteStep({
         )}
       </fieldset>
 
-      <LyricsSourceFields
-        sourceUrl={data.sourceUrl}
-        rightsStatus={data.rightsStatus}
-        onSourceUrlChange={(v) => update("sourceUrl", v)}
-        onRightsStatusChange={(v) => update("rightsStatus", v)}
-      />
+      {!hideSourceFields && (
+        <LyricsSourceFields
+          sourceUrl={data.sourceUrl}
+          rightsStatus={data.rightsStatus}
+          onSourceUrlChange={(v) => update("sourceUrl", v)}
+          onRightsStatusChange={(v) => update("rightsStatus", v)}
+        />
+      )}
 
       <div>
-        <label htmlFor="rawLyrics" className={labelClass}>
-          Paste Lyrics Here <span className="text-red-500">*</span>
-        </label>
+        <div className="flex items-center justify-between mb-2">
+          <label htmlFor="rawLyrics" className="block text-base font-medium text-foreground">
+            Paste Lyrics Here <span className="text-red-500">*</span>
+          </label>
+          {data.rawLyrics.trim() && (
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  const cleaned = cleanRawLyrics(data.rawLyrics);
+                  update("rawLyrics", cleaned);
+                }}
+                className="rounded-lg bg-primary/10 px-3 py-1.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/20"
+              >
+                🧹 Clean Pasted Text
+              </button>
+              <button
+                type="button"
+                onClick={() => update("rawLyrics", "")}
+                className="rounded-lg bg-red-50 px-3 py-1.5 text-sm font-semibold text-red-600 transition-colors hover:bg-red-100"
+              >
+                ❌ Clear
+              </button>
+            </div>
+          )}
+        </div>
         <p className={helperClass}>
           Copy and paste directly from your phone. Original text is always
           saved.

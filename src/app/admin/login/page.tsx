@@ -86,9 +86,10 @@ export default function AdminLoginPage() {
           </button>
         </form>
 
-        <p className="mt-6 text-center text-sm text-muted">
-          Demo login: admin@christianlyrics.app / admin123
-        </p>
+        <div className="mt-6 text-center text-sm text-muted space-y-1">
+          <p>Admin demo: admin@christianlyrics.app / admin123</p>
+          <p>Volunteer demo: volunteer@christianlyrics.app / volunteer123</p>
+        </div>
       </div>
     </div>
   );
