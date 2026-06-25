@@ -239,48 +239,48 @@ export default function LyricsBlockEditor({
                 type="button"
                 onClick={() => moveBlock(index, -1)}
                 disabled={index === 0}
-                className="rounded-lg border border-border px-3 py-2 text-sm font-medium disabled:opacity-40 md:hidden"
+                className="rounded-xl border border-border px-3.5 py-2.5 text-base font-semibold transition-all hover:bg-section active:scale-95 disabled:opacity-30 disabled:pointer-events-none md:hidden"
               >
-                ↑ Up
+                🔼 Up
               </button>
               <button
                 type="button"
                 onClick={() => moveBlock(index, 1)}
                 disabled={index === blocks.length - 1}
-                className="rounded-lg border border-border px-3 py-2 text-sm font-medium disabled:opacity-40 md:hidden"
+                className="rounded-xl border border-border px-3.5 py-2.5 text-base font-semibold transition-all hover:bg-section active:scale-95 disabled:opacity-30 disabled:pointer-events-none md:hidden"
               >
-                ↓ Down
+                🔽 Down
               </button>
               <button
                 type="button"
                 onClick={() => addBlockBelow(index)}
-                className="rounded-lg border border-border px-3 py-2 text-sm font-medium hover:bg-section"
+                className="rounded-xl border border-border px-3.5 py-2.5 text-base font-semibold transition-all hover:bg-section active:scale-95"
               >
-                + Add below
+                ➕ Add below
               </button>
               <button
                 type="button"
                 onClick={() => splitBlock(index)}
                 disabled={block.lines.filter((l) => l.trim()).length < 2}
-                className="rounded-lg border border-border px-3 py-2 text-sm font-medium hover:bg-section disabled:opacity-40"
+                className="rounded-xl border border-border px-3.5 py-2.5 text-base font-semibold transition-all hover:bg-section active:scale-95 disabled:opacity-30 disabled:pointer-events-none"
               >
-                Split
+                ✂️ Split
               </button>
               {index < blocks.length - 1 && (
                 <button
                   type="button"
                   onClick={() => mergeWithNext(index)}
-                  className="rounded-lg border border-border px-3 py-2 text-sm font-medium hover:bg-section"
+                  className="rounded-xl border border-border px-3.5 py-2.5 text-base font-semibold transition-all hover:bg-section active:scale-95"
                 >
-                  Merge next
+                  🔗 Merge next
                 </button>
               )}
               <button
                 type="button"
                 onClick={() => deleteBlock(index)}
-                className="rounded-lg border border-red-200 px-3 py-2 text-sm font-medium text-red-700 hover:bg-red-50"
+                className="rounded-xl border border-red-500/20 bg-red-500/10 px-3.5 py-2.5 text-base font-semibold text-red-400 transition-all hover:bg-red-500/25 active:scale-95 ml-auto"
               >
-                Delete
+                🗑️ Delete
               </button>
             </div>
           </div>

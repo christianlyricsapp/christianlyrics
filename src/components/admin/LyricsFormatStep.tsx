@@ -58,14 +58,14 @@ export default function LyricsFormatStep({
         <button
           type="button"
           onClick={onBack}
-          className="flex-1 rounded-xl border border-border bg-card px-4 py-3.5 text-lg font-medium transition-colors hover:bg-section"
+          className="flex-1 rounded-xl border border-border bg-card px-4 py-4 text-lg font-semibold transition-all hover:bg-section active:scale-95 cursor-pointer"
         >
           ← Back to Paste
         </button>
         <button
           type="button"
           onClick={onContinue}
-          className="flex-1 rounded-xl bg-primary px-4 py-3.5 text-lg font-medium text-white transition-colors hover:bg-primary-light"
+          className="flex-1 rounded-xl bg-gradient-to-r from-primary to-primary-light px-4 py-4 text-lg font-bold text-white transition-all hover:opacity-95 shadow-md shadow-primary/20 active:scale-95 cursor-pointer"
         >
           Continue to Preview →
         </button>

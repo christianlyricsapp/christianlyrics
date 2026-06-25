@@ -223,7 +223,7 @@ export default function LyricsReviewStep({
         <button
           type="button"
           onClick={onBack}
-          className="flex-1 rounded-xl border border-border bg-card px-4 py-3.5 text-lg font-medium transition-colors hover:bg-section"
+          className="flex-1 rounded-xl border border-border bg-card px-4 py-4 text-lg font-semibold transition-all hover:bg-section active:scale-95 cursor-pointer"
         >
           ← Back to Format
         </button>
@@ -236,7 +236,7 @@ export default function LyricsReviewStep({
             <button
               type="button"
               onClick={() => onSave("needs-review")}
-              className="w-full rounded-xl bg-primary px-5 py-4 text-lg font-bold text-white transition-opacity hover:opacity-90"
+              className="w-full rounded-xl bg-gradient-to-r from-primary to-primary-light px-5 py-4 text-lg font-bold text-white transition-opacity hover:opacity-95 shadow-md shadow-primary/20 active:scale-95 cursor-pointer"
             >
               Submit for Review
             </button>
@@ -245,14 +245,14 @@ export default function LyricsReviewStep({
               <button
                 type="button"
                 onClick={() => onSave("draft")}
-                className="flex-1 rounded-xl border border-border bg-card px-4 py-3.5 text-base font-medium transition-colors hover:bg-section"
+                className="flex-1 rounded-xl border border-border bg-card px-4 py-4 text-base font-semibold transition-all hover:bg-section active:scale-95 cursor-pointer"
               >
                 Save Draft
               </button>
               <button
                 type="button"
                 onClick={() => onSave("needs-review")}
-                className="flex-1 rounded-xl bg-accent px-4 py-3.5 text-base font-medium text-foreground transition-opacity hover:opacity-90"
+                className="flex-1 rounded-xl bg-purple-500/20 border border-purple-500/30 px-4 py-4 text-base font-semibold text-purple-400 transition-all hover:bg-purple-500/30 active:scale-95 cursor-pointer"
               >
                 Submit for Review
               </button>
@@ -260,7 +260,7 @@ export default function LyricsReviewStep({
                 type="button"
                 onClick={() => onSave("published")}
                 disabled={publishBlocked}
-                className="flex-1 rounded-xl bg-primary px-4 py-3.5 text-base font-medium text-white transition-colors hover:bg-primary-light disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex-1 rounded-xl bg-gradient-to-r from-primary to-primary-light px-4 py-4 text-base font-bold text-white transition-all hover:opacity-95 shadow-md shadow-primary/20 disabled:cursor-not-allowed disabled:opacity-40 active:scale-95 cursor-pointer"
               >
                 Publish
               </button>

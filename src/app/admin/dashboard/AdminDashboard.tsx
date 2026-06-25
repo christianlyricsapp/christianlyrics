@@ -34,9 +34,9 @@ export default function AdminDashboard() {
 
   const statCards = [
     { label: "Total Songs", value: stats.total, color: "text-foreground" },
-    { label: "Published", value: stats.published, color: "text-green-700" },
-    { label: "Drafts", value: stats.draft, color: "text-gray-600" },
-    { label: "Needs Review", value: stats.needsReview, color: "text-amber-700" },
+    { label: "Published", value: stats.published, color: "text-green-400" },
+    { label: "Drafts", value: stats.draft, color: "text-muted" },
+    { label: "Needs Review", value: stats.needsReview, color: "text-amber-400" },
   ];
 
   return (
@@ -114,7 +114,7 @@ export default function AdminDashboard() {
       <div className="mt-8">
         <Link
           href="/admin/songs/new"
-          className="inline-flex w-full items-center justify-center rounded-xl bg-primary px-6 py-4 text-lg font-medium text-white transition-colors hover:bg-primary-light sm:w-auto"
+          className="inline-flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-primary to-primary-light px-6 py-4 text-lg font-bold text-white transition-opacity hover:opacity-95 shadow-md shadow-primary/20 sm:w-auto active:scale-95 cursor-pointer"
         >
           ➕ Add New Lyrics
         </Link>
@@ -123,27 +123,33 @@ export default function AdminDashboard() {
       <div className="mt-8 grid gap-4 sm:grid-cols-2">
         <Link
           href="/admin/songs"
-          className="rounded-2xl border border-border bg-card p-5 transition-colors hover:border-primary/30 hover:bg-section"
+          className="group rounded-2xl border border-border bg-card p-6 transition-all hover:border-primary/50 hover:bg-section hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow-md flex items-center justify-between"
         >
-          <p className="text-lg font-semibold text-foreground">
-            {role === "admin" ? "Manage Songs" : "View My Submissions"}
-          </p>
-          <p className="mt-1 text-base text-muted">
-            {role === "admin"
-              ? "View, edit, and preview all library songs."
-              : "See status of songs submitted for review."}
-          </p>
+          <div>
+            <p className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
+              📂 {role === "admin" ? "Manage Songs" : "View My Submissions"}
+            </p>
+            <p className="mt-2 text-base text-muted leading-relaxed">
+              {role === "admin"
+                ? "View, edit, and preview all library songs."
+                : "See status of songs submitted for review."}
+            </p>
+          </div>
+          <span className="text-2xl text-muted group-hover:translate-x-1 group-hover:text-primary transition-all ml-4">→</span>
         </Link>
         <Link
           href="/admin/songs/new"
-          className="rounded-2xl border border-border bg-card p-5 transition-colors hover:border-primary/30 hover:bg-section"
+          className="group rounded-2xl border border-border bg-card p-6 transition-all hover:border-primary/50 hover:bg-section hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow-md flex items-center justify-between"
         >
-          <p className="text-lg font-semibold text-foreground">
-            Quick Add Lyrics
-          </p>
-          <p className="mt-1 text-base text-muted">
-            Paste lyrics from your phone and save.
-          </p>
+          <div>
+            <p className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
+              ⚡ Quick Add Lyrics
+            </p>
+            <p className="mt-2 text-base text-muted leading-relaxed">
+              Paste lyrics from your phone and save.
+            </p>
+          </div>
+          <span className="text-2xl text-muted group-hover:translate-x-1 group-hover:text-primary transition-all ml-4">→</span>
         </Link>
       </div>
     </div>

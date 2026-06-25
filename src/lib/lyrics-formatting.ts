@@ -178,3 +178,113 @@ export function parseExistingLyrics(lyrics: string): LyricsBlock[] {
   if (result.blocks.length > 0) return result.blocks;
   return [];
 }
+
+export function detectTitle(raw: string): string {
+  if (!raw || !raw.trim()) return "";
+  const lines = raw.split("\n").map((l) => l.trim()).filter((l) => l.length > 0);
+  
+  for (const line of lines) {
+    const match = line.match(/^(title|song\s*name|song|name)\s*:\s*(.+)$/i);
+    if (match) {
+      return match[2].trim();
+    }
+  }
+
+  for (const line of lines) {
+    const cleaned = line.trim();
+    if (
+      (cleaned.startsWith("[") && cleaned.endsWith("]")) ||
+      (cleaned.startsWith("(") && cleaned.endsWith(")")) ||
+      cleaned.endsWith(":") ||
+      /^(verse|chorus|bridge|outro|intro|pre-chorus|refrain|interlude|tag|hook)/i.test(cleaned)
+    ) {
+      continue;
+    }
+    if (cleaned.length > 0 && cleaned.length < 80) {
+      return cleaned;
+    }
+  }
+
+  if (lines.length > 0) {
+    return lines[0].replace(/[\[\]():]/g, "").trim();
+  }
+  return "";
+}
+
+export function detectLanguage(raw: string): string {
+  if (!raw || !raw.trim()) return "english";
+  const text = raw.toLowerCase();
+
+  let malCharCount = 0;
+  let hinCharCount = 0;
+  let tamCharCount = 0;
+  let telCharCount = 0;
+  let kanCharCount = 0;
+
+  for (let i = 0; i < text.length; i++) {
+    const code = text.charCodeAt(i);
+    if (code >= 0x0D00 && code <= 0x0D7F) malCharCount++;
+    else if (code >= 0x0900 && code <= 0x097F) hinCharCount++;
+    else if (code >= 0x0B80 && code <= 0x0BFF) tamCharCount++;
+    else if (code >= 0x0C00 && code <= 0x0C7F) telCharCount++;
+    else if (code >= 0x0C80 && code <= 0x0CFF) kanCharCount++;
+  }
+
+  const maxScript = Math.max(malCharCount, hinCharCount, tamCharCount, telCharCount, kanCharCount);
+  if (maxScript > 5) {
+    if (maxScript === malCharCount) return "malayalam";
+    if (maxScript === hinCharCount) return "hindi";
+    if (maxScript === tamCharCount) return "tamil";
+    if (maxScript === telCharCount) return "telugu";
+    if (maxScript === kanCharCount) return "kannada";
+  }
+
+  const words = text.split(/\s+/);
+
+  const malWords = new Set([
+    "daivam", "kartha", "yeshu", "sthothram", "aaradhana", "sthuthikkum", "sthuthy", 
+    "nanni", "enikkaayi", "snehikkum", "kruba", "vachanam", "shakthan", "parishudhan", 
+    "aathmavu", "pithave", "enikku", "njangal", "karthave", "neeyenne", "daivame", "sthuthi",
+    "kripa", "sthothra", "daivathin", "njangalkku", "snehathil", "santhosham"
+  ]);
+
+  const hinWords = new Set([
+    "prabhu", "masih", "stuti", "aradhana", "pavitra", "pyar", "anugrah", "dhanyavad", 
+    "jeevan", "raja", "dhanya", "mahima", "karta", "hai", "hain", "mere", "tujhe", "teri", 
+    "tera", "aaye", "gaye", "karte", "dhanyavaad", "prarthana"
+  ]);
+
+  const tamWords = new Set([
+    "en", "um", "anbu", "devan", "yesu", "kirubai", "sthothiram", "aaraadhana", "naan", 
+    "neer", "un", "enakkul", "thuthi", "unthan", "engal", "karthar", "irakkam", "neere",
+    "ennai", "tamil", "nalla", "kripathevare"
+  ]);
+
+  const telWords = new Set([
+    "naa", "nee", "yesu", "deva", "sthothramu", "aaradhana", "sthuthi", "prema", "kruba", 
+    "naaku", "ninnu", "sevalu", "raaju", "naathodu", "nene", "neevu", "thodu", "sannidhi"
+  ]);
+
+  let malScore = 0;
+  let hinScore = 0;
+  let tamScore = 0;
+  let telScore = 0;
+
+  for (const word of words) {
+    const cleanWord = word.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
+    if (malWords.has(cleanWord)) malScore++;
+    if (hinWords.has(cleanWord)) hinScore++;
+    if (tamWords.has(cleanWord)) tamScore++;
+    if (telWords.has(cleanWord)) telScore++;
+  }
+
+  const maxScore = Math.max(malScore, hinScore, tamScore, telScore);
+  if (maxScore > 0) {
+    if (maxScore === malScore) return "malayalam";
+    if (maxScore === hinScore) return "hindi";
+    if (maxScore === tamScore) return "tamil";
+    if (maxScore === telScore) return "telugu";
+  }
+
+  return "english";
+}

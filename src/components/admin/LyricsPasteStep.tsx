@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { categories, languages } from "@/lib/demo-data";
 import type { RightsStatus } from "@/lib/admin-types";
 import LyricsSourceFields from "./LyricsSourceFields";
@@ -34,6 +35,15 @@ export default function LyricsPasteStep({
   onContinue,
   hideSourceFields = false,
 }: LyricsPasteStepProps) {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+    textarea.style.height = "auto";
+    textarea.style.height = `${textarea.scrollHeight + 2}px`;
+  }, [data.rawLyrics]);
+
   function update<K extends keyof PasteStepData>(key: K, value: PasteStepData[K]) {
     onChange({ ...data, [key]: value });
   }
@@ -50,7 +60,7 @@ export default function LyricsPasteStep({
 
   return (
     <div className="space-y-6">
-      <div className="rounded-xl bg-section px-4 py-3 text-base text-muted">
+      <div className="rounded-xl border border-primary/10 bg-primary/5 px-4 py-3 text-base text-muted">
         <strong className="text-foreground">Step 1 of 3:</strong> Paste lyrics
         from your phone. Nothing goes live until you review and submit.
       </div>
@@ -68,7 +78,7 @@ export default function LyricsPasteStep({
           className={inputClass}
         />
         {errors.title && (
-          <p className="mt-1.5 text-sm text-red-600">{errors.title}</p>
+          <p className="mt-1.5 text-sm text-red-400">{errors.title}</p>
         )}
       </div>
 
@@ -90,7 +100,7 @@ export default function LyricsPasteStep({
           ))}
         </select>
         {errors.language && (
-          <p className="mt-1.5 text-sm text-red-600">{errors.language}</p>
+          <p className="mt-1.5 text-sm text-red-400">{errors.language}</p>
         )}
       </div>
 
@@ -99,33 +109,30 @@ export default function LyricsPasteStep({
           Category <span className="text-red-500">*</span>
         </legend>
         <p className={helperClass}>Select all that apply.</p>
-        <div className="mt-3 flex flex-col gap-2">
+        <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
           {categories.map((cat) => {
             const checked = data.categories.includes(cat.slug);
             return (
-              <label
+              <button
                 key={cat.slug}
-                className={`flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3.5 text-base transition-colors ${
+                type="button"
+                onClick={() => toggleCategory(cat.slug)}
+                className={`flex flex-col items-center justify-center gap-2 rounded-2xl border p-4 text-center transition-all cursor-pointer ${
                   checked
-                    ? "border-primary bg-primary/5"
-                    : "border-border bg-card hover:bg-section"
+                    ? "border-primary bg-primary/10 text-primary font-bold shadow-md ring-2 ring-primary/20 scale-[1.02]"
+                    : "border-border bg-card text-foreground hover:bg-section"
                 }`}
               >
-                <input
-                  type="checkbox"
-                  checked={checked}
-                  onChange={() => toggleCategory(cat.slug)}
-                  className="h-5 w-5 rounded accent-primary"
-                />
-                <span>
-                  {cat.icon} {cat.name}
+                <span className="text-3xl" role="img" aria-label={cat.name}>
+                  {cat.icon}
                 </span>
-              </label>
+                <span className="text-sm font-semibold">{cat.name}</span>
+              </button>
             );
           })}
         </div>
         {errors.categories && (
-          <p className="mt-1.5 text-sm text-red-600">{errors.categories}</p>
+          <p className="mt-1.5 text-sm text-red-400">{errors.categories}</p>
         )}
       </fieldset>
 
@@ -139,7 +146,7 @@ export default function LyricsPasteStep({
       )}
 
       <div>
-        <div className="flex items-center justify-between mb-2">
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
           <label htmlFor="rawLyrics" className="block text-base font-medium text-foreground">
             Paste Lyrics Here <span className="text-red-500">*</span>
           </label>
@@ -151,14 +158,14 @@ export default function LyricsPasteStep({
                   const cleaned = cleanRawLyrics(data.rawLyrics);
                   update("rawLyrics", cleaned);
                 }}
-                className="rounded-lg bg-primary/10 px-3 py-1.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/20"
+                className="rounded-xl bg-primary/10 px-4 py-2 text-sm font-semibold text-primary transition-colors hover:bg-primary/20"
               >
                 🧹 Clean Pasted Text
               </button>
               <button
                 type="button"
                 onClick={() => update("rawLyrics", "")}
-                className="rounded-lg bg-red-50 px-3 py-1.5 text-sm font-semibold text-red-600 transition-colors hover:bg-red-100"
+                className="rounded-xl bg-red-500/10 px-4 py-2 text-sm font-semibold text-red-400 transition-colors hover:bg-red-500/20"
               >
                 ❌ Clear
               </button>
@@ -170,15 +177,15 @@ export default function LyricsPasteStep({
           saved.
         </p>
         <textarea
+          ref={textareaRef}
           id="rawLyrics"
           value={data.rawLyrics}
           onChange={(e) => update("rawLyrics", e.target.value)}
-          rows={14}
           placeholder="Paste raw lyrics here...&#10;&#10;Verse 1&#10;Line one&#10;Line two&#10;&#10;Chorus&#10;Line one..."
-          className={`${inputClass} mt-2 font-mono leading-relaxed`}
+          className={`${inputClass} mt-2 font-mono leading-relaxed overflow-hidden`}
         />
         {errors.rawLyrics && (
-          <p className="mt-1.5 text-sm text-red-600">{errors.rawLyrics}</p>
+          <p className="mt-1.5 text-sm text-red-400">{errors.rawLyrics}</p>
         )}
         {data.rawLyrics.trim() && (
           <p className="mt-2 text-sm text-muted">
@@ -188,18 +195,18 @@ export default function LyricsPasteStep({
         )}
       </div>
 
-      <div className="flex flex-col gap-3 sm:flex-row">
+      <div className="flex flex-col gap-3 sm:flex-row pt-4">
         <button
           type="button"
           onClick={onAutoFormat}
-          className="flex-1 rounded-xl bg-primary px-4 py-3.5 text-lg font-medium text-white transition-colors hover:bg-primary-light"
+          className="flex-1 rounded-xl bg-gradient-to-r from-primary to-primary-light px-5 py-4 text-lg font-bold text-white transition-opacity hover:opacity-95 shadow-md shadow-primary/20"
         >
           Auto Format Lyrics
         </button>
         <button
           type="button"
           onClick={onContinue}
-          className="flex-1 rounded-xl border border-border bg-card px-4 py-3.5 text-lg font-medium transition-colors hover:bg-section"
+          className="flex-1 rounded-xl border border-border bg-card px-5 py-4 text-lg font-semibold transition-colors hover:bg-section"
         >
           Continue without formatting
         </button>

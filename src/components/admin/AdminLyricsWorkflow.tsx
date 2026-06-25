@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import LyricsFormatStep from "./LyricsFormatStep";
 import LyricsPasteStep, { type PasteStepData } from "./LyricsPasteStep";
@@ -10,6 +10,8 @@ import {
   autoFormatLyrics,
   cleanRawLyrics,
   parseExistingLyrics,
+  detectTitle,
+  detectLanguage,
 } from "@/lib/lyrics-formatting";
 import {
   canPublish,
@@ -69,6 +71,38 @@ export default function AdminLyricsWorkflow({ song }: AdminLyricsWorkflowProps) 
       setSlug(generateSlug(pasteData.title));
     }
   }, [pasteData.title, song?.slug]);
+
+  const lastDetectedRef = useRef("");
+
+  useEffect(() => {
+    const raw = pasteData.rawLyrics.trim();
+    if (!raw) {
+      lastDetectedRef.current = "";
+      return;
+    }
+    
+    if (raw === lastDetectedRef.current) return;
+    lastDetectedRef.current = raw;
+
+    const updates: Partial<PasteStepData> = {};
+    
+    if (!pasteData.title.trim()) {
+      const detected = detectTitle(raw);
+      if (detected) updates.title = detected;
+    }
+    
+    if (!pasteData.language) {
+      updates.language = detectLanguage(raw);
+    }
+    
+    if (pasteData.categories.length === 0) {
+      updates.categories = ["worship"];
+    }
+
+    if (Object.keys(updates).length > 0) {
+      setPasteData((prev) => ({ ...prev, ...updates }));
+    }
+  }, [pasteData.rawLyrics, pasteData.title, pasteData.language, pasteData.categories.length]);
 
   useEffect(() => {
     if (song && blocks.length === 0) {
@@ -177,31 +211,31 @@ export default function AdminLyricsWorkflow({ song }: AdminLyricsWorkflowProps) 
     <div>
       {/* Step indicator */}
       <nav
-        className="mb-8 flex items-center justify-center gap-2 sm:gap-4"
+        className="mb-8 flex items-center justify-between rounded-2xl border border-border bg-card p-4 shadow-sm"
         aria-label="Progress"
       >
         {STEPS.map(({ num, label }, index) => (
-          <div key={num} className="flex items-center gap-2">
+          <div key={num} className="flex flex-1 items-center justify-center gap-2">
             <div
-              className={`flex h-10 w-10 items-center justify-center rounded-full text-base font-semibold ${
+              className={`flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold transition-all duration-300 ${
                 step === num
-                  ? "bg-primary text-white"
+                  ? "bg-primary text-white shadow-lg shadow-primary/30 ring-4 ring-primary/20 scale-110"
                   : step > num
-                    ? "bg-primary/20 text-primary"
+                    ? "bg-green-500/20 text-green-400"
                     : "bg-section text-muted"
               }`}
             >
-              {num}
+              {step > num ? "✓" : num}
             </div>
             <span
-              className={`hidden text-sm font-medium sm:inline ${
+              className={`text-sm font-semibold transition-colors duration-300 ${
                 step === num ? "text-foreground" : "text-muted"
               }`}
             >
               {label}
             </span>
             {index < STEPS.length - 1 && (
-              <span className="mx-1 text-muted sm:mx-2">→</span>
+              <span className="mx-2 text-muted/30">/</span>
             )}
           </div>
         ))}

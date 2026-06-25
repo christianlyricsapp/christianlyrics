@@ -10,9 +10,46 @@
   --bg-page: #FAF8F2;
   --accent: #B58A45;
   --accent-hover: #A87C3A;
+
+  /* Default theme color mappings (Navy & Gold branding) */
+  --primary: #0A2540;
+  --primary-light: #102A43;
+  --primary-dark: #071D33;
+  --card-bg: #ffffff;
+  --section-bg: #FAF8F2;
+  --border-color: #E4DCCB;
+  --foreground-color: #0A2540;
+  --muted-color: #3E5C76;
   
   --font-stack: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
   --font-serif: var(--font-playfair), "Georgia", serif;
+}
+
+.admin-theme {
+  /* Slate/indigo themed dark mode admin layout */
+  background-color: #090d16 !important;
+  color: #f3f4f6 !important;
+
+  --bg-page: #090d16;
+  --card-bg: #111827; /* Gray 900 */
+  --section-bg: #1f2937; /* Gray 800 */
+  --border-color: #374151; /* Gray 700 */
+  --foreground-color: #f3f4f6; /* Gray 100 */
+  --muted-color: #9ca3af; /* Gray 400 */
+  
+  --primary: #6366f1; /* Indigo-500 */
+  --primary-light: #818cf8; /* Indigo-400 */
+  --primary-dark: #4f46e5; /* Indigo-600 */
+  
+  --accent: #a78bfa; /* Violet-400 */
+  --accent-hover: #c084fc; /* Purple-400 */
+
+  --navy: #f3f4f6;
+  --navy-light: #e5e7eb;
+  --navy-muted: #9ca3af;
+  --navy-faded: #6b7280;
+  --navy-border: #374151;
+  --navy-bg-subtle: #1e1b4b; /* Indigo-950 tint */
 }
 
 @theme inline {
@@ -24,6 +61,16 @@
   --color-navy-bg-subtle: var(--navy-bg-subtle);
   --color-bg-page: var(--bg-page);
   --color-accent: var(--accent);
+
+  /* Modern customizable properties */
+  --color-primary: var(--primary);
+  --color-primary-light: var(--primary-light);
+  --color-primary-dark: var(--primary-dark);
+  --color-card: var(--card-bg);
+  --color-section: var(--section-bg);
+  --color-border: var(--border-color);
+  --color-foreground: var(--foreground-color);
+  --color-muted: var(--muted-color);
 }
 
 /* ─── Base Reset & Typography ─────────────────────── */
