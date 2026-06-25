@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { isAdminLoggedIn } from "@/lib/admin-store";
+import { isAdminLoggedIn, updateVolunteerSessionHeartbeat } from "@/lib/admin-store";
 import AdminHeader from "./AdminHeader";
 import AdminSidebar from "./AdminSidebar";
 
@@ -32,6 +32,40 @@ export default function AdminLayout({
       }
     });
   }, [isLoginPage, router]);
+
+  // Session activity tracker heartbeat
+  useEffect(() => {
+    if (!ready || isLoginPage) return;
+
+    let activeThisMinute = false;
+
+    function recordActivity() {
+      activeThisMinute = true;
+    }
+
+    window.addEventListener("mousemove", recordActivity);
+    window.addEventListener("keydown", recordActivity);
+    window.addEventListener("click", recordActivity);
+    window.addEventListener("scroll", recordActivity);
+    window.addEventListener("touchstart", recordActivity);
+
+    // Run heartbeat checker every 60 seconds
+    const interval = setInterval(() => {
+      if (activeThisMinute) {
+        updateVolunteerSessionHeartbeat();
+        activeThisMinute = false;
+      }
+    }, 60000);
+
+    return () => {
+      window.removeEventListener("mousemove", recordActivity);
+      window.removeEventListener("keydown", recordActivity);
+      window.removeEventListener("click", recordActivity);
+      window.removeEventListener("scroll", recordActivity);
+      window.removeEventListener("touchstart", recordActivity);
+      clearInterval(interval);
+    };
+  }, [ready, isLoginPage]);
 
   if (isLoginPage) {
     return <>{children}</>;

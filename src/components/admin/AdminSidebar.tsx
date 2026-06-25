@@ -2,12 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
-const navItems = [
-  { href: "/admin/dashboard", label: "Dashboard", icon: "📊" },
-  { href: "/admin/songs", label: "Songs", icon: "🎵" },
-  { href: "/admin/songs/new", label: "Add Lyrics", icon: "➕" },
-];
+import { useEffect, useState, useMemo } from "react";
+import { getAdminRole } from "@/lib/admin-store";
 
 type AdminSidebarProps = {
   open: boolean;
@@ -16,15 +12,36 @@ type AdminSidebarProps = {
 
 export default function AdminSidebar({ open, onClose }: AdminSidebarProps) {
   const pathname = usePathname();
+  const [role, setRole] = useState<"admin" | "volunteer">("volunteer");
+
+  useEffect(() => {
+    getAdminRole().then(setRole);
+  }, []);
+
+  const navItems = useMemo(() => {
+    if (role === "admin") {
+      return [
+        { href: "/admin/dashboard", label: "Dashboard", icon: "📊" },
+        { href: "/admin/songs", label: "Songs", icon: "🎵" },
+        { href: "/admin/songs/new", label: "Add Lyrics", icon: "➕" },
+        { href: "/admin/volunteers", label: "Volunteers", icon: "👥" },
+      ];
+    }
+    return [
+      { href: "/admin/dashboard", label: "Dashboard", icon: "📊" },
+      { href: "/admin/songs", label: "My Submissions", icon: "🎵" },
+      { href: "/admin/songs/new", label: "Add Lyrics", icon: "➕" },
+    ];
+  }, [role]);
 
   function isActive(href: string) {
     if (href === "/admin/dashboard") return pathname === href;
     if (href === "/admin/songs/new") return pathname === href;
+    if (href === "/admin/volunteers") return pathname.startsWith("/admin/volunteers");
     if (href === "/admin/songs") {
       return (
         pathname === "/admin/songs" ||
-        (pathname.startsWith("/admin/songs/") &&
-          !pathname.endsWith("/new"))
+        (pathname.startsWith("/admin/songs/") && !pathname.endsWith("/new"))
       );
     }
     return pathname.startsWith(href);
@@ -56,7 +73,7 @@ export default function AdminSidebar({ open, onClose }: AdminSidebarProps) {
       <aside className="hidden w-64 shrink-0 border-r border-border bg-card md:block">
         <div className="sticky top-0 p-4">
           <p className="px-4 font-serif text-lg font-semibold text-primary">
-            Admin Panel
+            {role === "admin" ? "Admin Panel" : "Volunteer Panel"}
           </p>
           {sidebarContent}
         </div>
@@ -74,7 +91,7 @@ export default function AdminSidebar({ open, onClose }: AdminSidebarProps) {
           <aside className="absolute left-0 top-0 h-full w-72 bg-card shadow-xl">
             <div className="flex items-center justify-between border-b border-border p-4">
               <p className="font-serif text-lg font-semibold text-primary">
-                Admin Panel
+                {role === "admin" ? "Admin Panel" : "Volunteer Panel"}
               </p>
               <button
                 type="button"

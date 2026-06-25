@@ -69,3 +69,17 @@ export function getSongStatusLabel(status: SongStatus): string {
 export function canPublish(rightsStatus: RightsStatus): boolean {
   return rightsStatus !== "unknown" && rightsStatus !== "needs-verification";
 }
+
+export type Volunteer = {
+  id: string;
+  name: string;
+  email: string;
+  status: "active" | "inactive";
+  createdAt: string;
+};
+
+export type VolunteerStats = Volunteer & {
+  totalUploads: number;
+  totalDurationMinutes: number;
+  lastActive: string | null;
+};
