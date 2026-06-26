@@ -1,25 +1,33 @@
-# Walkthrough — Apple iOS Theme Redesign & Deploy Fixes
+# Walkthrough — Redesign, Routing & Title-Based Language Detection
 
-This walkthrough summarizes the recent layout re-design and workflow changes applied to the admin panel.
+This walkthrough summarizes the recent layout redesign, deployment fixes, and new smart auto-detection functionality in the admin panel.
 
 ---
 
-## 1. Redesigned Admin Theme (Apple iOS Style)
+## 1. Redesigned Admin Theme (Apple iOS Style) & Routing Fix
 * **[globals.css](file:///Users/sachinkhandeshe/Desktop/christianlyrics-app/src/app/globals.css)**:
-  * Implemented a clean, readable light mode theme under the `.admin-theme` scope.
-  * Mapped primary and accent actions to Apple's native system blue (`#007aff`).
-  * Used light gray borders (`#e5e5ea`) and soft system background shading (`#f2f2f7`).
+  * Implemented a clean, readable light mode theme under the `.admin-theme` scope with primary actions using Apple's system blue (`#007aff`).
 * **[AdminLayout.tsx](file:///Users/sachinkhandeshe/Desktop/christianlyrics-app/src/components/admin/AdminLayout.tsx)**:
-  * Ensured the `.admin-theme` scope wraps the entire admin panel, including the **Login page** and the **Dashboard/Volunteers** pages.
-  * Ensures that volunteers and administrators see a light, high-contrast user interface that is easy to navigate on mobile devices.
+  * Wrapped the login container in `.admin-theme` and fixed the trailing slash issue on `/admin/login/` routing.
+* **[AdminSidebar.tsx](file:///Users/sachinkhandeshe/Desktop/christianlyrics-app/src/components/admin/AdminSidebar.tsx)**:
+  * Normalized pathname checking to handle trailing slashes, ensuring active navigation link highlighting stays correct.
 
 ## 2. FTP Deploy Synchronization Fix
 * **[deploy.yml](file:///Users/sachinkhandeshe/Desktop/christianlyrics-app/.github/workflows/deploy.yml)**:
-  * Updated the state file pointer to `.ftp-deploy-sync-state-v3.json` to prevent local/remote build hash desynchronization errors.
+  * Changed the state file to `.ftp-deploy-sync-state-v3.json` to enforce clean synchronization.
+
+## 3. Title-Based Language Auto-Detection & Marathi Support
+* **[lyrics-formatting.ts](file:///Users/sachinkhandeshe/Desktop/christianlyrics-app/src/lib/lyrics-formatting.ts)**:
+  * Expanded language auto-detection to support **Marathi** (for both Devanagari and Latin script).
+  * Lowered the detection threshold to 2 characters to accurately detect languages on short titles.
+* **[AdminLyricsWorkflow.tsx](file:///Users/sachinkhandeshe/Desktop/christianlyrics-app/src/components/admin/AdminLyricsWorkflow.tsx)**:
+  * Linked the title change event to automatically run language detection and update the language dropdown if empty.
+* **[AdminSongForm.tsx](file:///Users/sachinkhandeshe/Desktop/christianlyrics-app/src/components/admin/AdminSongForm.tsx)**:
+  * Imported the `detectLanguage` function and updated `updateField` so that typing or editing a song title automatically detects the language and pre-fills the dropdown.
 
 ---
 
-## Verification Plan
+## Verification Results
 
 ### Build Verification
-* Verified compiling the static site locally with `npm run build`, producing clean assets and `.htaccess` rewrite rules in the output directory.
+* Verified compiling the static site locally with `npm run build`, producing clean assets with zero static page generation errors or compiler warnings.
