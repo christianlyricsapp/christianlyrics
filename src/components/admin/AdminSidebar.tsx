@@ -12,6 +12,7 @@ type AdminSidebarProps = {
 
 export default function AdminSidebar({ open, onClose }: AdminSidebarProps) {
   const pathname = usePathname();
+  const normalizedPathname = pathname === "/" ? "/" : pathname?.replace(/\/$/, "");
   const [role, setRole] = useState<"admin" | "volunteer">("volunteer");
 
   useEffect(() => {
@@ -35,16 +36,17 @@ export default function AdminSidebar({ open, onClose }: AdminSidebarProps) {
   }, [role]);
 
   function isActive(href: string) {
-    if (href === "/admin/dashboard") return pathname === href;
-    if (href === "/admin/songs/new") return pathname === href;
-    if (href === "/admin/volunteers") return pathname.startsWith("/admin/volunteers");
-    if (href === "/admin/songs") {
+    const cleanHref = href === "/" ? "/" : href.replace(/\/$/, "");
+    if (cleanHref === "/admin/dashboard") return normalizedPathname === cleanHref;
+    if (cleanHref === "/admin/songs/new") return normalizedPathname === cleanHref;
+    if (cleanHref === "/admin/volunteers") return normalizedPathname.startsWith("/admin/volunteers");
+    if (cleanHref === "/admin/songs") {
       return (
-        pathname === "/admin/songs" ||
-        (pathname.startsWith("/admin/songs/") && !pathname.endsWith("/new"))
+        normalizedPathname === "/admin/songs" ||
+        (normalizedPathname.startsWith("/admin/songs/") && !normalizedPathname.endsWith("/new"))
       );
     }
-    return pathname.startsWith(href);
+    return normalizedPathname.startsWith(cleanHref);
   }
 
   const sidebarContent = (
