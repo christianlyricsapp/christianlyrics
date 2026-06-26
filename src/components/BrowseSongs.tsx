@@ -203,7 +203,9 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
 
       // Categories multi-select filter
       if (selectedCategories.length > 0) {
-        if (!selectedCategories.includes(song.category)) return false;
+        const songCats = song.category ? song.category.split(",").map(c => c.trim()) : [];
+        const hasOverlap = songCats.some(cat => selectedCategories.includes(cat));
+        if (!hasOverlap) return false;
       }
 
       // Languages multi-select filter
@@ -457,44 +459,157 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
             
             {/* ─── Centered Top Hero Section (Moved inside main to let filters align at top) ────────────────── */}
             <div
+              className="premium-hero-container"
               style={{
+                position: "relative",
+                width: "100%",
+                backgroundImage: `
+                  radial-gradient(circle at 1px 1px, rgba(10, 37, 64, 0.035) 1px, transparent 0),
+                  linear-gradient(135deg, #F5F7FA 0%, #E4EBF5 100%)
+                `,
+                backgroundSize: "24px 24px, 100% 100%",
+                borderRadius: "24px",
+                padding: "52px 24px",
+                marginBottom: "40px",
+                boxShadow: "0 20px 50px rgba(10, 37, 64, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.6)",
+                border: "1px solid rgba(20, 53, 90, 0.08)",
                 display: "flex",
                 flexDirection: "column",
                 alignItems: "center",
                 textAlign: "center",
-                marginBottom: "40px",
+                overflow: "hidden",
+                boxSizing: "border-box",
               }}
             >
+              {/* Glowing Background Radial Blobs */}
+              <div
+                style={{
+                  position: "absolute",
+                  top: "-15%",
+                  left: "-5%",
+                  width: "380px",
+                  height: "380px",
+                  background: "radial-gradient(circle, rgba(181, 138, 69, 0.15) 0%, rgba(255, 255, 255, 0) 70%)",
+                  filter: "blur(40px)",
+                  pointerEvents: "none",
+                  zIndex: 1,
+                }}
+              />
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: "-20%",
+                  right: "-5%",
+                  width: "460px",
+                  height: "460px",
+                  background: "radial-gradient(circle, rgba(10, 37, 64, 0.08) 0%, rgba(255, 255, 255, 0) 70%)",
+                  filter: "blur(45px)",
+                  pointerEvents: "none",
+                  zIndex: 1,
+                }}
+              />
+
+              {/* Tagline kicker emblem pill badge */}
+              <div 
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "8px",
+                  padding: "6px 14px",
+                  borderRadius: "30px",
+                  border: "1px solid rgba(181, 138, 69, 0.25)",
+                  background: "rgba(255, 255, 255, 0.75)",
+                  backdropFilter: "blur(12px)",
+                  boxShadow: "0 4px 12px rgba(181, 138, 69, 0.05)",
+                  marginBottom: "16px",
+                  position: "relative",
+                  zIndex: 2,
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="var(--accent)"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  style={{ width: "12px", height: "12px" }}
+                >
+                  <path d="M12 2v20" />
+                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                </svg>
+                <span style={{
+                  color: "var(--accent)", 
+                  fontSize: "0.72rem", 
+                  textTransform: "uppercase", 
+                  letterSpacing: "0.18em", 
+                  fontWeight: 700,
+                  lineHeight: 1
+                }}>
+                  Explore Lyrics Database
+                </span>
+              </div>
+
               <h1
                 style={{
-                  fontSize: "2.4rem",
+                  fontSize: "2.8rem",
                   fontWeight: 800,
                   color: "#0A2540",
                   margin: 0,
-                  letterSpacing: "-0.02em",
+                  letterSpacing: "-0.03em",
+                  lineHeight: "1.2",
+                  position: "relative",
+                  zIndex: 2,
                 }}
               >
-                Christian Lyrics Library
+                Christian <span style={{
+                  fontFamily: "var(--font-serif)",
+                  fontStyle: "italic",
+                  fontWeight: 400,
+                  color: "var(--accent)",
+                  background: "none",
+                  WebkitTextFillColor: "var(--accent)",
+                  marginLeft: "4px",
+                  marginRight: "4px"
+                }}>Lyrics</span> Library
               </h1>
-              <span className="title-accent-underline" style={{ margin: "12px auto" }} />
+              
+              <div 
+                style={{ 
+                  width: "100px", 
+                  height: "2px", 
+                  margin: "18px auto 20px", 
+                  background: "linear-gradient(to right, transparent, rgba(181, 138, 69, 0.6), transparent)",
+                  position: "relative", 
+                  zIndex: 2 
+                }} 
+              />
+              
               <p
                 style={{
-                  fontSize: "1.05rem",
-                  color: "#355C85",
-                  margin: "4px 0 28px",
+                  fontSize: "1.125rem",
+                  color: "#3E648A",
+                  margin: "0 0 36px",
                   maxWidth: "600px",
+                  lineHeight: "1.6",
+                  position: "relative",
+                  zIndex: 2,
                 }}
               >
                 Find Christian lyrics by song, artist, language, or theme.
               </p>
 
-              {/* Search bar (centered and highlighted) */}
+              {/* Search bar (glassmorphic look) */}
               <div
                 style={{
-                  width: "100%",
+                  width: "92%",
                   maxWidth: "800px",
                   position: "relative",
                   marginBottom: "24px",
+                  display: "flex",
+                  alignItems: "center",
+                  zIndex: 2,
                 }}
               >
                 <SearchIcon
@@ -507,6 +622,7 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
                     height: "20px",
                     color: "#8fa8c4",
                     pointerEvents: "none",
+                    zIndex: 2,
                   }}
                 />
                 <input
@@ -517,82 +633,143 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
                   className="browse-search-input"
                   id="browse-search"
                   aria-label="Search songs"
-                  style={{ paddingLeft: "54px" }}
+                  style={{ 
+                    paddingLeft: "54px", 
+                    paddingRight: "60px",
+                    background: "rgba(255, 255, 255, 0.75)",
+                    backdropFilter: "blur(16px)",
+                    border: "1px solid rgba(10, 37, 64, 0.12)",
+                  }}
                 />
-              </div>
-
-              {/* A–Z Alphabet filter bar */}
-              <div
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  justifyContent: "center",
-                  gap: "6px",
-                  maxWidth: "900px",
-                }}
-              >
                 <button
                   type="button"
-                  onClick={() => handleLetterClick(ALL_KEY)}
-                  className={`browse-alpha-btn ${activeLetter === ALL_KEY ? "browse-alpha-active" : ""}`}
-                  style={{ width: "auto", paddingInline: "14px" }}
-                  aria-label="Show all songs"
-                  aria-pressed={activeLetter === ALL_KEY}
+                  aria-label="Submit search"
+                  style={{
+                    position: "absolute",
+                    right: "10px",
+                    top: "50%",
+                    transform: "translateY(-50%)",
+                    background: "var(--navy)",
+                    border: "none",
+                    borderRadius: "10px",
+                    width: "36px",
+                    height: "36px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    cursor: "pointer",
+                    color: "var(--accent)",
+                    transition: "all 0.2s ease",
+                    zIndex: 2,
+                  }}
+                  className="search-submit-btn"
                 >
-                  All
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    style={{ width: "16px", height: "16px" }}
+                  >
+                    <path d="M5 12h14" />
+                    <path d="m12 5 7 7-7 7" />
+                  </svg>
                 </button>
+              </div>
 
-                {ALPHABET.map((letter) => {
-                  const hasItems = availableLetters.has(letter);
-                  const isActive = activeLetter === letter;
-
-                  return (
+              {/* Browse by Letter Card */}
+              <div
+                className="browse-letter-card"
+                style={{
+                  width: "92%",
+                  maxWidth: "860px",
+                  background: "rgba(255, 255, 255, 0.65)",
+                  backdropFilter: "blur(14px)",
+                  border: "1px solid rgba(10, 37, 64, 0.08)",
+                  borderRadius: "18px",
+                  padding: "20px 24px",
+                  boxShadow: "0 15px 35px rgba(10, 37, 64, 0.02)",
+                  boxSizing: "border-box",
+                  position: "relative",
+                  zIndex: 2,
+                }}
+              >
+                {/* A–Z Alphabet scroll wrapper */}
+                <div className="alphabet-row-wrapper">
+                  <div
+                    className="alphabet-scroll-container"
+                    style={{
+                      display: "flex",
+                      flexWrap: "nowrap",
+                      gap: "8px",
+                      overflowX: "auto",
+                      scrollBehavior: "smooth",
+                      padding: "4px 8px",
+                      scrollbarWidth: "none",
+                      msOverflowStyle: "none",
+                      justifyContent: "flex-start",
+                      alignItems: "center",
+                    }}
+                  >
                     <button
-                      key={letter}
                       type="button"
-                      onClick={() => hasItems && handleLetterClick(letter)}
+                      onClick={() => handleLetterClick(ALL_KEY)}
+                      className={`browse-alpha-btn ${activeLetter === ALL_KEY ? "browse-alpha-active" : ""}`}
+                      style={{ width: "auto", paddingInline: "16px", flexShrink: 0 }}
+                      aria-label="Show all songs"
+                      aria-pressed={activeLetter === ALL_KEY}
+                    >
+                      All
+                    </button>
+
+                    {ALPHABET.map((letter) => {
+                      const hasItems = availableLetters.has(letter);
+                      const isActive = activeLetter === letter;
+
+                      return (
+                        <button
+                          key={letter}
+                          type="button"
+                          onClick={() => hasItems && handleLetterClick(letter)}
+                          className={`browse-alpha-btn ${
+                            isActive
+                              ? "browse-alpha-active"
+                              : !hasItems
+                              ? "browse-alpha-disabled"
+                              : ""
+                          }`}
+                          style={{ flexShrink: 0 }}
+                          aria-label={`Filter by letter ${letter}`}
+                          aria-pressed={isActive}
+                          aria-disabled={!hasItems}
+                        >
+                          {letter}
+                        </button>
+                      );
+                    })}
+
+                    <button
+                      type="button"
+                      onClick={() => availableLetters.has(HASH_KEY) && handleLetterClick(HASH_KEY)}
                       className={`browse-alpha-btn ${
-                        isActive
+                        activeLetter === HASH_KEY
                           ? "browse-alpha-active"
-                          : !hasItems
+                          : !availableLetters.has(HASH_KEY)
                           ? "browse-alpha-disabled"
                           : ""
                       }`}
-                      aria-label={`Filter by letter ${letter}`}
-                      aria-pressed={isActive}
-                      aria-disabled={!hasItems}
+                      style={{ flexShrink: 0 }}
+                      aria-label="Filter by non-alphabetic characters"
+                      aria-pressed={activeLetter === HASH_KEY}
+                      aria-disabled={!availableLetters.has(HASH_KEY)}
                     >
-                      {letter}
+                      #
                     </button>
-                  );
-                })}
-
-                <button
-                  type="button"
-                  onClick={() => availableLetters.has(HASH_KEY) && handleLetterClick(HASH_KEY)}
-                  className={`browse-alpha-btn ${
-                    activeLetter === HASH_KEY
-                      ? "browse-alpha-active"
-                      : !availableLetters.has(HASH_KEY)
-                      ? "browse-alpha-disabled"
-                      : ""
-                  }`}
-                  aria-label="Filter by non-alphabetic characters"
-                  aria-pressed={activeLetter === HASH_KEY}
-                  aria-disabled={!availableLetters.has(HASH_KEY)}
-                >
-                  #
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => handleLetterClick(ALL_KEY)}
-                  className={`browse-alpha-btn ${activeLetter === ALL_KEY ? "browse-alpha-active" : ""}`}
-                  aria-label="Filter by all songs"
-                  aria-pressed={activeLetter === ALL_KEY}
-                >
-                  *
-                </button>
+                  </div>
+                </div>
               </div>
             </div>
 

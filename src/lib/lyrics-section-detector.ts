@@ -8,6 +8,7 @@ export const SECTION_LABELS = [
   "Tag",
   "Ending",
   "Other",
+  "Intro",
 ] as const;
 
 export type SectionLabel = (typeof SECTION_LABELS)[number];
@@ -37,11 +38,67 @@ export function blocksToLyricsString(blocks: LyricsBlock[]): string {
 }
 
 export function suggestBlockLabel(index: number, totalBlocks: number): string {
-  if (totalBlocks === 1) return "Verse 1";
-  if (index === 0) return "Verse 1";
-  if (index === 1 && totalBlocks > 2) return "Chorus";
-  if (index % 2 === 0) return `Verse ${Math.floor(index / 2) + 1}`;
-  return "Chorus";
+  if (totalBlocks <= 0) return "Verse 1";
+  
+  if (totalBlocks === 1) {
+    return "Verse 1";
+  }
+  if (totalBlocks === 2) {
+    return index === 0 ? "Verse 1" : "Chorus";
+  }
+  if (totalBlocks === 3) {
+    if (index === 0) return "Verse 1";
+    if (index === 1) return "Chorus";
+    return "Verse 2";
+  }
+  if (totalBlocks === 4) {
+    if (index === 0) return "Intro";
+    if (index === 1) return "Verse 1";
+    if (index === 2) return "Chorus";
+    return "Verse 2";
+  }
+  if (totalBlocks === 5) {
+    if (index === 0) return "Intro";
+    if (index === 1) return "Verse 1";
+    if (index === 2) return "Chorus";
+    if (index === 3) return "Verse 2";
+    return "Chorus";
+  }
+  if (totalBlocks === 6) {
+    if (index === 0) return "Intro";
+    if (index === 1) return "Verse 1";
+    if (index === 2) return "Chorus";
+    if (index === 3) return "Verse 2";
+    if (index === 4) return "Chorus";
+    return "Bridge";
+  }
+  if (totalBlocks === 7) {
+    if (index === 0) return "Intro";
+    if (index === 1) return "Verse 1";
+    if (index === 2) return "Pre-Chorus";
+    if (index === 3) return "Chorus";
+    if (index === 4) return "Verse 2";
+    if (index === 5) return "Chorus";
+    return "Bridge";
+  }
+  
+  // 8 or more blocks
+  if (index === 0) return "Intro";
+  if (index === 1) return "Verse 1";
+  if (index === 2) return "Pre-Chorus";
+  if (index === 3) return "Chorus";
+  if (index === 4) return "Verse 2";
+  if (index === 5) return "Chorus";
+  if (index === 6) return "Bridge";
+  if (index === 7) return "Chorus";
+  
+  const remainingIndex = index - 8;
+  if (remainingIndex % 2 === 0) {
+    const verseNum = 3 + Math.floor(remainingIndex / 2);
+    return `Verse ${verseNum}`;
+  } else {
+    return "Chorus";
+  }
 }
 
 const LABEL_PATTERNS: { pattern: RegExp; label: string }[] = [
@@ -54,7 +111,7 @@ const LABEL_PATTERNS: { pattern: RegExp; label: string }[] = [
   { pattern: /^[\[(]?\s*pre[- ]?chorus\s*[\])]?\.?\s*$/i, label: "Pre-Chorus" },
   { pattern: /^[\[(]?\s*tag\s*[\])]?\.?\s*$/i, label: "Tag" },
   { pattern: /^[\[(]?\s*ending\s*[\])]?\.?\s*$/i, label: "Ending" },
-  { pattern: /^[\[(]?\s*intro\s*[\])]?\.?\s*$/i, label: "Other" },
+  { pattern: /^[\[(]?\s*intro\s*[\])]?\.?\s*$/i, label: "Intro" },
   { pattern: /^[\[(]?\s*outro\s*[\])]?\.?\s*$/i, label: "Ending" },
 ];
 

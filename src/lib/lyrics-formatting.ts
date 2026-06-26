@@ -80,6 +80,59 @@ export function formatLine(line: string): string {
   return smartCaseLine(line.trim());
 }
 
+export function toTitleCase(str: string): string {
+  if (!str) return "";
+  return str.replace(/\b([a-zA-Z])/g, (char) => char.toUpperCase());
+}
+
+export function splitParagraphIntoLines(text: string): string[] {
+  const words = text.split(/\s+/).filter((w) => w.length > 0);
+  const lines: string[] = [];
+  let currentLine: string[] = [];
+  let currentLength = 0;
+
+  // Words that are ideal for starting a new line/clause
+  const startLineWords = new Set([
+    "or", "and", "but", "if", "so", "that", "with", "when", "as", "for",
+    "because", "yet", "such", "like", "in", "on", "at", "by", "to", "from", "can"
+  ]);
+
+  for (let i = 0; i < words.length; i++) {
+    const word = words[i];
+    const wordLen = word.length;
+
+    if (currentLine.length > 0) {
+      const potentialLength = currentLength + 1 + wordLen;
+
+      // Wrap conditions:
+      // - Too long: line exceeds 45 characters or 10 words
+      const isTooLong = potentialLength > 45 || currentLine.length >= 10;
+
+      // - Soft limit: line is long enough and we hit a natural break
+      const isModeratelyLong = potentialLength >= 32;
+      const cleanWord = word.toLowerCase().replace(/[^a-z]/g, "");
+      const prevWord = currentLine[currentLine.length - 1];
+      const isGoodSplitPoint =
+        startLineWords.has(cleanWord) ||
+        /[.,\/#!$%\^&\*;:{}=\-_`~()?]$/.test(prevWord);
+
+      if (isTooLong || (isModeratelyLong && isGoodSplitPoint)) {
+        lines.push(currentLine.join(" "));
+        currentLine = [];
+        currentLength = 0;
+      }
+    }
+
+    currentLine.push(word);
+    currentLength = currentLine.join(" ").length;
+  }
+
+  if (currentLine.length > 0) {
+    lines.push(currentLine.join(" "));
+  }
+  return lines;
+}
+
 export type FormatResult = {
   blocks: LyricsBlock[];
   hasDuplicateWarning: boolean;
@@ -87,7 +140,16 @@ export type FormatResult = {
 
 export function autoFormatLyrics(raw: string): FormatResult {
   const cleaned = cleanRawLyrics(raw);
-  const lines = cleaned.split("\n");
+  const rawLines = cleaned.split("\n");
+  const lines: string[] = [];
+
+  for (const line of rawLines) {
+    if (line.length > 70 && line.split(/\s+/).length > 8) {
+      lines.push(...splitParagraphIntoLines(line));
+    } else {
+      lines.push(line);
+    }
+  }
 
   const blocks: LyricsBlock[] = [];
   let currentLabel = "";
@@ -156,16 +218,22 @@ function chunkLinesIntoBlocks(lines: string[]): LyricsBlock[] {
   const formatted = lines.map(formatLine).filter((l) => l.length > 0);
   if (formatted.length === 0) return [];
 
-  const chunkSize = formatted.length <= 6 ? 4 : 5;
-  const totalChunks = Math.ceil(formatted.length / chunkSize);
+  const targetLinesPerBlock = 4;
+  const totalBlocks = Math.max(1, Math.round(formatted.length / targetLinesPerBlock));
   const blocks: LyricsBlock[] = [];
+  let lineIndex = 0;
 
-  for (let i = 0; i < formatted.length; i += chunkSize) {
-    const chunk = formatted.slice(i, i + chunkSize);
-    const blockIndex = blocks.length;
+  for (let i = 0; i < totalBlocks; i++) {
+    const remainingBlocks = totalBlocks - i;
+    const remainingLines = formatted.length - lineIndex;
+    const currentBlockSize = Math.ceil(remainingLines / remainingBlocks);
+
+    const chunk = formatted.slice(lineIndex, lineIndex + currentBlockSize);
+    lineIndex += currentBlockSize;
+
     blocks.push({
       id: createBlockId(),
-      label: suggestBlockLabel(blockIndex, totalChunks),
+      label: suggestBlockLabel(i, totalBlocks),
       lines: chunk,
     });
   }
@@ -182,11 +250,11 @@ export function parseExistingLyrics(lyrics: string): LyricsBlock[] {
 export function detectTitle(raw: string): string {
   if (!raw || !raw.trim()) return "";
   const lines = raw.split("\n").map((l) => l.trim()).filter((l) => l.length > 0);
-  
+
   for (const line of lines) {
     const match = line.match(/^(title|song\s*name|song|name)\s*:\s*(.+)$/i);
     if (match) {
-      return match[2].trim();
+      return toTitleCase(match[2].trim());
     }
   }
 
@@ -201,12 +269,12 @@ export function detectTitle(raw: string): string {
       continue;
     }
     if (cleaned.length > 0 && cleaned.length < 80) {
-      return cleaned;
+      return toTitleCase(cleaned);
     }
   }
 
   if (lines.length > 0) {
-    return lines[0].replace(/[\[\]():]/g, "").trim();
+    return toTitleCase(lines[0].replace(/[\[\]():]/g, "").trim());
   }
   return "";
 }
@@ -241,7 +309,7 @@ export function detectLanguage(raw: string): string {
       if (text.includes("ळ") || text.includes("ळा") || text.includes("ळे") || text.includes("ळी") || text.includes("ळ्या")) {
         return "marathi";
       }
-      
+
       const words = text.split(/[\s,.\/#!$%\^&\*;:{}=\-_`~()?]+/);
       const marDevWords = new Set(["आहे", "आहेत", "माझ्या", "तुझ्या", "माझा", "तुझा", "आम्ही", "तुम्ही", "करतो", "करते", "मला", "तुला", "देवा", "माझं", "तुझं", "कृपा"]);
       for (const w of words) {
@@ -256,26 +324,26 @@ export function detectLanguage(raw: string): string {
   const words = text.split(/\s+/);
 
   const malWords = new Set([
-    "daivam", "kartha", "yeshu", "sthothram", "aaradhana", "sthuthikkum", "sthuthy", 
-    "nanni", "enikkaayi", "snehikkum", "kruba", "vachanam", "shakthan", "parishudhan", 
+    "daivam", "kartha", "yeshu", "sthothram", "aaradhana", "sthuthikkum", "sthuthy",
+    "nanni", "enikkaayi", "snehikkum", "kruba", "vachanam", "shakthan", "parishudhan",
     "aathmavu", "pithave", "enikku", "njangal", "karthave", "neeyenne", "daivame", "sthuthi",
     "kripa", "sthothra", "daivathin", "njangalkku", "snehathil", "santhosham"
   ]);
 
   const hinWords = new Set([
-    "prabhu", "masih", "stuti", "aradhana", "pavitra", "pyar", "anugrah", "dhanyavad", 
-    "jeevan", "raja", "dhanya", "mahima", "karta", "hai", "hain", "mere", "tujhe", "teri", 
+    "prabhu", "masih", "stuti", "aradhana", "pavitra", "pyar", "anugrah", "dhanyavad",
+    "jeevan", "raja", "dhanya", "mahima", "karta", "hai", "hain", "mere", "tujhe", "teri",
     "tera", "aaye", "gaye", "karte", "dhanyavaad", "prarthana"
   ]);
 
   const tamWords = new Set([
-    "en", "um", "anbu", "devan", "yesu", "kirubai", "sthothiram", "aaraadhana", "naan", 
+    "en", "um", "anbu", "devan", "yesu", "kirubai", "sthothiram", "aaraadhana", "naan",
     "neer", "un", "enakkul", "thuthi", "unthan", "engal", "karthar", "irakkam", "neere",
     "ennai", "tamil", "nalla", "kripathevare"
   ]);
 
   const telWords = new Set([
-    "naa", "nee", "yesu", "deva", "sthothramu", "aaradhana", "sthuthi", "prema", "kruba", 
+    "naa", "nee", "yesu", "deva", "sthothramu", "aaradhana", "sthuthi", "prema", "kruba",
     "naaku", "ninnu", "sevalu", "raaju", "naathodu", "nene", "neevu", "thodu", "sannidhi"
   ]);
 

@@ -7,9 +7,8 @@ const drawerLinks = [
   { href: "/", label: "Browse Songs" },
   { href: "/about", label: "About Us" },
   { href: "/contact", label: "Contact Us" },
-  { href: "/contact", label: "Submit Lyrics" },
-  { href: "/privacy-policy", label: "Privacy Policy" },
-  { href: "/terms", label: "Terms & Conditions" },
+  { href: "/contact", label: "Add New Lyrics" },
+  { href: "/policies-terms", label: "Policies & Terms" },
 ];
 
 function HamburgerIcon() {
@@ -232,6 +231,47 @@ export default function Header() {
           </div>
 
           <hr style={{ border: "none", borderTop: "1px solid #14355a", opacity: 0.5, margin: 0 }} />
+
+          {/* Login / Sign in premium card */}
+          <Link
+            href="/admin/login"
+            className="drawer-login-card"
+            onClick={() => setIsOpen(false)}
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="var(--accent)"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              style={{ width: "22px", height: "22px", flexShrink: 0 }}
+            >
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            <div style={{ display: "flex", flexDirection: "column", gap: "2px", flex: 1, textAlign: "left" }}>
+              <span style={{ fontSize: "1rem", fontWeight: 700, color: "#ffffff" }}>
+                Login / Sign in
+              </span>
+              <span style={{ fontSize: "0.85rem", color: "#8fa8c4" }}>
+                Access your account
+              </span>
+            </div>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="var(--accent)"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              style={{ width: "18px", height: "18px", flexShrink: 0 }}
+            >
+              <path d="m9 18 6-6-6-6" />
+            </svg>
+          </Link>
 
           {/* Links list */}
           <div

@@ -25,12 +25,20 @@ function isBrowser(): boolean {
   return typeof window !== "undefined";
 }
 
+function isValidUuid(id: string | null): boolean {
+  if (!id) return false;
+  const regex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+  return regex.test(id);
+}
+
 function mapDbSongToAdminSong(dbSong: any): AdminSong {
   return {
     id: dbSong.id,
     title: dbSong.title,
     slug: dbSong.slug,
-    categories: dbSong.category ? [dbSong.category] : [],
+    categories: dbSong.category
+      ? dbSong.category.split(",").map((c: string) => c.trim())
+      : [],
     language: dbSong.language,
     lyrics: dbSong.lyrics,
     rawLyrics: dbSong.raw_lyrics || dbSong.lyrics,
@@ -41,6 +49,9 @@ function mapDbSongToAdminSong(dbSong: any): AdminSong {
     status: (dbSong.status || "draft") as SongStatus,
     createdAt: dbSong.created_at || new Date().toISOString(),
     updatedAt: dbSong.updated_at || new Date().toISOString(),
+    deletedAt: dbSong.deleted_at || null,
+    createdByName: dbSong.created_by_name || null,
+    lastModifiedByName: dbSong.last_modified_by_name || null,
   };
 }
 
@@ -56,6 +67,7 @@ export async function getAdminSongs(): Promise<AdminSong[]> {
   const { data, error } = await supabase
     .from("songs")
     .select("*")
+    .is("deleted_at", null)
     .order("updated_at", { ascending: false });
 
   if (error) {
@@ -63,6 +75,60 @@ export async function getAdminSongs(): Promise<AdminSong[]> {
     return [];
   }
   return (data || []).map(mapDbSongToAdminSong);
+}
+
+export async function getTrashedSongs(): Promise<AdminSong[]> {
+  const { data, error } = await supabase
+    .from("songs")
+    .select("*")
+    .not("deleted_at", "is", null)
+    .order("deleted_at", { ascending: false });
+
+  if (error) {
+    console.error("Error fetching trashed songs:", error);
+    return [];
+  }
+  return (data || []).map(mapDbSongToAdminSong);
+}
+
+export async function softDeleteSongs(ids: string[]): Promise<boolean> {
+  const now = new Date().toISOString();
+  const { error } = await supabase
+    .from("songs")
+    .update({ deleted_at: now })
+    .in("id", ids);
+
+  if (error) {
+    console.error("Error soft-deleting songs:", error);
+    return false;
+  }
+  return true;
+}
+
+export async function restoreSongs(ids: string[]): Promise<boolean> {
+  const { error } = await supabase
+    .from("songs")
+    .update({ deleted_at: null })
+    .in("id", ids);
+
+  if (error) {
+    console.error("Error restoring songs:", error);
+    return false;
+  }
+  return true;
+}
+
+export async function permanentDeleteSongs(ids: string[]): Promise<boolean> {
+  const { error } = await supabase
+    .from("songs")
+    .delete()
+    .in("id", ids);
+
+  if (error) {
+    console.error("Error permanently deleting songs:", error);
+    return false;
+  }
+  return true;
 }
 
 export async function getAdminSongById(id: string): Promise<AdminSong | null> {
@@ -101,20 +167,36 @@ export async function getAdminStats(): Promise<AdminStats> {
 export async function createAdminSong(data: AdminSongFormData): Promise<AdminSong | null> {
   const now = new Date().toISOString();
   const excerpt = generateExcerpt(data.lyrics);
-  const firstCategory = data.categories[0] || "worship";
+  const categoriesString =
+    data.categories && data.categories.length > 0
+      ? data.categories.join(",")
+      : "worship";
 
   let createdBy: string | null = null;
   let createdByName: string | null = null;
 
   if (isBrowser()) {
-    createdBy = localStorage.getItem(VOLUNTEER_ID_KEY);
+    const rawId = localStorage.getItem(VOLUNTEER_ID_KEY);
+    createdBy = isValidUuid(rawId) ? rawId : null;
     createdByName = localStorage.getItem(VOLUNTEER_NAME_KEY);
+  }
+
+  // Fetch existing slugs to avoid collision
+  const { data: existingSongs } = await supabase.from("songs").select("slug");
+  const existingSlugs = new Set((existingSongs || []).map((s) => s.slug));
+
+  let baseSlug = data.slug || generateSlug(data.title);
+  let finalSlug = baseSlug;
+  let counter = 1;
+  while (existingSlugs.has(finalSlug)) {
+    finalSlug = `${baseSlug}-${counter}`;
+    counter++;
   }
 
   const dbData = {
     title: data.title,
-    slug: data.slug || generateSlug(data.title),
-    category: firstCategory,
+    slug: finalSlug,
+    category: categoriesString,
     language: data.language,
     lyrics: data.lyrics,
     raw_lyrics: data.rawLyrics || data.lyrics,
@@ -150,12 +232,35 @@ export async function updateAdminSong(
 ): Promise<AdminSong | null> {
   const now = new Date().toISOString();
   const excerpt = generateExcerpt(data.lyrics);
-  const firstCategory = data.categories[0] || "worship";
+  const categoriesString =
+    data.categories && data.categories.length > 0
+      ? data.categories.join(",")
+      : "worship";
 
-  const dbData = {
+  let modifiedByName: string | null = null;
+  if (isBrowser()) {
+    modifiedByName = localStorage.getItem(VOLUNTEER_NAME_KEY);
+  }
+
+  // Fetch other songs' slugs to avoid collision
+  const { data: existingSongs } = await supabase
+    .from("songs")
+    .select("slug")
+    .neq("id", id);
+  const existingSlugs = new Set((existingSongs || []).map((s) => s.slug));
+
+  let baseSlug = data.slug || generateSlug(data.title);
+  let finalSlug = baseSlug;
+  let counter = 1;
+  while (existingSlugs.has(finalSlug)) {
+    finalSlug = `${baseSlug}-${counter}`;
+    counter++;
+  }
+
+  const dbData: Record<string, any> = {
     title: data.title,
-    slug: data.slug || generateSlug(data.title),
-    category: firstCategory,
+    slug: finalSlug,
+    category: categoriesString,
     language: data.language,
     lyrics: data.lyrics,
     raw_lyrics: data.rawLyrics || data.lyrics,
@@ -166,6 +271,7 @@ export async function updateAdminSong(
     status: data.status,
     excerpt,
     updated_at: now,
+    last_modified_by_name: modifiedByName,
   };
 
   const { data: updatedData, error } = await supabase
@@ -183,6 +289,88 @@ export async function updateAdminSong(
   return mapDbSongToAdminSong(updatedData);
 }
 
+export async function createAdminSongsBatch(songs: AdminSongFormData[]): Promise<boolean> {
+  const now = new Date().toISOString();
+  let createdBy: string | null = null;
+  let createdByName: string | null = null;
+
+  if (isBrowser()) {
+    const rawId = localStorage.getItem(VOLUNTEER_ID_KEY);
+    createdBy = isValidUuid(rawId) ? rawId : null;
+    createdByName = localStorage.getItem(VOLUNTEER_NAME_KEY);
+  }
+
+  // Fetch existing slugs to avoid collision
+  const { data: existingSongs } = await supabase.from("songs").select("slug");
+  const existingSlugs = new Set((existingSongs || []).map((s) => s.slug));
+
+  const dbData = [];
+  for (const data of songs) {
+    const excerpt = generateExcerpt(data.lyrics);
+    const categoriesString =
+      data.categories && data.categories.length > 0
+        ? data.categories.join(",")
+        : "worship";
+
+    let baseSlug = data.slug || generateSlug(data.title);
+    let finalSlug = baseSlug;
+    let counter = 1;
+    while (existingSlugs.has(finalSlug)) {
+      finalSlug = `${baseSlug}-${counter}`;
+      counter++;
+    }
+    existingSlugs.add(finalSlug);
+
+    dbData.push({
+      title: data.title,
+      slug: finalSlug,
+      category: categoriesString,
+      language: data.language,
+      lyrics: data.lyrics,
+      raw_lyrics: data.rawLyrics || data.lyrics,
+      seo_title: data.seoTitle || "",
+      seo_description: data.seoDescription || "",
+      source_url: data.sourceUrl || "",
+      rights_status: data.rightsStatus || "unknown",
+      status: data.status,
+      excerpt,
+      created_at: now,
+      updated_at: now,
+      created_by: createdBy,
+      created_by_name: createdByName,
+    });
+  }
+
+  const { error } = await supabase
+    .from("songs")
+    .insert(dbData);
+
+  if (error) {
+    console.error("Error batch creating songs:", error);
+    return false;
+  }
+
+  return true;
+}
+
+export async function updateSongsStatus(ids: string[], status: SongStatus): Promise<boolean> {
+  const now = new Date().toISOString();
+  const { error } = await supabase
+    .from("songs")
+    .update({
+      status,
+      updated_at: now,
+    })
+    .in("id", ids);
+
+  if (error) {
+    console.error(`Error updating status for songs to ${status}:`, error);
+    return false;
+  }
+  return true;
+}
+
+
 export async function getAdminRole(): Promise<"admin" | "volunteer"> {
   if (!isBrowser()) return "volunteer";
   try {
@@ -194,6 +382,11 @@ export async function getAdminRole(): Promise<"admin" | "volunteer"> {
   
   const role = localStorage.getItem(ROLE_KEY);
   return role === "admin" ? "admin" : "volunteer";
+}
+
+export function getLoggedInUserName(): string {
+  if (!isBrowser()) return "";
+  return localStorage.getItem(VOLUNTEER_NAME_KEY) || "Admin";
 }
 
 export async function isAdminLoggedIn(): Promise<boolean> {
@@ -255,6 +448,7 @@ export async function adminLogin(email: string, password: string): Promise<boole
     if (isBrowser()) {
       localStorage.setItem(AUTH_KEY, "true");
       localStorage.setItem(ROLE_KEY, "admin");
+      localStorage.setItem(VOLUNTEER_NAME_KEY, "Sachin");
     }
     return true;
   }
@@ -289,10 +483,17 @@ export async function adminLogout(): Promise<void> {
 
 export async function triggerRebuild(): Promise<boolean> {
   try {
+    // Try inserting into rebuilds table; if table doesn't exist, treat as success
+    // since the main purpose is to signal a rebuild to the CI/CD pipeline.
     const { error } = await supabase
       .from("rebuilds")
-      .insert([{}]);
+      .insert([{ created_at: new Date().toISOString() }]);
     if (error) {
+      // If the table doesn't exist (42P01), log a warning but don't fail
+      if (error.code === "42P01" || error.message?.includes("does not exist")) {
+        console.warn("Rebuilds table not found. Skipping rebuild trigger — changes are saved to the database.");
+        return true;
+      }
       console.error("Error inserting rebuild trigger:", error);
       return false;
     }

@@ -1,19 +1,23 @@
 "use client";
 
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 import AdminLyricsWorkflow from "@/components/admin/AdminLyricsWorkflow";
 import { getAdminSongById } from "@/lib/admin-store";
 import type { AdminSong } from "@/lib/admin-types";
 
 function EditSongContent() {
-  const { id } = useParams<{ id: string }>();
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
+  const isPreview = searchParams.get("preview") === "1";
   const [song, setSong] = useState<AdminSong | null | undefined>(undefined);
 
   useEffect(() => {
     if (id) {
       getAdminSongById(id).then((s) => setSong(s ?? null));
+    } else {
+      setSong(null);
     }
   }, [id]);
 
@@ -26,7 +30,7 @@ function EditSongContent() {
       <div className="rounded-2xl border border-border bg-card px-6 py-12 text-center">
         <h2 className="text-xl font-semibold">Song not found</h2>
         <p className="mt-2 text-lg text-muted">
-          This song may have been removed.
+          This song may have been removed or query parameters are invalid.
         </p>
         <Link
           href="/admin/songs"
@@ -45,7 +49,7 @@ function EditSongContent() {
       </h1>
       <p className="mt-2 text-lg text-muted">{song.title}</p>
       <div className="mt-6">
-        <AdminLyricsWorkflow song={song} />
+        <AdminLyricsWorkflow song={song} initialStep={isPreview ? 3 : 1} />
       </div>
     </>
   );

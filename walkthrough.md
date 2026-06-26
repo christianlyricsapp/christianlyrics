@@ -25,9 +25,15 @@ This walkthrough summarizes the recent layout redesign, deployment fixes, and ne
 * **[AdminSongForm.tsx](file:///Users/sachinkhandeshe/Desktop/christianlyrics-app/src/components/admin/AdminSongForm.tsx)**:
   * Imported the `detectLanguage` function and updated `updateField` so that typing or editing a song title automatically detects the language and pre-fills the dropdown.
 
+## 4. Bulk Lyrics Importer Supabase Save Fix
+* **[admin-store.ts](file:///Users/sachinkhandeshe/Desktop/christianlyrics-app/src/lib/admin-store.ts)**:
+  * Added a `isValidUuid` helper to validate that the volunteer ID matches UUID format before sending it to the database's `created_by` column.
+  * This prevents insertion crashes when users are logged in under the fallback `"demo-volunteer-id"`, mapping invalid formats safely to `null`.
+
 ---
 
 ## Verification Results
 
 ### Build Verification
 * Verified compiling the static site locally with `npm run build`, producing clean assets with zero static page generation errors or compiler warnings.
+* Created and verified a node database insertion script replicating the `isValidUuid` logic, ensuring it maps demo volunteer IDs correctly to `null` and successfully inserts them into PostgreSQL.

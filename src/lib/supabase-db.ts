@@ -71,13 +71,14 @@ export async function getSongBySlug(slug: string): Promise<Song | null> {
   }
 }
 
-// Get related songs based on category and language
 export function getRelatedSongs(song: Song, allSongs: Song[]): Song[] {
+  const songCats = song.category ? song.category.split(",").map((c) => c.trim()) : [];
   return allSongs
-    .filter(
-      (s) =>
-        s.slug !== song.slug &&
-        (s.category === song.category || s.language === song.language)
-    )
+    .filter((s) => {
+      if (s.slug === song.slug) return false;
+      const sCats = s.category ? s.category.split(",").map((c) => c.trim()) : [];
+      const shareCategory = sCats.some((c) => songCats.includes(c));
+      return shareCategory || s.language === song.language;
+    })
     .slice(0, 3);
 }

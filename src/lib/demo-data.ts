@@ -727,6 +727,13 @@ export function getRelatedSongs(song: Song, limit = 3): Song[] {
 }
 
 export function getCategoryName(slug: string): string {
+  if (!slug) return "";
+  if (slug.includes(",")) {
+    return slug
+      .split(",")
+      .map((s) => getCategoryBySlug(s.trim())?.name ?? s.trim())
+      .join(", ");
+  }
   return getCategoryBySlug(slug)?.name ?? slug;
 }
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import {
   canPublish,
   getRightsStatusLabel,
@@ -10,6 +11,7 @@ import { getCategoryName, getLanguageName } from "@/lib/demo-data";
 import { blocksToLyricsString, type LyricsBlock } from "@/lib/lyrics-section-detector";
 import ReviewStatusBadge from "./ReviewStatusBadge";
 import { helperClass, inputClass, labelClass } from "./LyricsSourceFields";
+import { parseExistingLyrics, toTitleCase } from "@/lib/lyrics-formatting";
 
 type LyricsReviewStepProps = {
   title: string;
@@ -27,8 +29,10 @@ type LyricsReviewStepProps = {
   onSeoTitleChange: (value: string) => void;
   onSeoDescriptionChange: (value: string) => void;
   onBack: () => void;
-  onSave: (status: SongStatus) => void;
+  onSave: (status: SongStatus, finalBlocks?: LyricsBlock[]) => void;
   hideAdvancedFields?: boolean;
+  onTitleChange: (value: string) => void;
+  onBlocksChange: (blocks: LyricsBlock[]) => void;
 };
 
 export default function LyricsReviewStep({
@@ -49,10 +53,27 @@ export default function LyricsReviewStep({
   onBack,
   onSave,
   hideAdvancedFields = false,
+  onTitleChange,
+  onBlocksChange,
 }: LyricsReviewStepProps) {
   const formattedLyrics = blocksToLyricsString(blocks);
   const publishBlocked = !canPublish(rightsStatus);
   const displaySeoTitle = seoTitle.trim() || title;
+
+  const [localLyrics, setLocalLyrics] = useState(formattedLyrics);
+
+  useEffect(() => {
+    setLocalLyrics(formattedLyrics);
+  }, [formattedLyrics]);
+
+  function handleLyricsChange(text: string) {
+    setLocalLyrics(text);
+  }
+
+  function handleLyricsBlur() {
+    const newBlocks = parseExistingLyrics(localLyrics);
+    onBlocksChange(newBlocks);
+  }
 
   return (
     <div className="space-y-6 pb-28 md:pb-6">
@@ -73,16 +94,28 @@ export default function LyricsReviewStep({
 
       {/* Public lyrics preview */}
       <div className="rounded-2xl border border-border bg-card p-5 sm:p-6">
-        <p className="text-sm font-medium uppercase tracking-wide text-muted">
-          Public Lyrics Preview
-        </p>
-        {title ? (
-          <h2 className="mt-3 text-2xl font-semibold text-foreground">
-            {title}
-          </h2>
-        ) : (
-          <p className="mt-3 text-lg text-muted italic">No title</p>
-        )}
+        <div className="flex items-center justify-between">
+          <p className="text-sm font-medium uppercase tracking-wide text-muted">
+            Public Lyrics Preview
+          </p>
+          <button
+            type="button"
+            onClick={onBack}
+            className="rounded-xl border border-border bg-card px-4 py-2 text-sm font-semibold transition-colors hover:bg-section active:scale-95 cursor-pointer flex items-center gap-1.5"
+          >
+            ✏️ Edit Formats
+          </button>
+        </div>
+        <div className="mt-3">
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => onTitleChange(e.target.value)}
+            onBlur={(e) => onTitleChange(toTitleCase(e.target.value))}
+            className="w-full bg-transparent border-b border-border/20 hover:border-border/60 focus:border-primary text-2xl font-bold text-foreground focus:outline-none pb-1"
+            placeholder="Song Title"
+          />
+        </div>
         {slug && <p className="mt-1 text-sm text-muted">/songs/{slug}</p>}
 
         <div className="mt-4 flex flex-wrap gap-2">
@@ -102,26 +135,14 @@ export default function LyricsReviewStep({
           )}
         </div>
 
-        <div className="mt-6 rounded-xl border border-border bg-section p-4 sm:p-5">
-          {formattedLyrics ? (
-            formattedLyrics.split("\n").map((line, index) => (
-              <p
-                key={index}
-                className={
-                  line.startsWith("[")
-                    ? "mt-4 font-semibold text-primary first:mt-0"
-                    : line === ""
-                      ? "h-3"
-                      : "text-base leading-relaxed text-foreground"
-                }
-              >
-                {line}
-              </p>
-            ))
-          ) : (
-            <p className="text-muted italic">No formatted lyrics yet.</p>
-          )}
-        </div>
+        <textarea
+          value={localLyrics}
+          onChange={(e) => handleLyricsChange(e.target.value)}
+          onBlur={handleLyricsBlur}
+          rows={Math.max(12, localLyrics.split("\n").length + 2)}
+          className="mt-6 w-full rounded-2xl border border-border bg-section p-4 sm:p-5 font-mono text-base leading-relaxed text-foreground focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 resize-y"
+          placeholder="Edit lyrics here..."
+        />
       </div>
 
       {/* SEO fields (Admins only) */}
@@ -235,7 +256,10 @@ export default function LyricsReviewStep({
           {hideAdvancedFields ? (
             <button
               type="button"
-              onClick={() => onSave("needs-review")}
+              onClick={() => {
+                const finalBlocks = parseExistingLyrics(localLyrics);
+                onSave("needs-review", finalBlocks);
+              }}
               className="w-full rounded-xl bg-gradient-to-r from-primary to-primary-light px-5 py-4 text-lg font-bold text-white transition-opacity hover:opacity-95 shadow-md shadow-primary/20 active:scale-95 cursor-pointer"
             >
               Submit for Review
@@ -244,21 +268,30 @@ export default function LyricsReviewStep({
             <>
               <button
                 type="button"
-                onClick={() => onSave("draft")}
+                onClick={() => {
+                  const finalBlocks = parseExistingLyrics(localLyrics);
+                  onSave("draft", finalBlocks);
+                }}
                 className="flex-1 rounded-xl border border-border bg-card px-4 py-4 text-base font-semibold transition-all hover:bg-section active:scale-95 cursor-pointer"
               >
                 Save Draft
               </button>
               <button
                 type="button"
-                onClick={() => onSave("needs-review")}
+                onClick={() => {
+                  const finalBlocks = parseExistingLyrics(localLyrics);
+                  onSave("needs-review", finalBlocks);
+                }}
                 className="flex-1 rounded-xl bg-purple-500/20 border border-purple-500/30 px-4 py-4 text-base font-semibold text-purple-400 transition-all hover:bg-purple-500/30 active:scale-95 cursor-pointer"
               >
                 Submit for Review
               </button>
               <button
                 type="button"
-                onClick={() => onSave("published")}
+                onClick={() => {
+                  const finalBlocks = parseExistingLyrics(localLyrics);
+                  onSave("published", finalBlocks);
+                }}
                 disabled={publishBlocked}
                 className="flex-1 rounded-xl bg-gradient-to-r from-primary to-primary-light px-4 py-4 text-base font-bold text-white transition-all hover:opacity-95 shadow-md shadow-primary/20 disabled:cursor-not-allowed disabled:opacity-40 active:scale-95 cursor-pointer"
               >

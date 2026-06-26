@@ -29,7 +29,8 @@ export default function SongsList() {
         song.excerpt.toLowerCase().includes(query);
 
       const matchesCategory =
-        categoryFilter === "all" || song.category === categoryFilter;
+        categoryFilter === "all" ||
+        (song.category ? song.category.split(",").map(c => c.trim()).includes(categoryFilter) : false);
 
       const matchesLanguage =
         languageFilter === "all" || song.language === languageFilter;

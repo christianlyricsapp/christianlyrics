@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { getAdminStats, getAdminRole, triggerRebuild } from "@/lib/admin-store";
+import { getAdminStats, getAdminRole, triggerRebuild, getLoggedInUserName } from "@/lib/admin-store";
 import type { AdminStats } from "@/lib/admin-types";
 
 export default function AdminDashboard() {
@@ -13,11 +13,13 @@ export default function AdminDashboard() {
     needsReview: 0,
   });
   const [role, setRole] = useState<"admin" | "volunteer">("volunteer");
+  const [userName, setUserName] = useState("");
   const [rebuildStatus, setRebuildStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
 
   useEffect(() => {
     getAdminRole().then(setRole);
     getAdminStats().then(setStats);
+    setUserName(getLoggedInUserName());
   }, []);
 
   async function handlePublish() {
@@ -44,12 +46,12 @@ export default function AdminDashboard() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold text-foreground sm:text-3xl">
-            {role === "admin" ? "Admin Dashboard" : "Volunteer Dashboard"}
+            {userName ? `${userName}'s Dashboard` : role === "admin" ? "Admin Dashboard" : "Volunteer Dashboard"}
           </h1>
           <p className="mt-2 text-lg text-muted">
             {role === "admin"
-              ? "Welcome to the Christian Lyrics admin panel."
-              : "Welcome to the Christian Lyrics Volunteer Portal."}
+              ? `Welcome back, ${userName || "Admin"}! Manage your Christian Lyrics library.`
+              : `Welcome, ${userName || "Volunteer"}! Thank you for contributing.`}
           </p>
         </div>
 

@@ -12,7 +12,9 @@ import {
   parseExistingLyrics,
   detectTitle,
   detectLanguage,
+  toTitleCase,
 } from "@/lib/lyrics-formatting";
+import { categories, languages } from "@/lib/demo-data";
 import {
   canPublish,
   generateSlug,
@@ -27,6 +29,7 @@ import {
 
 type AdminLyricsWorkflowProps = {
   song?: AdminSong;
+  initialStep?: Step;
 };
 
 type Step = 1 | 2 | 3;
@@ -37,9 +40,13 @@ const STEPS: { num: Step; label: string }[] = [
   { num: 3, label: "Preview" },
 ];
 
-export default function AdminLyricsWorkflow({ song }: AdminLyricsWorkflowProps) {
+export default function AdminLyricsWorkflow({ song, initialStep = 1 }: AdminLyricsWorkflowProps) {
   const router = useRouter();
-  const [step, setStep] = useState<Step>(1);
+  const [step, setStep] = useState<Step>(initialStep);
+
+  useEffect(() => {
+    setStep(initialStep);
+  }, [initialStep]);
   const [role, setRole] = useState<"admin" | "volunteer">("volunteer");
 
   useEffect(() => {
@@ -80,6 +87,49 @@ export default function AdminLyricsWorkflow({ song }: AdminLyricsWorkflowProps) 
       setPasteData((prev) => ({ ...prev, language: detected }));
     }
   }, [pasteData.title, pasteData.language]);
+
+  const autoFilledSeoRef = useRef({ seoTitle: false, seoDescription: false });
+
+  // Auto-generate SEO values if empty when entering step 3
+  useEffect(() => {
+    if (step !== 3) return;
+
+    if (!pasteData.title) {
+      autoFilledSeoRef.current.seoTitle = false;
+      autoFilledSeoRef.current.seoDescription = false;
+      return;
+    }
+
+    if (!seoTitle.trim() && !autoFilledSeoRef.current.seoTitle) {
+      setSeoTitle(`${toTitleCase(pasteData.title)} Lyrics`);
+      autoFilledSeoRef.current.seoTitle = true;
+    }
+
+    if (!seoDescription.trim() && !autoFilledSeoRef.current.seoDescription && blocks.length > 0) {
+      const categoryNames = pasteData.categories
+        .map((c) => {
+          const cat = categories.find((cat) => cat.slug === c);
+          return cat ? cat.name : c;
+        })
+        .join(", ");
+
+      const lang = languages.find((l) => l.slug === pasteData.language);
+      const languageName = lang ? lang.name : pasteData.language;
+
+      // Extract the first 2 lines of lyrics for a nice snippet
+      const lyricsBody = blocks
+        .flatMap((b) => b.lines)
+        .filter((l) => l.trim() && !l.startsWith("["))
+        .slice(0, 2)
+        .join(" / ");
+
+      const snippet = lyricsBody ? ` "${lyricsBody}"` : "";
+
+      const desc = `Read the full lyrics for "${toTitleCase(pasteData.title)}" Christian song.${snippet} Categorized under ${categoryNames || "Worship"} in ${languageName || "English"}.`;
+      setSeoDescription(desc.slice(0, 160));
+      autoFilledSeoRef.current.seoDescription = true;
+    }
+  }, [step, pasteData.title, pasteData.language, pasteData.categories, blocks, seoTitle, seoDescription]);
 
   const lastDetectedRef = useRef("");
 
@@ -171,14 +221,15 @@ export default function AdminLyricsWorkflow({ song }: AdminLyricsWorkflowProps) 
     setStep(3);
   }
 
-  function handleSave(status: SongStatus) {
+  function handleSave(status: SongStatus, finalBlocks?: LyricsBlock[]) {
     if (!pasteData.title.trim()) {
       setStep(1);
       setPasteErrors({ title: "Song title is required." });
       return;
     }
 
-    const lyrics = blocksToLyricsString(blocks);
+    const blocksToUse = finalBlocks || blocks;
+    const lyrics = blocksToLyricsString(blocksToUse);
     if (!lyrics.trim()) {
       setStep(2);
       return;
@@ -295,6 +346,8 @@ export default function AdminLyricsWorkflow({ song }: AdminLyricsWorkflowProps) 
           onBack={() => setStep(2)}
           onSave={handleSave}
           hideAdvancedFields={role === "volunteer"}
+          onTitleChange={(t) => setPasteData((prev) => ({ ...prev, title: t }))}
+          onBlocksChange={setBlocks}
         />
       )}
     </div>

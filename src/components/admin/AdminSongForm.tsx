@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import LyricsPreview from "./LyricsPreview";
 import { categories, languages } from "@/lib/demo-data";
@@ -15,7 +15,7 @@ import {
   type RightsStatus,
   type SongStatus,
 } from "@/lib/admin-types";
-import { detectLanguage } from "@/lib/lyrics-formatting";
+import { detectLanguage, toTitleCase } from "@/lib/lyrics-formatting";
 
 type AdminSongFormProps = {
   song?: AdminSong;
@@ -81,6 +81,49 @@ export default function AdminSongForm({
     }
   }, [form.title, slugManual]);
 
+  const autoFilledSeoRef = useRef({ seoTitle: false, seoDescription: false });
+
+  useEffect(() => {
+    if (!form.title) {
+      autoFilledSeoRef.current.seoTitle = false;
+      return;
+    }
+    if (!form.seoTitle && !autoFilledSeoRef.current.seoTitle) {
+      setForm((prev) => ({ ...prev, seoTitle: `${toTitleCase(prev.title)} Lyrics` }));
+      autoFilledSeoRef.current.seoTitle = true;
+    }
+  }, [form.title]);
+
+  useEffect(() => {
+    if (!form.title || !form.lyrics) {
+      autoFilledSeoRef.current.seoDescription = false;
+      return;
+    }
+    if (!form.seoDescription && !autoFilledSeoRef.current.seoDescription) {
+      const categoryNames = form.categories
+        .map((c) => {
+          const cat = categories.find((cat) => cat.slug === c);
+          return cat ? cat.name : c;
+        })
+        .join(", ");
+
+      const lang = languages.find((l) => l.slug === form.language);
+      const languageName = lang ? lang.name : form.language;
+
+      const lines = form.lyrics
+        .split("\n")
+        .map((l) => l.trim())
+        .filter((l) => l && !l.startsWith("[") && !l.endsWith("]"));
+
+      const snippet = lines.slice(0, 2).join(" / ");
+      const lyricsSnippet = snippet ? ` "${snippet}"` : "";
+
+      const desc = `Read the full lyrics for "${toTitleCase(form.title)}" Christian song.${lyricsSnippet} Categorized under ${categoryNames || "Worship"} in ${languageName || "English"}.`;
+      setForm((prev) => ({ ...prev, seoDescription: desc.slice(0, 160) }));
+      autoFilledSeoRef.current.seoDescription = true;
+    }
+  }, [form.title, form.lyrics, form.categories, form.language]);
+
   function updateField<K extends keyof AdminSongFormData>(
     key: K,
     value: AdminSongFormData[K]
@@ -101,10 +144,18 @@ export default function AdminSongForm({
   function toggleCategory(slug: string) {
     setForm((prev) => {
       const exists = prev.categories.includes(slug);
-      const categories = exists
+      let nextCategories = exists
         ? prev.categories.filter((c) => c !== slug)
         : [...prev.categories, slug];
-      return { ...prev, categories };
+
+      // Praise and Worship are mutually exclusive
+      if (slug === "worship" && !exists) {
+        nextCategories = nextCategories.filter((c) => c !== "praise");
+      } else if (slug === "praise" && !exists) {
+        nextCategories = nextCategories.filter((c) => c !== "worship");
+      }
+
+      return { ...prev, categories: nextCategories };
     });
     setErrors((prev) => ({ ...prev, categories: undefined }));
   }
@@ -192,6 +243,7 @@ export default function AdminSongForm({
               type="text"
               value={form.title}
               onChange={(e) => updateField("title", e.target.value)}
+              onBlur={(e) => updateField("title", toTitleCase(e.target.value))}
               placeholder="e.g. Morning Light Praise"
               className={inputClass}
             />

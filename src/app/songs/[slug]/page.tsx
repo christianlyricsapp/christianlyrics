@@ -15,6 +15,9 @@ type Props = {
 
 export async function generateStaticParams() {
   const songs = await getAllSongs();
+  if (songs.length === 0) {
+    return [{ slug: "placeholder" }];
+  }
   return songs.map((song) => ({ slug: song.slug }));
 }
 

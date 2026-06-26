@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { adminLogout } from "@/lib/admin-store";
+import { useEffect, useState } from "react";
+import { adminLogout, getLoggedInUserName, getAdminRole } from "@/lib/admin-store";
 
 type AdminHeaderProps = {
   onMenuOpen: () => void;
@@ -10,12 +11,28 @@ type AdminHeaderProps = {
 
 export default function AdminHeader({ onMenuOpen }: AdminHeaderProps) {
   const router = useRouter();
+  const [userName, setUserName] = useState("");
+  const [role, setRole] = useState<"admin" | "volunteer">("volunteer");
+
+  useEffect(() => {
+    setUserName(getLoggedInUserName());
+    getAdminRole().then(setRole);
+  }, []);
 
   function handleLogout() {
     adminLogout().then(() => {
       router.push("/admin/login");
     });
   }
+
+  const initials = userName
+    ? userName
+        .split(" ")
+        .map((w) => w[0])
+        .join("")
+        .toUpperCase()
+        .slice(0, 2)
+    : "?";
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-card/95 backdrop-blur-sm">
@@ -47,13 +64,38 @@ export default function AdminHeader({ onMenuOpen }: AdminHeaderProps) {
           </Link>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <Link
             href="/"
             className="hidden rounded-xl px-3 py-2 text-sm font-medium text-muted transition-colors hover:bg-section hover:text-foreground sm:inline-block"
           >
             View Site
           </Link>
+
+          {/* User Avatar + Name */}
+          <div className="flex items-center gap-2">
+            <div
+              className="flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold text-white"
+              style={{
+                background:
+                  role === "admin"
+                    ? "linear-gradient(135deg, #6366f1, #8b5cf6)"
+                    : "linear-gradient(135deg, #10b981, #34d399)",
+              }}
+              title={`${userName} (${role})`}
+            >
+              {initials}
+            </div>
+            <div className="hidden flex-col sm:flex">
+              <span className="text-sm font-semibold leading-tight text-foreground">
+                {userName}
+              </span>
+              <span className="text-[10px] font-medium uppercase tracking-wider text-muted">
+                {role}
+              </span>
+            </div>
+          </div>
+
           <button
             type="button"
             onClick={handleLogout}

@@ -25,6 +25,7 @@ export default function AdminSidebar({ open, onClose }: AdminSidebarProps) {
         { href: "/admin/dashboard", label: "Dashboard", icon: "📊" },
         { href: "/admin/songs", label: "Songs", icon: "🎵" },
         { href: "/admin/songs/new", label: "Add Lyrics", icon: "➕" },
+        { href: "/admin/songs/import", label: "Bulk Import", icon: "📦" },
         { href: "/admin/volunteers", label: "Volunteers", icon: "👥" },
       ];
     }
@@ -32,6 +33,7 @@ export default function AdminSidebar({ open, onClose }: AdminSidebarProps) {
       { href: "/admin/dashboard", label: "Dashboard", icon: "📊" },
       { href: "/admin/songs", label: "My Submissions", icon: "🎵" },
       { href: "/admin/songs/new", label: "Add Lyrics", icon: "➕" },
+      { href: "/admin/songs/import", label: "Bulk Import", icon: "📦" },
     ];
   }, [role]);
 
@@ -39,11 +41,14 @@ export default function AdminSidebar({ open, onClose }: AdminSidebarProps) {
     const cleanHref = href === "/" ? "/" : href.replace(/\/$/, "");
     if (cleanHref === "/admin/dashboard") return normalizedPathname === cleanHref;
     if (cleanHref === "/admin/songs/new") return normalizedPathname === cleanHref;
+    if (cleanHref === "/admin/songs/import") return normalizedPathname === cleanHref;
     if (cleanHref === "/admin/volunteers") return normalizedPathname.startsWith("/admin/volunteers");
     if (cleanHref === "/admin/songs") {
       return (
         normalizedPathname === "/admin/songs" ||
-        (normalizedPathname.startsWith("/admin/songs/") && !normalizedPathname.endsWith("/new"))
+        (normalizedPathname.startsWith("/admin/songs/") && 
+         !normalizedPathname.endsWith("/new") && 
+         !normalizedPathname.endsWith("/import"))
       );
     }
     return normalizedPathname.startsWith(cleanHref);

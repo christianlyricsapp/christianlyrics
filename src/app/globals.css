@@ -260,10 +260,26 @@ h4 {
   opacity: 0.8;
 }
 
-.browse-search-input:focus,
 .browse-search-input:hover {
-  border-color: var(--accent);
-  box-shadow: 0 8px 28px rgba(10, 37, 64, 0.05);
+  border-color: rgba(181, 138, 69, 0.4);
+  box-shadow: 0 8px 28px rgba(10, 37, 64, 0.06);
+}
+
+.browse-search-input:focus {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 4px rgba(181, 138, 69, 0.15), 0 8px 30px rgba(10, 37, 64, 0.08) !important;
+}
+
+/* Submit button micro-interactions */
+.search-submit-btn:hover {
+  transform: translateY(-50%) scale(1.08) !important;
+  background-color: var(--accent) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(181, 138, 69, 0.3) !important;
+}
+
+.search-submit-btn:active {
+  transform: translateY(-50%) scale(0.95) !important;
 }
 
 /* ─── Alphabet Buttons ────────────────────────────── */
@@ -281,20 +297,25 @@ h4 {
   font-weight: 600;
   font-size: 0.85rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   user-select: none;
 }
 
 .browse-alpha-btn:hover:not(.browse-alpha-active):not(.browse-alpha-disabled) {
   border-color: var(--accent);
   background-color: #FAF8F2;
+  transform: scale(1.1);
+}
+
+.browse-alpha-btn:active:not(.browse-alpha-disabled) {
+  transform: scale(0.95);
 }
 
 .browse-alpha-active {
   background: var(--navy);
-  color: #ffffff;
-  border-color: var(--navy);
-  box-shadow: 0 4px 10px rgba(10, 37, 64, 0.1);
+  color: var(--accent) !important;
+  border-color: var(--accent) !important;
+  box-shadow: 0 4px 12px rgba(10, 37, 64, 0.15);
 }
 
 .browse-alpha-disabled {
@@ -303,6 +324,40 @@ h4 {
   background: #FAF8F2;
   cursor: default;
   opacity: 0.4;
+}
+
+/* ─── Scroll Fade & Containers ────────────────────── */
+.alphabet-row-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.alphabet-row-wrapper::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 24px;
+  background: linear-gradient(to right, #ffffff, rgba(255, 255, 255, 0));
+  z-index: 3;
+  pointer-events: none;
+}
+
+.alphabet-row-wrapper::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 24px;
+  background: linear-gradient(to left, #ffffff, rgba(255, 255, 255, 0));
+  z-index: 3;
+  pointer-events: none;
+}
+
+.alphabet-scroll-container::-webkit-scrollbar {
+  display: none !important;
 }
 
 .browse-divider {
@@ -472,6 +527,46 @@ h4 {
 .side-drawer-closed {
   transform: translateX(100%);
 }
+
+.drawer-login-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background-color: #102a43;
+  border: 1px solid #14355a;
+  border-radius: 18px;
+  padding: 20px 24px;
+  text-decoration: none;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.drawer-login-card:hover {
+  background-color: #14355a;
+  border-color: var(--accent);
+}
+
+.drawer-login-card:active {
+  transform: scale(0.98);
+}
+
+@media (max-width: 480px) {
+  .side-drawer {
+    padding: 24px 16px;
+  }
+  .drawer-link-premium {
+    padding: 12px 14px;
+    font-size: 1.15rem;
+    gap: 12px;
+  }
+  .drawer-login-card {
+    padding: 16px 18px;
+    gap: 12px;
+  }
+}
+
 
 .drawer-close-btn {
   align-self: flex-end;

@@ -3,9 +3,8 @@ import Link from "next/link";
 const footerLinks = [
   { href: "/about", label: "About Us" },
   { href: "/contact", label: "Contact Us" },
-  { href: "/contact", label: "Submit Lyrics" },
-  { href: "/privacy-policy", label: "Privacy Policy" },
-  { href: "/terms", label: "Terms & Conditions" },
+  { href: "/contact", label: "Add New Lyrics" },
+  { href: "/policies-terms", label: "Policies & Terms" },
 ];
 
 /* ─── Social Icons SVG Components ─────────────────── */

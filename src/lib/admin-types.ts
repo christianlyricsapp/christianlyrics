@@ -34,11 +34,14 @@ export type AdminSong = {
   status: SongStatus;
   createdAt: string;
   updatedAt: string;
+  deletedAt: string | null;
+  createdByName: string | null;
+  lastModifiedByName: string | null;
 };
 
 export type AdminSongFormData = Omit<
   AdminSong,
-  "id" | "createdAt" | "updatedAt"
+  "id" | "createdAt" | "updatedAt" | "deletedAt" | "createdByName" | "lastModifiedByName"
 >;
 
 export type AdminStats = {
