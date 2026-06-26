@@ -68,7 +68,7 @@ export default function AdminLayout({
   }, [ready, isLoginPage]);
 
   if (isLoginPage) {
-    return <>{children}</>;
+    return <div className="admin-theme min-h-screen bg-bg-page">{children}</div>;
   }
 
   if (!ready) {
