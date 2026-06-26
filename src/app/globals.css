@@ -26,30 +26,30 @@
 }
 
 .admin-theme {
-  /* Slate/indigo themed dark mode admin layout */
-  background-color: #090d16 !important;
-  color: #f3f4f6 !important;
+  /* Apple iOS light system theme admin layout */
+  background-color: #f2f2f7 !important;
+  color: #1c1c1e !important;
 
-  --bg-page: #090d16;
-  --card-bg: #111827; /* Gray 900 */
-  --section-bg: #1f2937; /* Gray 800 */
-  --border-color: #374151; /* Gray 700 */
-  --foreground-color: #f3f4f6; /* Gray 100 */
-  --muted-color: #9ca3af; /* Gray 400 */
+  --bg-page: #f2f2f7;
+  --card-bg: #ffffff;
+  --section-bg: #f2f2f7;
+  --border-color: #e5e5ea;
+  --foreground-color: #1c1c1e;
+  --muted-color: #8e8e93;
   
-  --primary: #6366f1; /* Indigo-500 */
-  --primary-light: #818cf8; /* Indigo-400 */
-  --primary-dark: #4f46e5; /* Indigo-600 */
+  --primary: #007aff; /* Apple iOS System Blue */
+  --primary-light: #47a1ff;
+  --primary-dark: #0056b3;
   
-  --accent: #a78bfa; /* Violet-400 */
-  --accent-hover: #c084fc; /* Purple-400 */
+  --accent: #007aff;
+  --accent-hover: #0056b3;
 
-  --navy: #f3f4f6;
-  --navy-light: #e5e7eb;
-  --navy-muted: #9ca3af;
-  --navy-faded: #6b7280;
-  --navy-border: #374151;
-  --navy-bg-subtle: #1e1b4b; /* Indigo-950 tint */
+  --navy: #1c1c1e;
+  --navy-light: #2c2c2e;
+  --navy-muted: #8e8e93;
+  --navy-faded: #aeaeb2;
+  --navy-border: #e5e5ea;
+  --navy-bg-subtle: #f2f2f7;
 }
 
 @theme inline {
