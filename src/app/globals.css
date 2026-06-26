@@ -176,6 +176,7 @@ h4 {
 }
 
 .filter-checkbox-input {
+  -webkit-appearance: none;
   appearance: none;
   width: 18px;
   height: 18px;
@@ -1018,5 +1019,15 @@ h4 {
   box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
 }
 
-
+/* Global Select Reset for Premium iOS Dropdowns */
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238fa8c4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 15px;
+  padding-right: 36px !important;
+}
 
