@@ -72,6 +72,15 @@ export default function AdminLyricsWorkflow({ song }: AdminLyricsWorkflowProps) 
     }
   }, [pasteData.title, song?.slug]);
 
+  // Auto-detect language when title changes and language is empty
+  useEffect(() => {
+    if (!pasteData.title.trim() || pasteData.language) return;
+    const detected = detectLanguage(pasteData.title);
+    if (detected) {
+      setPasteData((prev) => ({ ...prev, language: detected }));
+    }
+  }, [pasteData.title, pasteData.language]);
+
   const lastDetectedRef = useRef("");
 
   useEffect(() => {

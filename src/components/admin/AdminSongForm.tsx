@@ -15,6 +15,7 @@ import {
   type RightsStatus,
   type SongStatus,
 } from "@/lib/admin-types";
+import { detectLanguage } from "@/lib/lyrics-formatting";
 
 type AdminSongFormProps = {
   song?: AdminSong;
@@ -84,7 +85,16 @@ export default function AdminSongForm({
     key: K,
     value: AdminSongFormData[K]
   ) {
-    setForm((prev) => ({ ...prev, [key]: value }));
+    setForm((prev) => {
+      const updated = { ...prev, [key]: value };
+      if (key === "title" && typeof value === "string" && !prev.language) {
+        const detected = detectLanguage(value);
+        if (detected) {
+          updated.language = detected;
+        }
+      }
+      return updated;
+    });
     setErrors((prev) => ({ ...prev, [key]: undefined }));
   }
 

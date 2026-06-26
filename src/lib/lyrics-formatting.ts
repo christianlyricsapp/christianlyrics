@@ -231,12 +231,26 @@ export function detectLanguage(raw: string): string {
   }
 
   const maxScript = Math.max(malCharCount, hinCharCount, tamCharCount, telCharCount, kanCharCount);
-  if (maxScript > 5) {
+  if (maxScript >= 2) {
     if (maxScript === malCharCount) return "malayalam";
-    if (maxScript === hinCharCount) return "hindi";
     if (maxScript === tamCharCount) return "tamil";
     if (maxScript === telCharCount) return "telugu";
     if (maxScript === kanCharCount) return "kannada";
+    if (maxScript === hinCharCount) {
+      // Check if it is Marathi (Devanagari Marathi LLA 'ळ' or common Marathi Devanagari words)
+      if (text.includes("ळ") || text.includes("ळा") || text.includes("ळे") || text.includes("ळी") || text.includes("ळ्या")) {
+        return "marathi";
+      }
+      
+      const words = text.split(/[\s,.\/#!$%\^&\*;:{}=\-_`~()?]+/);
+      const marDevWords = new Set(["आहे", "आहेत", "माझ्या", "तुझ्या", "माझा", "तुझा", "आम्ही", "तुम्ही", "करतो", "करते", "मला", "तुला", "देवा", "माझं", "तुझं", "कृपा"]);
+      for (const w of words) {
+        if (marDevWords.has(w)) {
+          return "marathi";
+        }
+      }
+      return "hindi";
+    }
   }
 
   const words = text.split(/\s+/);
@@ -265,10 +279,17 @@ export function detectLanguage(raw: string): string {
     "naaku", "ninnu", "sevalu", "raaju", "naathodu", "nene", "neevu", "thodu", "sannidhi"
   ]);
 
+  const marWords = new Set([
+    "mazya", "tuzya", "majha", "tujha", "maza", "tuza", "ahe", "ahet", "tula", "mala",
+    "devacha", "krupa", "aamhi", "tumhi", "karato", "karate", "karat", "mhanun", "yeshula",
+    "majhya", "tujhya", "devacha"
+  ]);
+
   let malScore = 0;
   let hinScore = 0;
   let tamScore = 0;
   let telScore = 0;
+  let marScore = 0;
 
   for (const word of words) {
     const cleanWord = word.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g, "");
@@ -276,14 +297,16 @@ export function detectLanguage(raw: string): string {
     if (hinWords.has(cleanWord)) hinScore++;
     if (tamWords.has(cleanWord)) tamScore++;
     if (telWords.has(cleanWord)) telScore++;
+    if (marWords.has(cleanWord)) marScore++;
   }
 
-  const maxScore = Math.max(malScore, hinScore, tamScore, telScore);
+  const maxScore = Math.max(malScore, hinScore, tamScore, telScore, marScore);
   if (maxScore > 0) {
     if (maxScore === malScore) return "malayalam";
     if (maxScore === hinScore) return "hindi";
     if (maxScore === tamScore) return "tamil";
     if (maxScore === telScore) return "telugu";
+    if (maxScore === marScore) return "marathi";
   }
 
   return "english";
