@@ -8,6 +8,7 @@ import { cleanRawLyrics, toTitleCase } from "@/lib/lyrics-formatting";
 
 export type PasteStepData = {
   title: string;
+  artist: string;
   language: string;
   categories: string[];
   sourceUrl: string;
@@ -125,6 +126,36 @@ export default function LyricsPasteStep({
         {errors.title && (
           <p className="mt-1.5 text-sm text-red-400">{errors.title}</p>
         )}
+      </div>
+
+      <div>
+        <label htmlFor="artist" className={labelClass}>
+          Artist / Band / Sung By
+        </label>
+        <div className="relative">
+          <input
+            id="artist"
+            type="text"
+            value={data.artist}
+            onChange={(e) => update("artist", e.target.value)}
+            onBlur={(e) => update("artist", toTitleCase(e.target.value))}
+            placeholder="e.g. Bethel Music, Chris Tomlin"
+            className={`${inputClass} pr-10`}
+          />
+          {data.artist && (
+            <button
+              type="button"
+              onClick={() => update("artist", "")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-white text-lg font-bold cursor-pointer"
+              aria-label="Clear artist"
+            >
+              ✕
+            </button>
+          )}
+        </div>
+        <p className={helperClass}>
+          Detected automatically if you paste a line starting with a dash (e.g. &quot;- Bethel Music&quot;)
+        </p>
       </div>
 
       {/* ── 2. Paste Lyrics (moved up) ── */}

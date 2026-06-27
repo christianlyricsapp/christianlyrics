@@ -27,6 +27,7 @@ type FormErrors = Partial<Record<keyof AdminSongFormData | "categories", string>
 const emptyForm: AdminSongFormData = {
   title: "",
   slug: "",
+  artist: "",
   categories: [],
   language: "",
   lyrics: "",
@@ -54,6 +55,7 @@ export default function AdminSongForm({
       ? {
           title: song.title,
           slug: song.slug,
+          artist: song.artist || "",
           categories: song.categories,
           language: song.language,
           lyrics: song.lyrics,
@@ -250,6 +252,22 @@ export default function AdminSongForm({
             {errors.title && (
               <p className="mt-1.5 text-sm text-red-600">{errors.title}</p>
             )}
+          </div>
+
+          {/* Artist */}
+          <div>
+            <label htmlFor="artist" className={labelClass}>
+              Artist / Band / Sung By
+            </label>
+            <input
+              id="artist"
+              type="text"
+              value={form.artist}
+              onChange={(e) => updateField("artist", e.target.value)}
+              onBlur={(e) => updateField("artist", toTitleCase(e.target.value))}
+              placeholder="e.g. Bethel Music, Chris Tomlin"
+              className={inputClass}
+            />
           </div>
 
           {/* Slug */}

@@ -23,6 +23,7 @@ export type AdminSong = {
   id: string;
   title: string;
   slug: string;
+  artist: string;
   categories: string[];
   language: string;
   lyrics: string;

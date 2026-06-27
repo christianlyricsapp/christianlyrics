@@ -24,6 +24,7 @@ type ExtractedSongItem = {
   fileName: string;
   title: string;
   slug: string;
+  artist: string;
   language: string;
   categories: string[];
   lyricsBlocks: LyricsBlock[];
@@ -108,6 +109,7 @@ export default function BulkImportPage() {
               .toLowerCase()
               .replace(/[^\w\s-]/g, "")
               .replace(/\s+/g, "-"),
+            artist: autoFormatted.detectedArtist || "",
             language: detectedLang,
             categories: ["worship"],
             lyricsBlocks: autoFormatted.blocks,
@@ -223,6 +225,7 @@ export default function BulkImportPage() {
       return {
         title: s.title.trim(),
         slug: s.slug || s.title.toLowerCase().replace(/\s+/g, "-"),
+        artist: s.artist.trim(),
         categories: s.categories,
         language: s.language,
         lyrics,
@@ -375,8 +378,8 @@ export default function BulkImportPage() {
                     </button>
                   </div>
 
-                  {/* Title & Language */}
-                  <div className="grid gap-3 grid-cols-2">
+                  {/* Title, Artist & Language */}
+                  <div className="grid gap-3 grid-cols-3">
                     <div>
                       <label htmlFor={`title-${song.id}`} className={labelClass}>
                         Song Title
@@ -387,6 +390,19 @@ export default function BulkImportPage() {
                         value={song.title}
                         onChange={(e) => updateSongField(index, "title", e.target.value)}
                         placeholder="Untitled Song"
+                        className={inputClass}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor={`artist-${song.id}`} className={labelClass}>
+                        Artist / Band
+                      </label>
+                      <input
+                        id={`artist-${song.id}`}
+                        type="text"
+                        value={song.artist || ""}
+                        onChange={(e) => updateSongField(index, "artist", e.target.value)}
+                        placeholder="e.g. Bethel Music"
                         className={inputClass}
                       />
                     </div>

@@ -55,6 +55,7 @@ export default function AdminLyricsWorkflow({ song, initialStep = 1 }: AdminLyri
 
   const [pasteData, setPasteData] = useState<PasteStepData>({
     title: song?.title ?? "",
+    artist: song?.artist ?? "",
     language: song?.language ?? "",
     categories: song?.categories ?? [],
     sourceUrl: song?.sourceUrl ?? "",
@@ -149,6 +150,13 @@ export default function AdminLyricsWorkflow({ song, initialStep = 1 }: AdminLyri
       const detected = detectTitle(raw);
       if (detected) updates.title = detected;
     }
+
+    if (!pasteData.artist.trim()) {
+      const formatRes = autoFormatLyrics(raw);
+      if (formatRes.detectedArtist) {
+        updates.artist = formatRes.detectedArtist;
+      }
+    }
     
     if (!pasteData.language) {
       updates.language = detectLanguage(raw);
@@ -161,7 +169,7 @@ export default function AdminLyricsWorkflow({ song, initialStep = 1 }: AdminLyri
     if (Object.keys(updates).length > 0) {
       setPasteData((prev) => ({ ...prev, ...updates }));
     }
-  }, [pasteData.rawLyrics, pasteData.title, pasteData.language, pasteData.categories.length]);
+  }, [pasteData.rawLyrics, pasteData.title, pasteData.artist, pasteData.language, pasteData.categories.length]);
 
   useEffect(() => {
     if (song && blocks.length === 0) {
@@ -247,6 +255,7 @@ export default function AdminLyricsWorkflow({ song, initialStep = 1 }: AdminLyri
     const data = {
       title: pasteData.title.trim(),
       slug: slug || generateSlug(pasteData.title),
+      artist: pasteData.artist.trim(),
       categories: pasteData.categories,
       language: pasteData.language,
       lyrics,

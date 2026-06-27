@@ -147,28 +147,43 @@ export function splitParagraphIntoLines(text: string): string[] {
 export type FormatResult = {
   blocks: LyricsBlock[];
   hasDuplicateWarning: boolean;
+  detectedArtist?: string;
 };
 
 export function autoFormatLyrics(raw: string): FormatResult {
   const cleaned = cleanRawLyrics(raw);
   const rawLines = cleaned.split("\n");
 
+  let detectedArtist = "";
+  const filteredRawLines = rawLines.filter((line) => {
+    const trimmed = line.trim();
+    const match = trimmed.match(/^[-–—]\s*(.+)$/);
+    if (match) {
+      const candidate = match[1].trim();
+      if (candidate.length > 0 && candidate.length < 50) {
+        detectedArtist = toTitleCase(candidate);
+        return false;
+      }
+    }
+    return true;
+  });
+
   // Detect if double-spaced: count how many empty lines are sandwiched between non-empty lines
   let emptyCount = 0;
   let nonEmptyCount = 0;
-  for (const line of rawLines) {
+  for (const line of filteredRawLines) {
     if (line.trim() === "") emptyCount++;
     else nonEmptyCount++;
   }
   const isDoubleSpaced = nonEmptyCount > 3 && (emptyCount / nonEmptyCount) > 0.35;
 
   const lines: string[] = [];
-  for (let i = 0; i < rawLines.length; i++) {
-    const line = rawLines[i];
+  for (let i = 0; i < filteredRawLines.length; i++) {
+    const line = filteredRawLines[i];
     if (isDoubleSpaced && line.trim() === "") {
       // Keep empty line only if it is adjacent to a section label
-      const prevLine = i > 0 ? rawLines[i - 1] : "";
-      const nextLine = i < rawLines.length - 1 ? rawLines[i + 1] : "";
+      const prevLine = i > 0 ? filteredRawLines[i - 1] : "";
+      const nextLine = i < filteredRawLines.length - 1 ? filteredRawLines[i + 1] : "";
       const isNearLabel = detectSectionLabel(prevLine) || detectSectionLabel(nextLine);
       if (!isNearLabel) {
         continue;
@@ -219,7 +234,7 @@ export function autoFormatLyrics(raw: string): FormatResult {
   const nonEmptyBlocks = blocks.filter((b) => b.lines.length > 0);
 
   if (nonEmptyBlocks.length === 0) {
-    return { blocks: [], hasDuplicateWarning: false };
+    return { blocks: [], hasDuplicateWarning: false, detectedArtist };
   }
 
   const foundExplicitLabels = blocks.some((b) => b.label !== "");
@@ -242,6 +257,7 @@ export function autoFormatLyrics(raw: string): FormatResult {
   return {
     blocks: finalBlocks,
     hasDuplicateWarning: detectDuplicateLines(allLines),
+    detectedArtist,
   };
 }
 

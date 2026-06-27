@@ -39,6 +39,7 @@ function mapDbSongToAdminSong(dbSong: any): AdminSong {
     id: dbSong.id,
     title: dbSong.title,
     slug: dbSong.slug,
+    artist: dbSong.artist || "",
     categories: dbSong.category
       ? dbSong.category.split(",").map((c: string) => c.trim())
       : [],
@@ -199,6 +200,7 @@ export async function createAdminSong(data: AdminSongFormData): Promise<AdminSon
   const dbData = {
     title: data.title,
     slug: finalSlug,
+    artist: data.artist || "",
     category: categoriesString,
     language: data.language,
     lyrics: data.lyrics,
@@ -263,6 +265,7 @@ export async function updateAdminSong(
   const dbData: Record<string, any> = {
     title: data.title,
     slug: finalSlug,
+    artist: data.artist || "",
     category: categoriesString,
     language: data.language,
     lyrics: data.lyrics,
@@ -327,6 +330,7 @@ export async function createAdminSongsBatch(songs: AdminSongFormData[]): Promise
     dbData.push({
       title: data.title,
       slug: finalSlug,
+      artist: data.artist || "",
       category: categoriesString,
       language: data.language,
       lyrics: data.lyrics,
