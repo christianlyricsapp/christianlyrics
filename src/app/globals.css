@@ -1035,6 +1035,12 @@ select {
    PREMIUM HERO REDESIGN & VIEWPORT HEIGHT STYLING
    ========================================================================== */
 
+.main-header {
+  background: #0A2540 !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
 .browse-page-wrapper {
   background: var(--bg-page);
   min-height: 100vh;
@@ -1063,7 +1069,7 @@ select {
 .premium-hero-container {
   position: relative;
   width: 100%;
-  background: linear-gradient(135deg, #0A2540 0%, #061427 100%) !important;
+  background: linear-gradient(to bottom, #0A2540 0%, #051224 100%) !important; /* Flow seamlessly from navbar color */
   border-radius: 24px;
   padding: 56px 24px !important;
   margin-bottom: 32px !important;
@@ -1081,12 +1087,11 @@ select {
 @media (max-width: 767px) {
   .premium-hero-container {
     min-height: calc(100vh - 76px) !important; /* Spans full height of first viewport */
-    border-radius: 0 0 28px 28px !important; /* flat top to merge with header, rounded bottom */
-    border-top: none !important;
-    border-left: none !important;
-    border-right: none !important;
-    padding: 32px 16px !important;
+    border-radius: 0 !important; /* Completely squared on mobile - no white curves showing on bottom sides! */
+    border: none !important;
+    padding: 48px 16px 32px !important; /* More padding top, aligned top */
     margin-bottom: 20px !important;
+    justify-content: flex-start !important; /* Take content to the top instead of middle */
   }
 }
 

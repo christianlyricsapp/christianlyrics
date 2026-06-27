@@ -123,14 +123,11 @@ export default function Header() {
   return (
     <>
       <header
+        className="main-header"
         style={{
           position: "sticky",
           top: 0,
           zIndex: 80,
-          background: "#0A2540",
-          borderBottom: "1px solid #14355a",
-          boxShadow: "0 4px 20px rgba(0, 0, 0, 0.05)",
-          backdropFilter: "blur(8px)",
           height: "76px",
           display: "flex",
           alignItems: "center",
