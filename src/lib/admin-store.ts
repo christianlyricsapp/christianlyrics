@@ -16,6 +16,9 @@ const VOLUNTEER_ID_KEY = "christian-lyrics-volunteer-id";
 const VOLUNTEER_NAME_KEY = "christian-lyrics-volunteer-name";
 const SESSION_ID_KEY = "christian-lyrics-volunteer-session-id";
 
+// Shadow localStorage with sessionStorage to enforce temporary login lifetimes (clears on tab close)
+const localStorage = typeof window !== "undefined" ? window.sessionStorage : null as any;
+
 const DEMO_EMAIL = "admin@christianlyrics.app";
 const DEMO_PASSWORD = "admin123";
 const VOLUNTEER_EMAIL = "volunteer@christianlyrics.app";
