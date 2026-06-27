@@ -58,7 +58,7 @@ function UserIcon() {
       strokeWidth="2.5"
       strokeLinecap="round"
       strokeLinejoin="round"
-      style={{ width: "20px", height: "20px" }}
+      style={{ width: "16px", height: "16px" }}
     >
       <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
       <circle cx="12" cy="7" r="4" />
