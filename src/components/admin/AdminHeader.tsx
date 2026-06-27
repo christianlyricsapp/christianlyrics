@@ -75,12 +75,12 @@ export default function AdminHeader({ onMenuOpen }: AdminHeaderProps) {
           {/* User Avatar + Name */}
           <div className="flex items-center gap-2">
             <div
-              className="flex h-8 w-8 items-center justify-center rounded-full text-xs font-bold text-white"
+              className="flex h-8 w-8 items-center justify-center rounded-full text-xs font-extrabold text-[#051224]"
               style={{
                 background:
                   role === "admin"
-                    ? "linear-gradient(135deg, #6366f1, #8b5cf6)"
-                    : "linear-gradient(135deg, #10b981, #34d399)",
+                    ? "var(--accent)"
+                    : "#d6b265",
               }}
               title={`${userName} (${role})`}
             >

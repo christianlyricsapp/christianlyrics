@@ -43,12 +43,12 @@ export default function AdminDashboard() {
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
-      <div className="flex flex-wrap items-center justify-between gap-4">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
         <div>
-          <h1 className="text-2xl font-semibold text-foreground sm:text-3xl">
+          <h1 className="text-2xl font-extrabold text-white sm:text-3xl">
             {userName ? `${userName}'s Dashboard` : role === "admin" ? "Admin Dashboard" : "Volunteer Dashboard"}
           </h1>
-          <p className="mt-2 text-lg text-muted">
+          <p className="mt-2 text-base text-muted">
             {role === "admin"
               ? `Welcome back, ${userName || "Admin"}! Manage your Christian Lyrics library.`
               : `Welcome, ${userName || "Volunteer"}! Thank you for contributing.`}
@@ -57,18 +57,18 @@ export default function AdminDashboard() {
 
         {/* Publish Live Button (Admins only) */}
         {role === "admin" && (
-          <div className="flex flex-col items-end gap-1.5">
+          <div className="w-full md:w-auto flex flex-col items-stretch md:items-end gap-1.5">
             <button
               onClick={handlePublish}
               disabled={rebuildStatus === "loading"}
-              className={`rounded-xl px-5 py-3 text-base font-medium text-white transition-colors focus:outline-none focus:ring-2 focus:ring-primary/20 ${
+              className={`rounded-xl px-5 py-3 text-base font-bold transition-all focus:outline-none focus:ring-2 focus:ring-gold/20 cursor-pointer shadow-lg w-full md:w-auto ${
                 rebuildStatus === "loading"
-                  ? "bg-muted cursor-not-allowed text-foreground/50"
+                  ? "bg-slate-800 text-slate-500 cursor-not-allowed"
                   : rebuildStatus === "success"
-                    ? "bg-green-600 hover:bg-green-700"
+                    ? "bg-green-600 hover:bg-green-700 text-white"
                     : rebuildStatus === "error"
-                      ? "bg-red-600 hover:bg-red-700"
-                      : "bg-primary hover:bg-primary-light"
+                      ? "bg-red-600 hover:bg-red-700 text-white"
+                      : "bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-[#051224]"
               }`}
             >
               {rebuildStatus === "loading" && "⏳ Triggering Rebuild..."}
@@ -76,7 +76,7 @@ export default function AdminDashboard() {
               {rebuildStatus === "error" && "❌ Failed to Trigger"}
               {rebuildStatus === "idle" && "📢 Publish Changes Live"}
             </button>
-            <span className="text-xs text-muted text-right">
+            <span className="text-xs text-muted text-left md:text-right">
               {rebuildStatus === "idle" && "Already live for users! Click to update static HTML for Google/SEO."}
               {rebuildStatus === "loading" && "Connecting to rebuild pipeline..."}
               {rebuildStatus === "success" && "SEO update running. (Song changes are already live for users!)"}
@@ -87,14 +87,14 @@ export default function AdminDashboard() {
 
       {/* Stats Cards (Admins only) */}
       {role === "admin" && (
-        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4 animate-fade-in">
+        <div className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4 animate-fade-in">
           {statCards.map((card) => (
             <div
               key={card.label}
-              className="rounded-2xl border border-border bg-card p-5 shadow-sm"
+              className="rounded-2xl border border-[rgba(199,157,79,0.15)] bg-[rgba(10,37,64,0.45)] backdrop-blur-md p-5 shadow-sm"
             >
-              <p className="text-base text-muted">{card.label}</p>
-              <p className={`mt-2 text-3xl font-semibold ${card.color}`}>
+              <p className="text-sm text-muted">{card.label}</p>
+              <p className={`mt-2 text-2xl font-bold ${card.color}`}>
                 {card.value}
               </p>
             </div>
@@ -104,8 +104,8 @@ export default function AdminDashboard() {
 
       {/* Volunteer Welcome Card */}
       {role === "volunteer" && (
-        <div className="mt-8 rounded-2xl border border-border bg-card p-6 shadow-sm animate-fade-in">
-          <h2 className="text-xl font-semibold text-foreground">Thank you for contributing! 🎵</h2>
+        <div className="mt-8 rounded-2xl border border-[rgba(199,157,79,0.15)] bg-[rgba(10,37,64,0.45)] backdrop-blur-md p-6 shadow-sm animate-fade-in">
+          <h2 className="text-xl font-bold text-white">Thank you for contributing! 🎵</h2>
           <p className="mt-2 text-base text-muted leading-relaxed">
             Your volunteer account lets you paste and format new lyrics directly from your mobile phone.
             Once you submit a song, our administrators will review, correct, and publish it live to the website!
@@ -116,7 +116,7 @@ export default function AdminDashboard() {
       <div className="mt-8">
         <Link
           href="/admin/songs/new"
-          className="inline-flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-primary to-primary-light px-6 py-4 text-lg font-bold text-white transition-opacity hover:opacity-95 shadow-md shadow-primary/20 sm:w-auto active:scale-95 cursor-pointer"
+          className="inline-flex w-full items-center justify-center rounded-xl bg-[var(--accent)] hover:bg-[var(--accent-hover)] px-6 py-4 text-lg font-bold text-[#051224] transition-all shadow-lg shadow-gold/10 sm:w-auto active:scale-95 cursor-pointer"
         >
           ➕ Add New Lyrics
         </Link>
@@ -125,10 +125,10 @@ export default function AdminDashboard() {
       <div className="mt-8 grid gap-4 sm:grid-cols-2">
         <Link
           href="/admin/songs"
-          className="group rounded-2xl border border-border bg-card p-6 transition-all hover:border-primary/50 hover:bg-section hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow-md flex items-center justify-between"
+          className="group rounded-2xl border border-[rgba(199,157,79,0.15)] bg-[rgba(10,37,64,0.45)] backdrop-blur-md p-6 transition-all hover:border-[var(--accent)] hover:bg-[#0A2540] hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow-md flex items-center justify-between"
         >
           <div>
-            <p className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
+            <p className="text-xl font-bold text-white group-hover:text-[var(--accent)] transition-colors">
               📂 {role === "admin" ? "Manage Songs" : "View My Submissions"}
             </p>
             <p className="mt-2 text-base text-muted leading-relaxed">
@@ -137,21 +137,21 @@ export default function AdminDashboard() {
                 : "See status of songs submitted for review."}
             </p>
           </div>
-          <span className="text-2xl text-muted group-hover:translate-x-1 group-hover:text-primary transition-all ml-4">→</span>
+          <span className="text-2xl text-muted group-hover:translate-x-1 group-hover:text-[var(--accent)] transition-all ml-4">→</span>
         </Link>
         <Link
           href="/admin/songs/new"
-          className="group rounded-2xl border border-border bg-card p-6 transition-all hover:border-primary/50 hover:bg-section hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow-md flex items-center justify-between"
+          className="group rounded-2xl border border-[rgba(199,157,79,0.15)] bg-[rgba(10,37,64,0.45)] backdrop-blur-md p-6 transition-all hover:border-[var(--accent)] hover:bg-[#0A2540] hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow-md flex items-center justify-between"
         >
           <div>
-            <p className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
+            <p className="text-xl font-bold text-white group-hover:text-[var(--accent)] transition-colors">
               ⚡ Quick Add Lyrics
             </p>
             <p className="mt-2 text-base text-muted leading-relaxed">
               Paste lyrics from your phone and save.
             </p>
           </div>
-          <span className="text-2xl text-muted group-hover:translate-x-1 group-hover:text-primary transition-all ml-4">→</span>
+          <span className="text-2xl text-muted group-hover:translate-x-1 group-hover:text-[var(--accent)] transition-all ml-4">→</span>
         </Link>
       </div>
     </div>

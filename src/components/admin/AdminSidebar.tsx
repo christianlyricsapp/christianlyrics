@@ -63,7 +63,7 @@ export default function AdminSidebar({ open, onClose }: AdminSidebarProps) {
           onClick={onClose}
           className={`flex items-center gap-3 rounded-xl px-4 py-3.5 text-base font-medium transition-colors ${
             isActive(item.href)
-              ? "bg-primary text-white"
+              ? "bg-[var(--accent)] text-[#051224] font-bold"
               : "text-foreground hover:bg-section"
           }`}
         >
