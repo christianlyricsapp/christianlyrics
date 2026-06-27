@@ -77,9 +77,9 @@ export default function AdminDashboard() {
               {rebuildStatus === "idle" && "📢 Publish Changes Live"}
             </button>
             <span className="text-xs text-muted text-right">
-              {rebuildStatus === "idle" && "Pre-renders database edits to Hostinger"}
+              {rebuildStatus === "idle" && "Already live for users! Click to update static HTML for Google/SEO."}
               {rebuildStatus === "loading" && "Connecting to rebuild pipeline..."}
-              {rebuildStatus === "success" && "Rebuild running. Live in 1 minute!"}
+              {rebuildStatus === "success" && "SEO update running. (Song changes are already live for users!)"}
             </span>
           </div>
         )}
