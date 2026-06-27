@@ -1358,6 +1358,32 @@ select {
 }
 
 /* ==========================================================================
+   HERO CONTENT ALIGNMENT (LEFT ALIGNED TITLE & CORNER-TO-CORNER SEARCH BAR)
+   ========================================================================== */
+
+.premium-hero-content-inner {
+  width: 92%;
+  max-width: 540px; /* Aligns with the max width of the search container */
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  text-align: left;
+  margin: 0 auto;
+}
+
+@media (max-width: 767px) {
+  .premium-hero-content-inner {
+    width: 100%;
+    padding: 0 4px;
+  }
+
+  .premium-hero-title {
+    text-align: left !important;
+    margin-left: 0 !important;
+  }
+}
+
+/* ==========================================================================
    HEADER GRID LAYOUT (HAMBURGER LEFT, LOGO CENTER, LOGIN RIGHT)
    ========================================================================== */
 

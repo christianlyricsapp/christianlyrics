@@ -199,9 +199,9 @@ export default function Header() {
             href="/admin/login"
             style={{
               background: "transparent",
-              border: "1.5px solid #14355a",
-              color: "#C7DDF2",
-              borderRadius: "10px",
+              border: "1.5px solid var(--accent)",
+              color: "var(--accent)",
+              borderRadius: "50%",
               width: "42px",
               height: "42px",
               cursor: "pointer",

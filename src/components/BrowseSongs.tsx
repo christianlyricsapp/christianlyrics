@@ -545,103 +545,92 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
                 }}
               />
 
-              <h1 className="premium-hero-title">
-                Christian <span style={{
-                  fontFamily: "var(--font-serif)",
-                  fontStyle: "italic",
-                  fontWeight: 400,
-                  color: "var(--accent)",
-                  background: "none",
-                  WebkitTextFillColor: "var(--accent)",
-                  marginLeft: "4px",
-                  marginRight: "4px"
-                }}>Lyrics</span> Library
-              </h1>
-              
-              <p className="premium-hero-tagline">
-                Find Christian lyrics by song, artist, language, or theme.
-              </p>
-
-              {/* Search bar (glassmorphic look) */}
-              <div className="premium-hero-search-wrapper">
-                <SearchIcon
-                  style={{
-                    position: "absolute",
-                    left: "20px",
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    width: "20px",
-                    height: "20px",
-                    color: "#8fa8c4",
-                    pointerEvents: "none",
-                    zIndex: 2,
-                  }}
-                />
-                <input
-                  type="search"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search songs, lyrics, artist, language, or theme…"
-                  className="browse-search-input"
-                  id="browse-search"
-                  aria-label="Search songs"
-                />
-                <button
-                  type="button"
-                  aria-label="Submit search"
-                  style={{
-                    position: "absolute",
-                    right: "10px",
-                    top: "50%",
-                    transform: "translateY(-50%)",
-                    background: "var(--accent)",
-                    border: "none",
-                    borderRadius: "10px",
-                    width: "36px",
-                    height: "36px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    cursor: "pointer",
-                    color: "#051424",
-                    transition: "all 0.2s ease",
-                    zIndex: 2,
-                  }}
-                  className="search-submit-btn"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    style={{ width: "16px", height: "16px" }}
+              <div className="premium-hero-content-inner">
+                <h1 className="premium-hero-title">
+                  <strong>Christian</strong> Lyrics Library
+                </h1>
+                
+                {/* Search bar (glassmorphic look) */}
+                <div className="premium-hero-search-wrapper">
+                  <SearchIcon
+                    style={{
+                      position: "absolute",
+                      left: "20px",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      width: "20px",
+                      height: "20px",
+                      color: "#8fa8c4",
+                      pointerEvents: "none",
+                      zIndex: 2,
+                    }}
+                  />
+                  <input
+                    type="search"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search songs, lyrics, artist, language, or theme…"
+                    className="browse-search-input"
+                    id="browse-search"
+                    aria-label="Search songs"
+                  />
+                  <button
+                    type="button"
+                    aria-label="Submit search"
+                    style={{
+                      position: "absolute",
+                      right: "10px",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      background: "var(--accent)",
+                      border: "none",
+                      borderRadius: "10px",
+                      width: "36px",
+                      height: "36px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      cursor: "pointer",
+                      color: "#051424",
+                      transition: "all 0.2s ease",
+                      zIndex: 2,
+                    }}
+                    className="search-submit-btn"
                   >
-                    <path d="M5 12h14" />
-                    <path d="m12 5 7 7-7 7" />
-                  </svg>
-                </button>
-              </div>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      style={{ width: "16px", height: "16px" }}
+                    >
+                      <path d="M5 12h14" />
+                      <path d="m12 5 7 7-7 7" />
+                    </svg>
+                  </button>
+                </div>
 
-              {/* Quick Access Categories */}
-              <div className="quick-access-container">
-                <span className="quick-access-label">Quick Access</span>
-                <div className="quick-access-scroll-row">
-                  {CATEGORIES.map((cat) => {
-                    const isSelected = selectedCategories.includes(cat);
-                    return (
-                      <button
-                        key={cat}
-                        type="button"
-                        onClick={() => handleCategoryToggle(cat)}
-                        className={`quick-access-chip ${isSelected ? "active" : ""}`}
-                      >
-                        {CATEGORY_NAMES[cat]}
-                      </button>
-                    );
-                  })}
+                {/* Quick Access Categories */}
+                <div className="quick-access-container">
+                  <span className="quick-access-label">Quick Access</span>
+                  <div className="quick-access-scroll-row">
+                    {CATEGORIES.map((cat) => {
+                      const isSelected = selectedCategories.includes(cat);
+                      return (
+                        <button
+                          key={cat}
+                          type="button"
+                          onClick={() => handleCategoryToggle(cat)}
+                          className={`quick-access-chip ${isSelected ? "active" : ""}`}
+                        >
+                          {CATEGORY_NAMES[cat]}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
 
