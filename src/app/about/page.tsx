@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-10 sm:px-6">
-      <h1 className="text-3xl font-bold sm:text-4xl" style={{ color: "#0A2540" }}>
+      <h1 className="text-3xl font-bold sm:text-4xl">
         About Christian Lyrics
       </h1>
 

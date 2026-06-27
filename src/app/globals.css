@@ -26,30 +26,30 @@
 }
 
 .admin-theme {
-  /* Apple iOS light system theme admin layout */
-  background-color: #f2f2f7 !important;
-  color: #1c1c1e !important;
+  /* Premium Dark Gold Admin Layout matching homepage exactly */
+  background-color: #051224 !important;
+  color: #ffffff !important;
 
-  --bg-page: #f2f2f7;
-  --card-bg: #ffffff;
-  --section-bg: #f2f2f7;
-  --border-color: #e5e5ea;
-  --foreground-color: #1c1c1e;
-  --muted-color: #8e8e93;
+  --bg-page: #051224;
+  --card-bg: rgba(10, 37, 64, 0.45);
+  --section-bg: #0A2540;
+  --border-color: rgba(255, 255, 255, 0.08);
+  --foreground-color: #ffffff;
+  --muted-color: #8fa8c4;
   
-  --primary: #007aff; /* Apple iOS System Blue */
-  --primary-light: #47a1ff;
-  --primary-dark: #0056b3;
+  --primary: var(--accent);
+  --primary-light: #d6b265;
+  --primary-dark: #b48c3f;
   
-  --accent: #007aff;
-  --accent-hover: #0056b3;
+  --accent: #C59D4F;
+  --accent-hover: #B48C3F;
 
-  --navy: #1c1c1e;
-  --navy-light: #2c2c2e;
-  --navy-muted: #8e8e93;
-  --navy-faded: #aeaeb2;
-  --navy-border: #e5e5ea;
-  --navy-bg-subtle: #f2f2f7;
+  --navy: #ffffff;
+  --navy-light: #C7DDF2;
+  --navy-muted: #8fa8c4;
+  --navy-faded: #4B6B88;
+  --navy-border: rgba(255, 255, 255, 0.08);
+  --navy-bg-subtle: #0A2540;
 }
 
 @theme inline {
@@ -77,7 +77,7 @@
 
 body {
   background: var(--bg-page);
-  color: var(--navy);
+  color: var(--foreground-color);
   font-family: var(--font-stack);
   -webkit-font-smoothing: antialiased;
 }
@@ -86,7 +86,7 @@ h1,
 h2,
 h3,
 h4 {
-  color: var(--navy);
+  color: var(--foreground-color);
   font-family: var(--font-stack);
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -854,27 +854,27 @@ h4 {
 .form-input-premium {
   width: 100%;
   padding: 12px 16px;
-  border: 1.5px solid var(--navy-border);
+  border: 1.5px solid var(--border-color) !important;
   border-radius: 12px;
-  background-color: #ffffff;
-  color: var(--navy);
+  background-color: var(--card-bg) !important;
+  color: var(--foreground-color) !important;
   font-size: 1.05rem;
   font-family: var(--font-stack);
-  box-shadow: 0 4px 12px rgba(8, 43, 102, 0.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   outline: none;
   transition: all 0.2s ease;
 }
 .form-input-premium::placeholder {
-  color: var(--navy-faded);
-  opacity: 0.8;
+  color: var(--muted-color) !important;
+  opacity: 0.6;
 }
 .form-input-premium:hover {
-  border-color: var(--navy-light);
-  box-shadow: 0 6px 16px rgba(8, 43, 102, 0.05);
+  border-color: var(--accent) !important;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
 }
 .form-input-premium:focus {
-  border-color: var(--navy);
-  box-shadow: 0 0 0 4px rgba(199, 221, 242, 0.4), 0 6px 16px rgba(8, 43, 102, 0.05);
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 3px rgba(199, 157, 79, 0.25), 0 6px 16px rgba(0, 0, 0, 0.15) !important;
 }
 
 .song-category-txt {

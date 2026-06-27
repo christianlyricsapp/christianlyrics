@@ -91,9 +91,9 @@ export default function SiteChrome({
   const isBrowseActive = pathname.startsWith("/songs");
 
   return (
-    <div className="flex min-h-screen flex-col bg-white">
+    <div className="flex min-h-screen flex-col bg-[#051224]">
       <Header />
-      <main className="flex-1 bg-white">{children}</main>
+      <main className="flex-1 bg-[#051224]">{children}</main>
       <Footer />
 
       {/* Floating Sticky WhatsApp Button */}
