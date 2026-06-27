@@ -1123,7 +1123,7 @@ select {
 }
 
 .premium-hero-search-wrapper {
-  width: 92%;
+  width: 100%;
   max-width: 540px; /* Centered narrow width for dynamic focus */
   position: relative;
   margin-bottom: 28px;
