@@ -337,6 +337,9 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
   };
 
   const handleLetterClick = (letter: string) => {
+    if (typeof navigator !== "undefined" && navigator.vibrate) {
+      navigator.vibrate(10);
+    }
     setActiveLetter(letter);
   };
 
@@ -496,14 +499,8 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
   }
 
   return (
-    <div style={{ background: "#F8FBFF", minHeight: "100vh", paddingInline: "24px" }}>
-      <div
-        style={{
-          maxWidth: "100%",
-          margin: "0 auto",
-          padding: "20px 0 24px",
-        }}
-      >
+    <div className="browse-page-wrapper">
+      <div className="browse-container">
         {/* ─── Layout Grid (Two Columns Desktop) ────────── */}
         <div className="browse-layout">
           
@@ -545,26 +542,6 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
                 }}
               />
 
-              {/* Tagline kicker emblem pill badge */}
-              <div className="premium-hero-badge">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="var(--accent)"
-                  strokeWidth="2.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  style={{ width: "12px", height: "12px" }}
-                >
-                  <path d="M12 2v20" />
-                  <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                </svg>
-                <span className="premium-hero-badge-text">
-                  Explore Lyrics Database
-                </span>
-              </div>
-
               <h1 className="premium-hero-title">
                 Christian <span style={{
                   fontFamily: "var(--font-serif)",
@@ -577,8 +554,6 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
                   marginRight: "4px"
                 }}>Lyrics</span> Library
               </h1>
-              
-              <div className="premium-hero-divider" />
               
               <p className="premium-hero-tagline">
                 Find Christian lyrics by song, artist, language, or theme.
@@ -678,25 +653,17 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
                     </button>
 
                     {ALPHABET.map((letter) => {
-                      const hasItems = availableLetters.has(letter);
                       const isActive = activeLetter === letter;
 
                       return (
                         <button
                           key={letter}
                           type="button"
-                          onClick={() => hasItems && handleLetterClick(letter)}
-                          className={`browse-alpha-btn ${
-                            isActive
-                              ? "browse-alpha-active"
-                              : !hasItems
-                              ? "browse-alpha-disabled"
-                              : ""
-                          }`}
+                          onClick={() => handleLetterClick(letter)}
+                          className={`browse-alpha-btn ${isActive ? "browse-alpha-active" : ""}`}
                           style={{ flexShrink: 0 }}
                           aria-label={`Filter by letter ${letter}`}
                           aria-pressed={isActive}
-                          aria-disabled={!hasItems}
                         >
                           {letter}
                         </button>
@@ -705,18 +672,11 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
 
                     <button
                       type="button"
-                      onClick={() => availableLetters.has(HASH_KEY) && handleLetterClick(HASH_KEY)}
-                      className={`browse-alpha-btn ${
-                        activeLetter === HASH_KEY
-                          ? "browse-alpha-active"
-                          : !availableLetters.has(HASH_KEY)
-                          ? "browse-alpha-disabled"
-                          : ""
-                      }`}
+                      onClick={() => handleLetterClick(HASH_KEY)}
+                      className={`browse-alpha-btn ${activeLetter === HASH_KEY ? "browse-alpha-active" : ""}`}
                       style={{ flexShrink: 0 }}
                       aria-label="Filter by non-alphabetic characters"
                       aria-pressed={activeLetter === HASH_KEY}
-                      aria-disabled={!availableLetters.has(HASH_KEY)}
                     >
                       #
                     </button>
