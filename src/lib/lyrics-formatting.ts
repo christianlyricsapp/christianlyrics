@@ -31,6 +31,17 @@ const GARBAGE_PATTERNS = [
   /reproduction\s*without\s*permission/i,
   /copyright\s*@/i,
   /all\s*rights\s*reserved/i,
+  // Metadata / header filtering patterns
+  /^\s*lyrics\s*$/i,
+  /^\s*song\s*lyrics\s*$/i,
+  /^\s*lyrics\s*of\s+/i,
+  /^\s*written\s*by\s+/i,
+  /^\s*composed\s*by\s+/i,
+  /^\s*arranged\s*by\s+/i,
+  /^\s*music\s*by\s+/i,
+  /^\s*lyrics\s*by\s+/i,
+  /^\s*singer\s*:\s*/i,
+  /^\s*artist\s*:\s*/i,
 ];
 
 export function cleanRawLyrics(raw: string): string {
