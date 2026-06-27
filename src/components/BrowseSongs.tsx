@@ -473,29 +473,7 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
           <main style={{ flex: 1, minWidth: 0 }} aria-label="Songs list browser">
             
             {/* ─── Centered Top Hero Section (Moved inside main to let filters align at top) ────────────────── */}
-            <div
-              className="premium-hero-container"
-              style={{
-                position: "relative",
-                width: "100%",
-                backgroundImage: `
-                  radial-gradient(circle at 1px 1px, rgba(10, 37, 64, 0.035) 1px, transparent 0),
-                  linear-gradient(135deg, #F5F7FA 0%, #E4EBF5 100%)
-                `,
-                backgroundSize: "24px 24px, 100% 100%",
-                borderRadius: "24px",
-                padding: "52px 24px",
-                marginBottom: "40px",
-                boxShadow: "0 20px 50px rgba(10, 37, 64, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.6)",
-                border: "1px solid rgba(20, 53, 90, 0.08)",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                textAlign: "center",
-                overflow: "hidden",
-                boxSizing: "border-box",
-              }}
-            >
+            <div className="premium-hero-container">
               {/* Glowing Background Radial Blobs */}
               <div
                 style={{
@@ -504,7 +482,7 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
                   left: "-5%",
                   width: "380px",
                   height: "380px",
-                  background: "radial-gradient(circle, rgba(181, 138, 69, 0.15) 0%, rgba(255, 255, 255, 0) 70%)",
+                  background: "radial-gradient(circle, rgba(197, 157, 79, 0.18) 0%, rgba(0, 0, 0, 0) 70%)",
                   filter: "blur(40px)",
                   pointerEvents: "none",
                   zIndex: 1,
@@ -517,7 +495,7 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
                   right: "-5%",
                   width: "460px",
                   height: "460px",
-                  background: "radial-gradient(circle, rgba(10, 37, 64, 0.08) 0%, rgba(255, 255, 255, 0) 70%)",
+                  background: "radial-gradient(circle, rgba(20, 80, 160, 0.2) 0%, rgba(0, 0, 0, 0) 70%)",
                   filter: "blur(45px)",
                   pointerEvents: "none",
                   zIndex: 1,
@@ -525,22 +503,7 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
               />
 
               {/* Tagline kicker emblem pill badge */}
-              <div 
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  gap: "8px",
-                  padding: "6px 14px",
-                  borderRadius: "30px",
-                  border: "1px solid rgba(181, 138, 69, 0.25)",
-                  background: "rgba(255, 255, 255, 0.75)",
-                  backdropFilter: "blur(12px)",
-                  boxShadow: "0 4px 12px rgba(181, 138, 69, 0.05)",
-                  marginBottom: "16px",
-                  position: "relative",
-                  zIndex: 2,
-                }}
-              >
+              <div className="premium-hero-badge">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -554,30 +517,12 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
                   <path d="M12 2v20" />
                   <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
                 </svg>
-                <span style={{
-                  color: "var(--accent)", 
-                  fontSize: "0.72rem", 
-                  textTransform: "uppercase", 
-                  letterSpacing: "0.18em", 
-                  fontWeight: 700,
-                  lineHeight: 1
-                }}>
+                <span className="premium-hero-badge-text">
                   Explore Lyrics Database
                 </span>
               </div>
 
-              <h1
-                style={{
-                  fontSize: "2.8rem",
-                  fontWeight: 800,
-                  color: "#0A2540",
-                  margin: 0,
-                  letterSpacing: "-0.03em",
-                  lineHeight: "1.2",
-                  position: "relative",
-                  zIndex: 2,
-                }}
-              >
+              <h1 className="premium-hero-title">
                 Christian <span style={{
                   fontFamily: "var(--font-serif)",
                   fontStyle: "italic",
@@ -590,43 +535,14 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
                 }}>Lyrics</span> Library
               </h1>
               
-              <div 
-                style={{ 
-                  width: "100px", 
-                  height: "2px", 
-                  margin: "18px auto 20px", 
-                  background: "linear-gradient(to right, transparent, rgba(181, 138, 69, 0.6), transparent)",
-                  position: "relative", 
-                  zIndex: 2 
-                }} 
-              />
+              <div className="premium-hero-divider" />
               
-              <p
-                style={{
-                  fontSize: "1.125rem",
-                  color: "#3E648A",
-                  margin: "0 0 36px",
-                  maxWidth: "600px",
-                  lineHeight: "1.6",
-                  position: "relative",
-                  zIndex: 2,
-                }}
-              >
+              <p className="premium-hero-tagline">
                 Find Christian lyrics by song, artist, language, or theme.
               </p>
 
               {/* Search bar (glassmorphic look) */}
-              <div
-                style={{
-                  width: "92%",
-                  maxWidth: "800px",
-                  position: "relative",
-                  marginBottom: "24px",
-                  display: "flex",
-                  alignItems: "center",
-                  zIndex: 2,
-                }}
-              >
+              <div className="premium-hero-search-wrapper">
                 <SearchIcon
                   style={{
                     position: "absolute",
@@ -648,13 +564,6 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
                   className="browse-search-input"
                   id="browse-search"
                   aria-label="Search songs"
-                  style={{ 
-                    paddingLeft: "54px", 
-                    paddingRight: "60px",
-                    background: "rgba(255, 255, 255, 0.75)",
-                    backdropFilter: "blur(16px)",
-                    border: "1px solid rgba(10, 37, 64, 0.12)",
-                  }}
                 />
                 <button
                   type="button"
@@ -664,7 +573,7 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
                     right: "10px",
                     top: "50%",
                     transform: "translateY(-50%)",
-                    background: "var(--navy)",
+                    background: "var(--accent)",
                     border: "none",
                     borderRadius: "10px",
                     width: "36px",
@@ -673,7 +582,7 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
                     alignItems: "center",
                     justifyContent: "center",
                     cursor: "pointer",
-                    color: "var(--accent)",
+                    color: "#051424",
                     transition: "all 0.2s ease",
                     zIndex: 2,
                   }}
@@ -696,22 +605,7 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
               </div>
 
               {/* Browse by Letter Card */}
-              <div
-                className="browse-letter-card"
-                style={{
-                  width: "92%",
-                  maxWidth: "860px",
-                  background: "rgba(255, 255, 255, 0.65)",
-                  backdropFilter: "blur(14px)",
-                  border: "1px solid rgba(10, 37, 64, 0.08)",
-                  borderRadius: "18px",
-                  padding: "20px 24px",
-                  boxShadow: "0 15px 35px rgba(10, 37, 64, 0.02)",
-                  boxSizing: "border-box",
-                  position: "relative",
-                  zIndex: 2,
-                }}
-              >
+              <div className="browse-letter-card">
                 {/* A–Z Alphabet scroll wrapper */}
                 <div className="alphabet-row-wrapper">
                   <div

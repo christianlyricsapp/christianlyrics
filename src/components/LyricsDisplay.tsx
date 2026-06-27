@@ -241,19 +241,9 @@ export default function LyricsDisplay({
 
       {/* ─── Lyrics Text Block ─────────────────────────── */}
       <div
-        className="glass-strong"
+        className="lyrics-text-container"
         style={{
-          background: "#ffffff",
-          border: "1px solid #D8E8F7",
-          boxShadow: "0 10px 30px rgba(8, 43, 102, 0.04)",
-          borderRadius: "18px",
-          padding: "36px 28px",
           fontSize: `${fontSize}px`,
-          lineHeight: 1.85,
-          color: "#0A2540",
-          marginBottom: "40px",
-          maxWidth: "720px", /* Narrow width for reading comfort */
-          marginInline: "auto",
         }}
       >
         {lyrics.split("\n").map((line, index) => (

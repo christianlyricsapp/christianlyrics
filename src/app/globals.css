@@ -2,24 +2,24 @@
 
 :root {
   --navy: #0A2540;
-  --navy-light: #102A43;
-  --navy-muted: #3E5C76;
-  --navy-faded: #7B8794;
-  --navy-border: #E4DCCB;
-  --navy-bg-subtle: #FFFDF8;
-  --bg-page: #FAF8F2;
-  --accent: #B58A45;
-  --accent-hover: #A87C3A;
+  --navy-light: #153457;
+  --navy-muted: #4B6B88;
+  --navy-faded: #8EA0B4;
+  --navy-border: #D8E6F2; /* Cool ice-blue border instead of sand yellow */
+  --navy-bg-subtle: #F5F8FC;
+  --bg-page: #F4F6F9; /* Cool, modern white-grey background */
+  --accent: #C59D4F; /* Richer gold branding */
+  --accent-hover: #B48C3F;
 
-  /* Default theme color mappings (Navy & Gold branding) */
+  /* Default theme color mappings */
   --primary: #0A2540;
-  --primary-light: #102A43;
-  --primary-dark: #071D33;
+  --primary-light: #153457;
+  --primary-dark: #06182D;
   --card-bg: #ffffff;
-  --section-bg: #FAF8F2;
-  --border-color: #E4DCCB;
+  --section-bg: #F4F6F9;
+  --border-color: #D8E6F2;
   --foreground-color: #0A2540;
-  --muted-color: #3E5C76;
+  --muted-color: #4B6B88;
   
   --font-stack: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
   --font-serif: var(--font-playfair), "Georgia", serif;
@@ -1030,4 +1030,302 @@ select {
   background-size: 15px;
   padding-right: 36px !important;
 }
+
+/* ==========================================================================
+   PREMIUM HERO REDESIGN & DYNAMIC STYLING
+   ========================================================================== */
+
+.premium-hero-container {
+  position: relative;
+  width: 100%;
+  background: linear-gradient(135deg, #0A2540 0%, #061427 100%) !important;
+  background-size: 100% 100% !important;
+  border-radius: 24px;
+  padding: 48px 24px !important;
+  margin-bottom: 32px !important;
+  box-shadow: 0 20px 40px rgba(6, 20, 39, 0.12) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+@media (max-width: 640px) {
+  .premium-hero-container {
+    padding: 36px 16px !important;
+    border-radius: 20px;
+    margin-bottom: 24px !important;
+  }
+}
+
+.premium-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 30px;
+  border: 1px solid rgba(197, 157, 79, 0.3) !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 16px;
+  position: relative;
+  z-index: 2;
+}
+
+.premium-hero-badge-text {
+  color: var(--accent);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.premium-hero-title {
+  font-size: clamp(2rem, 6vw, 3rem) !important;
+  font-weight: 800 !important;
+  color: #ffffff !important;
+  margin: 0 !important;
+  letter-spacing: -0.03em !important;
+  line-height: 1.25 !important;
+  position: relative;
+  z-index: 2;
+}
+
+.premium-hero-divider {
+  width: 80px;
+  height: 2px;
+  margin: 18px auto 20px;
+  background: linear-gradient(to right, transparent, rgba(197, 157, 79, 0.6), transparent);
+  position: relative;
+  z-index: 2;
+}
+
+.premium-hero-tagline {
+  font-size: clamp(0.95rem, 3vw, 1.1rem) !important;
+  color: #C7DDF2 !important;
+  margin: 0 0 32px !important;
+  max-width: 540px;
+  line-height: 1.6 !important;
+  position: relative;
+  z-index: 2;
+  opacity: 0.9;
+}
+
+.premium-hero-search-wrapper {
+  width: 92%;
+  max-width: 800px;
+  position: relative;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  z-index: 2;
+}
+
+.premium-hero-search-wrapper .browse-search-input {
+  background: rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(16px);
+  border: 1.5px solid rgba(255, 255, 255, 0.15) !important;
+  color: #ffffff !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  padding-left: 54px !important;
+  padding-right: 60px !important;
+  border-radius: 12px;
+}
+
+.premium-hero-search-wrapper .browse-search-input::placeholder {
+  color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.premium-hero-search-wrapper .browse-search-input:hover {
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+
+.premium-hero-search-wrapper .browse-search-input:focus {
+  border-color: var(--accent) !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 0 0 4px rgba(197, 157, 79, 0.25), 0 10px 32px rgba(0, 0, 0, 0.2) !important;
+}
+
+.browse-letter-card {
+  width: 92%;
+  max-width: 860px;
+  background: rgba(255, 255, 255, 0.06) !important;
+  backdrop-filter: blur(14px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 18px;
+  padding: 16px 20px !important;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1) !important;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 2;
+}
+
+.browse-letter-card .browse-alpha-btn {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.browse-letter-card .browse-alpha-btn:hover:not(.browse-alpha-active):not(.browse-alpha-disabled) {
+  border-color: var(--accent) !important;
+  background: rgba(255, 255, 255, 0.2) !important;
+}
+
+.browse-letter-card .browse-alpha-active {
+  background: var(--accent) !important;
+  color: #061325 !important;
+  border-color: var(--accent) !important;
+  box-shadow: 0 4px 12px rgba(197, 157, 79, 0.3) !important;
+}
+
+.browse-letter-card .browse-alpha-disabled {
+  background: transparent !important;
+  color: rgba(255, 255, 255, 0.25) !important;
+  border-color: rgba(255, 255, 255, 0.04) !important;
+  opacity: 0.4 !important;
+}
+
+/* ==========================================================================
+   MOBILE-FIRST CARDS & FILTERS ALIGNMENT
+   ========================================================================== */
+
+/* Spacing layout of columns */
+@media (min-width: 768px) {
+  .browse-sidebar {
+    background: linear-gradient(135deg, #0A2540 0%, #061325 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 15px 35px rgba(6, 19, 37, 0.1) !important;
+  }
+}
+
+.mobile-filter-drawer {
+  background: linear-gradient(135deg, #0A2540 0%, #061325 100%) !important;
+  border: 1.5px solid rgba(197, 157, 79, 0.2) !important;
+  border-radius: 16px !important;
+  box-shadow: 0 12px 30px rgba(6, 19, 37, 0.2) !important;
+}
+
+.filter-checkbox-label {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.04) !important;
+  padding: 8px 12px !important;
+  border-radius: 8px !important;
+  margin-bottom: 4px !important;
+  transition: all 0.2s ease !important;
+}
+
+.filter-checkbox-label:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.filter-checkbox-label.is-checked {
+  background: rgba(197, 157, 79, 0.15) !important;
+  color: #ffffff !important;
+  border-color: var(--accent) !important;
+}
+
+.filter-checkbox-input {
+  border: 1.5px solid rgba(255, 255, 255, 0.3) !important;
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border-radius: 6px !important;
+}
+
+.filter-checkbox-input:checked {
+  background-color: var(--accent) !important;
+  border-color: var(--accent) !important;
+}
+
+.filter-checkbox-input:checked::after {
+  color: #061325 !important;
+}
+
+/* Dynamic Cards for individual table rows */
+.table-responsive {
+  overflow-x: visible !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+}
+
+.songs-table {
+  width: 100% !important;
+  border-collapse: separate !important;
+  border-spacing: 0 8px !important;
+}
+
+.songs-table tr {
+  background: #ffffff !important;
+  border-radius: 12px !important;
+  box-shadow: 0 2px 8px rgba(10, 37, 64, 0.02) !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  border: 1px solid rgba(20, 53, 90, 0.04) !important;
+}
+
+.songs-table tr:hover {
+  background-color: #ffffff !important;
+  transform: translateY(-2px) scale(1.005);
+  box-shadow: 0 8px 24px rgba(10, 37, 64, 0.07) !important;
+  border-color: rgba(197, 157, 79, 0.2) !important;
+}
+
+.songs-table td {
+  padding: 16px 14px !important;
+  border: none !important;
+  border-top: 1px solid rgba(20, 53, 90, 0.03) !important;
+  border-bottom: 1px solid rgba(20, 53, 90, 0.03) !important;
+  color: var(--navy) !important;
+}
+
+.songs-table td:first-child {
+  border-left: 1px solid rgba(20, 53, 90, 0.03) !important;
+  border-top-left-radius: 12px !important;
+  border-bottom-left-radius: 12px !important;
+}
+
+.songs-table td:last-child {
+  border-right: 1px solid rgba(20, 53, 90, 0.03) !important;
+  border-top-right-radius: 12px !important;
+  border-bottom-right-radius: 12px !important;
+}
+
+/* Active filter pills overrides */
+.active-filter-pill {
+  background: rgba(197, 157, 79, 0.08) !important;
+  border: 1.5px solid var(--accent) !important;
+  color: var(--navy) !important;
+}
+
+/* ==========================================================================
+   LYRICS BLOCK DISPLAY STYLING
+   ========================================================================== */
+
+.lyrics-text-container {
+  background: #ffffff !important;
+  border: 1.5px solid var(--border-color) !important;
+  box-shadow: 0 10px 30px rgba(10, 37, 64, 0.035) !important;
+  border-radius: 18px;
+  padding: 36px 28px;
+  margin-bottom: 40px;
+  max-width: 720px;
+  margin-inline: auto;
+  transition: all 0.25s ease;
+  border-left: 5px solid var(--accent) !important; /* Elegant gold hued vertical bar */
+}
+
+@media (max-width: 640px) {
+  .lyrics-text-container {
+    padding: 24px 18px !important;
+    border-radius: 14px;
+    margin-bottom: 24px;
+  }
+}
+
 
