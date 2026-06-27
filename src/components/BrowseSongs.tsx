@@ -928,16 +928,14 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
                   </div>
                 </div>
 
-                <h2 style={{ fontSize: "1.2rem", fontWeight: 800, color: "#ffffff", marginTop: "40px", marginBottom: "8px" }}>
-                  All Songs Library
-                </h2>
               </div>
             )}
 
             {/* Subtle separator line */}
-            <hr className="browse-divider" style={{ marginBlock: "32px", opacity: 0.5 }} />
+            <hr className="browse-divider" style={{ display: isHomeDefaultState ? "none" : "block", marginBlock: "32px", opacity: 0.5 }} />
             
-            {/* ─── Mobile Filters Drawer Toggle ─────────── */}
+            <div style={{ display: isHomeDefaultState ? "none" : "block" }}>
+              {/* ─── Mobile Filters Drawer Toggle ─────────── */}
             <div className="mobile-filter-bar">
               <button
                 type="button"
@@ -1107,6 +1105,7 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
                 </button>
               </div>
             )}
+            </div>
           </main>
 
         </div>
