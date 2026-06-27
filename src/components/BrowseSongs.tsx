@@ -4,6 +4,7 @@ import { useMemo, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getCategoryName, getLanguageName, type Song } from "@/lib/demo-data";
+import { getAllSongs } from "@/lib/supabase-db";
 
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 const ALL_KEY = "*";
@@ -103,6 +104,20 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
   const router = useRouter();
   const searchParams = useSearchParams();
 
+  const [songsList, setSongsList] = useState<Song[]>(initialSongs);
+
+  useEffect(() => {
+    let active = true;
+    getAllSongs().then((latest) => {
+      if (active && latest && latest.length > 0) {
+        setSongsList(latest);
+      }
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+
   const initialCategory = searchParams.get("category");
   const initialLanguage = searchParams.get("language");
   const initialArtist = searchParams.get("artist");
@@ -152,18 +167,18 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
   /* Build alphabet sets representing items available in the total dataset */
   const availableLetters = useMemo(() => {
     const set = new Set<string>();
-    initialSongs.forEach((s) => set.add(getFirstChar(s.title)));
+    songsList.forEach((s) => set.add(getFirstChar(s.title)));
     return set;
-  }, [initialSongs]);
+  }, [songsList]);
 
   /* Extract unique artists list dynamically */
   const allArtists = useMemo(() => {
     const set = new Set<string>();
-    initialSongs.forEach((s) => {
+    songsList.forEach((s) => {
       if (s.artist) set.add(s.artist);
     });
     return Array.from(set).sort((a, b) => a.localeCompare(b));
-  }, [initialSongs]);
+  }, [songsList]);
 
   /* Filter artists dynamically inside the filter section search box */
   const filteredUniqueArtists = useMemo(() => {
@@ -190,7 +205,7 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
   const filteredSongs = useMemo(() => {
     const query = searchQuery.toLowerCase().trim();
 
-    return initialSongs.filter((song: Song) => {
+    return songsList.filter((song: Song) => {
       // Letter filter
       if (activeLetter !== ALL_KEY) {
         const songChar = getFirstChar(song.title);
@@ -234,7 +249,7 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
 
       return true;
     });
-  }, [activeLetter, selectedCategories, selectedLanguages, selectedArtists, searchQuery]);
+  }, [activeLetter, selectedCategories, selectedLanguages, selectedArtists, searchQuery, songsList]);
 
   /* Group filtered songs alphabetically */
   const groupedSongs = useMemo(() => {
