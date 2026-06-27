@@ -18,3 +18,12 @@
   RewriteRule ^songs/([^/]+)/?$ /songs/placeholder/index.html [L]
 
 </IfModule>
+
+# 4. Disable caching for HTML and JSON files to ensure updates are real-time
+<FilesMatch "\.(html|json)$">
+  <IfModule mod_headers.c>
+    Header set Cache-Control "max-age=0, no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+  </IfModule>
+</FilesMatch>
