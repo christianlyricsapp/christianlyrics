@@ -21,7 +21,7 @@ function HamburgerIcon() {
       strokeWidth="2.5"
       strokeLinecap="round"
       strokeLinejoin="round"
-      style={{ width: "20px", height: "20px" }}
+      style={{ width: "15px", height: "15px" }}
     >
       <line x1="4" x2="20" y1="12" y2="12" />
       <line x1="4" x2="20" y1="6" y2="6" />
