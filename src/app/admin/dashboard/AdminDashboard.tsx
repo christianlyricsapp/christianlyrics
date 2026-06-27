@@ -113,12 +113,18 @@ export default function AdminDashboard() {
         </div>
       )}
 
-      <div className="mt-8">
+      <div className="mt-8 flex flex-col gap-4 sm:flex-row">
         <Link
           href="/admin/songs/new"
           className="inline-flex w-full items-center justify-center rounded-xl bg-[var(--accent)] hover:bg-[var(--accent-hover)] px-6 py-4 text-lg font-bold text-[#051224] transition-all shadow-lg shadow-gold/10 sm:w-auto active:scale-95 cursor-pointer"
         >
           ➕ Add New Lyrics
+        </Link>
+        <Link
+          href="/admin/songs/import"
+          className="inline-flex w-full items-center justify-center rounded-xl border border-[rgba(199,157,79,0.3)] bg-[rgba(10,37,64,0.35)] backdrop-blur-md px-6 py-4 text-lg font-bold text-white transition-all shadow-lg hover:border-[var(--accent)] hover:bg-[rgba(10,37,64,0.6)] sm:w-auto active:scale-95 cursor-pointer"
+        >
+          📦 Bulk Import (Docs/PDFs/PPTs)
         </Link>
       </div>
 
