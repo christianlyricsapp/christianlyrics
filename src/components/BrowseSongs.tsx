@@ -626,66 +626,69 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
               </div>
 
               {/* Browse by Letter Card */}
-              <div className="browse-letter-card">
-                {/* A–Z Alphabet scroll wrapper */}
-                <div className="alphabet-row-wrapper">
-                  <div
-                    className="alphabet-scroll-container"
-                    style={{
-                      display: "flex",
-                      flexWrap: "nowrap",
-                      gap: "8px",
-                      overflowX: "auto",
-                      scrollBehavior: "smooth",
-                      padding: "4px 8px",
-                      scrollbarWidth: "none",
-                      msOverflowStyle: "none",
-                      justifyContent: "flex-start",
-                      alignItems: "center",
-                    }}
-                  >
-                    <button
-                      type="button"
-                      onClick={() => handleLetterClick(ALL_KEY)}
-                      className={`browse-alpha-btn ${activeLetter === ALL_KEY ? "browse-alpha-active" : ""}`}
-                      style={{ width: "auto", paddingInline: "16px", flexShrink: 0 }}
-                      aria-label="Show all songs"
-                      aria-pressed={activeLetter === ALL_KEY}
+              {/* Temporarily hidden letter search card per user request */}
+              {false && (
+                <div className="browse-letter-card">
+                  {/* A–Z Alphabet scroll wrapper */}
+                  <div className="alphabet-row-wrapper">
+                    <div
+                      className="alphabet-scroll-container"
+                      style={{
+                        display: "flex",
+                        flexWrap: "nowrap",
+                        gap: "8px",
+                        overflowX: "auto",
+                        scrollBehavior: "smooth",
+                        padding: "4px 8px",
+                        scrollbarWidth: "none",
+                        msOverflowStyle: "none",
+                        justifyContent: "flex-start",
+                        alignItems: "center",
+                      }}
                     >
-                      All
-                    </button>
+                      <button
+                        type="button"
+                        onClick={() => handleLetterClick(ALL_KEY)}
+                        className={`browse-alpha-btn ${activeLetter === ALL_KEY ? "browse-alpha-active" : ""}`}
+                        style={{ width: "auto", paddingInline: "16px", flexShrink: 0 }}
+                        aria-label="Show all songs"
+                        aria-pressed={activeLetter === ALL_KEY}
+                      >
+                        All
+                      </button>
 
-                    {ALPHABET.map((letter) => {
-                      const isActive = activeLetter === letter;
+                      {ALPHABET.map((letter) => {
+                        const isActive = activeLetter === letter;
 
-                      return (
-                        <button
-                          key={letter}
-                          type="button"
-                          onClick={() => handleLetterClick(letter)}
-                          className={`browse-alpha-btn ${isActive ? "browse-alpha-active" : ""}`}
-                          style={{ flexShrink: 0 }}
-                          aria-label={`Filter by letter ${letter}`}
-                          aria-pressed={isActive}
-                        >
-                          {letter}
-                        </button>
-                      );
-                    })}
+                        return (
+                          <button
+                            key={letter}
+                            type="button"
+                            onClick={() => handleLetterClick(letter)}
+                            className={`browse-alpha-btn ${isActive ? "browse-alpha-active" : ""}`}
+                            style={{ flexShrink: 0 }}
+                            aria-label={`Filter by letter ${letter}`}
+                            aria-pressed={isActive}
+                          >
+                            {letter}
+                          </button>
+                        );
+                      })}
 
-                    <button
-                      type="button"
-                      onClick={() => handleLetterClick(HASH_KEY)}
-                      className={`browse-alpha-btn ${activeLetter === HASH_KEY ? "browse-alpha-active" : ""}`}
-                      style={{ flexShrink: 0 }}
-                      aria-label="Filter by non-alphabetic characters"
-                      aria-pressed={activeLetter === HASH_KEY}
-                    >
-                      #
-                    </button>
+                      <button
+                        type="button"
+                        onClick={() => handleLetterClick(HASH_KEY)}
+                        className={`browse-alpha-btn ${activeLetter === HASH_KEY ? "browse-alpha-active" : ""}`}
+                        style={{ flexShrink: 0 }}
+                        aria-label="Filter by non-alphabetic characters"
+                        aria-pressed={activeLetter === HASH_KEY}
+                      >
+                        #
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
             </div>
 
             {/* Subtle separator line */}
