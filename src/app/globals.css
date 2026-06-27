@@ -1094,6 +1094,10 @@ select {
     margin-bottom: 20px !important;
     justify-content: flex-start !important; /* Take content to the top instead of middle */
   }
+
+  .premium-hero-blob {
+    display: none !important; /* Hide glowing background blobs on mobile to prevent color gradient lines */
+  }
 }
 
 .premium-hero-title {

@@ -515,7 +515,9 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
             {/* ─── Centered Top Hero Section (Moved inside main to let filters align at top) ────────────────── */}
             <div className="premium-hero-container">
               {/* Glowing Background Radial Blobs */}
+              {/* Glowing Background Radial Blobs */}
               <div
+                className="premium-hero-blob"
                 style={{
                   position: "absolute",
                   top: "-15%",
@@ -529,6 +531,7 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
                 }}
               />
               <div
+                className="premium-hero-blob"
                 style={{
                   position: "absolute",
                   bottom: "-20%",
