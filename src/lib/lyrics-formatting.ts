@@ -152,9 +152,29 @@ export type FormatResult = {
 export function autoFormatLyrics(raw: string): FormatResult {
   const cleaned = cleanRawLyrics(raw);
   const rawLines = cleaned.split("\n");
-  const lines: string[] = [];
 
+  // Detect if double-spaced: count how many empty lines are sandwiched between non-empty lines
+  let emptyCount = 0;
+  let nonEmptyCount = 0;
   for (const line of rawLines) {
+    if (line.trim() === "") emptyCount++;
+    else nonEmptyCount++;
+  }
+  const isDoubleSpaced = nonEmptyCount > 3 && (emptyCount / nonEmptyCount) > 0.35;
+
+  const lines: string[] = [];
+  for (let i = 0; i < rawLines.length; i++) {
+    const line = rawLines[i];
+    if (isDoubleSpaced && line.trim() === "") {
+      // Keep empty line only if it is adjacent to a section label
+      const prevLine = i > 0 ? rawLines[i - 1] : "";
+      const nextLine = i < rawLines.length - 1 ? rawLines[i + 1] : "";
+      const isNearLabel = detectSectionLabel(prevLine) || detectSectionLabel(nextLine);
+      if (!isNearLabel) {
+        continue;
+      }
+    }
+
     if (line.length > 70 && line.split(/\s+/).length > 8) {
       lines.push(...splitParagraphIntoLines(line));
     } else {
@@ -262,6 +282,7 @@ export function detectTitle(raw: string): string {
   if (!raw || !raw.trim()) return "";
   const lines = raw.split("\n").map((l) => l.trim()).filter((l) => l.length > 0);
 
+  // 1. Explicit title pattern
   for (const line of lines) {
     const match = line.match(/^(title|song\s*name|song|name)\s*:\s*(.+)$/i);
     if (match) {
@@ -269,19 +290,56 @@ export function detectTitle(raw: string): string {
     }
   }
 
-  for (const line of lines) {
-    const cleaned = line.trim();
-    if (
-      (cleaned.startsWith("[") && cleaned.endsWith("]")) ||
-      (cleaned.startsWith("(") && cleaned.endsWith(")")) ||
-      cleaned.endsWith(":") ||
-      /^(verse|chorus|bridge|outro|intro|pre-chorus|refrain|interlude|tag|hook)/i.test(cleaned)
-    ) {
-      continue;
+  // 2. Try to find the Chorus block
+  let chorusLine = "";
+  for (let i = 0; i < lines.length - 1; i++) {
+    const line = lines[i].toLowerCase();
+    if (/^(chorus|refrain)/i.test(line) || (line.startsWith("[") && line.includes("chorus"))) {
+      // The next non-empty, non-label line is the start of the chorus!
+      for (let j = i + 1; j < lines.length; j++) {
+        const nextLine = lines[j].trim();
+        if (
+          nextLine &&
+          !(nextLine.startsWith("[") && nextLine.endsWith("]")) &&
+          !(nextLine.startsWith("(") && nextLine.endsWith(")")) &&
+          !nextLine.endsWith(":") &&
+          !/^(verse|chorus|bridge|outro|intro|pre-chorus|refrain|interlude|tag|hook)/i.test(nextLine)
+        ) {
+          chorusLine = nextLine;
+          break;
+        }
+      }
+      if (chorusLine) break;
     }
-    if (cleaned.length > 0 && cleaned.length < 80) {
-      return toTitleCase(cleaned);
+  }
+
+  // 3. Fallback to first lyrics line if no Chorus found
+  let sourceLine = chorusLine;
+  if (!sourceLine) {
+    for (const line of lines) {
+      const cleaned = line.trim();
+      if (
+        (cleaned.startsWith("[") && cleaned.endsWith("]")) ||
+        (cleaned.startsWith("(") && cleaned.endsWith(")")) ||
+        cleaned.endsWith(":") ||
+        /^(verse|chorus|bridge|outro|intro|pre-chorus|refrain|interlude|tag|hook)/i.test(cleaned)
+      ) {
+        continue;
+      }
+      if (cleaned.length > 0) {
+        sourceLine = cleaned;
+        break;
+      }
     }
+  }
+
+  if (sourceLine) {
+    // Clean punctuation
+    const cleanedSource = sourceLine.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?]/g, "").replace(/\s+/g, " ").trim();
+    // Take first 4-5 words as title candidate
+    const words = cleanedSource.split(" ");
+    const titleCandidate = words.slice(0, Math.min(5, words.length)).join(" ");
+    return toTitleCase(titleCandidate);
   }
 
   if (lines.length > 0) {

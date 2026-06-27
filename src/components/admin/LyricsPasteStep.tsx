@@ -97,20 +97,31 @@ export default function LyricsPasteStep({
         from your phone. Nothing goes live until you review and submit.
       </div>
 
-      {/* ── 1. Song Title ── */}
       <div>
         <label htmlFor="title" className={labelClass}>
           Song Title <span className="text-red-500">*</span>
         </label>
-        <input
-          id="title"
-          type="text"
-          value={data.title}
-          onChange={(e) => update("title", e.target.value)}
-          onBlur={(e) => update("title", toTitleCase(e.target.value))}
-          placeholder="e.g. Morning Light Praise"
-          className={inputClass}
-        />
+        <div className="relative">
+          <input
+            id="title"
+            type="text"
+            value={data.title}
+            onChange={(e) => update("title", e.target.value)}
+            onBlur={(e) => update("title", toTitleCase(e.target.value))}
+            placeholder="e.g. Morning Light Praise"
+            className={`${inputClass} pr-10`}
+          />
+          {data.title && (
+            <button
+              type="button"
+              onClick={() => update("title", "")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-white text-lg font-bold cursor-pointer"
+              aria-label="Clear title"
+            >
+              ✕
+            </button>
+          )}
+        </div>
         {errors.title && (
           <p className="mt-1.5 text-sm text-red-400">{errors.title}</p>
         )}
@@ -122,30 +133,53 @@ export default function LyricsPasteStep({
           <label htmlFor="rawLyrics" className="block text-base font-medium text-foreground">
             Paste Lyrics Here <span className="text-red-500">*</span>
           </label>
-          {data.rawLyrics.trim() && (
-            <div className="flex gap-2">
+          <div className="flex gap-2">
+            {!data.rawLyrics.trim() && (
               <button
                 type="button"
-                onClick={() => {
-                  const cleaned = cleanRawLyrics(data.rawLyrics);
-                  update("rawLyrics", cleaned);
+                onClick={async () => {
+                  try {
+                    if (typeof navigator !== "undefined" && navigator.clipboard && navigator.clipboard.readText) {
+                      const text = await navigator.clipboard.readText();
+                      if (text && text.trim()) {
+                        update("rawLyrics", text);
+                        clipboardPastedRef.current = true;
+                      }
+                    }
+                  } catch (err) {
+                    console.warn("Clipboard access denied or not supported:", err);
+                  }
                 }}
-                className="rounded-xl bg-primary/10 px-4 py-2 text-sm font-semibold text-primary transition-colors hover:bg-primary/20"
+                className="rounded-xl bg-primary/10 px-4 py-2 text-sm font-semibold text-primary transition-colors hover:bg-primary/20 cursor-pointer"
               >
-                🧹 Clean Pasted Text
+                📋 Paste
               </button>
-              <button
-                type="button"
-                onClick={() => {
-                  update("rawLyrics", "");
-                  clipboardPastedRef.current = false;
-                }}
-                className="rounded-xl bg-red-500/10 px-4 py-2 text-sm font-semibold text-red-400 transition-colors hover:bg-red-500/20"
-              >
-                ❌ Clear
-              </button>
-            </div>
-          )}
+            )}
+            {data.rawLyrics.trim() && (
+              <>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const cleaned = cleanRawLyrics(data.rawLyrics);
+                    update("rawLyrics", cleaned);
+                  }}
+                  className="rounded-xl bg-primary/10 px-4 py-2 text-sm font-semibold text-primary transition-colors hover:bg-primary/20 cursor-pointer"
+                >
+                  🧹 Clean Pasted Text
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    update("rawLyrics", "");
+                    clipboardPastedRef.current = false;
+                  }}
+                  className="rounded-xl bg-red-500/10 px-4 py-2 text-sm font-semibold text-red-400 transition-colors hover:bg-red-500/20 cursor-pointer"
+                >
+                  ❌ Clear
+                </button>
+              </>
+            )}
+          </div>
         </div>
         <p className={helperClass}>
           Copy and paste directly from your phone. Original text is always
