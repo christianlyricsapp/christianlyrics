@@ -18,10 +18,10 @@ function HamburgerIcon() {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="2.5"
+      strokeWidth="3.2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      style={{ width: "20px", height: "20px" }}
+      style={{ width: "11px", height: "11px" }}
     >
       <line x1="4" x2="20" y1="12" y2="12" />
       <line x1="4" x2="20" y1="6" y2="6" />
@@ -53,15 +53,10 @@ function UserIcon() {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      style={{ width: "16px", height: "16px" }}
+      fill="currentColor"
+      style={{ width: "11px", height: "11px" }}
     >
-      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
-      <circle cx="12" cy="7" r="4" />
+      <path d="M12 12c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
     </svg>
   );
 }
@@ -161,11 +156,11 @@ export default function Header() {
             onClick={() => setIsOpen(true)}
             style={{
               background: "transparent",
-              border: "1.5px solid #14355a",
+              border: "none",
               color: "#C7DDF2",
-              borderRadius: "10px",
-              width: "42px",
-              height: "42px",
+              borderRadius: "4px",
+              width: "21px",
+              height: "21px",
               cursor: "pointer",
               display: "flex",
               alignItems: "center",
@@ -198,12 +193,12 @@ export default function Header() {
           <Link
             href="/admin/login"
             style={{
-              background: "transparent",
-              border: "1.5px solid var(--accent)",
-              color: "var(--accent)",
+              background: "var(--accent)",
+              border: "none",
+              color: "#0A2540",
               borderRadius: "50%",
-              width: "42px",
-              height: "42px",
+              width: "21px",
+              height: "21px",
               cursor: "pointer",
               display: "flex",
               alignItems: "center",
