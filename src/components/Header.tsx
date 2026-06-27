@@ -18,10 +18,10 @@ function HamburgerIcon() {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="3.2"
+      strokeWidth="2.5"
       strokeLinecap="round"
       strokeLinejoin="round"
-      style={{ width: "11px", height: "11px" }}
+      style={{ width: "20px", height: "20px" }}
     >
       <line x1="4" x2="20" y1="12" y2="12" />
       <line x1="4" x2="20" y1="6" y2="6" />
@@ -54,7 +54,7 @@ function UserIcon() {
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
       fill="currentColor"
-      style={{ width: "11px", height: "11px" }}
+      style={{ width: "18px", height: "18px" }}
     >
       <path d="M12 12c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
     </svg>
@@ -156,11 +156,11 @@ export default function Header() {
             onClick={() => setIsOpen(true)}
             style={{
               background: "transparent",
-              border: "none",
+              border: "1.5px solid #14355a",
               color: "#C7DDF2",
-              borderRadius: "4px",
-              width: "21px",
-              height: "21px",
+              borderRadius: "10px",
+              width: "42px",
+              height: "42px",
               cursor: "pointer",
               display: "flex",
               alignItems: "center",
@@ -197,8 +197,8 @@ export default function Header() {
               border: "none",
               color: "#0A2540",
               borderRadius: "50%",
-              width: "21px",
-              height: "21px",
+              width: "42px",
+              height: "42px",
               cursor: "pointer",
               display: "flex",
               alignItems: "center",
