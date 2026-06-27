@@ -21,7 +21,7 @@ function HamburgerIcon() {
       strokeWidth="2.5"
       strokeLinecap="round"
       strokeLinejoin="round"
-      style={{ width: "20px", height: "20px" }}
+      style={{ width: "18px", height: "18px" }}
     >
       <line x1="4" x2="20" y1="12" y2="12" />
       <line x1="4" x2="20" y1="6" y2="6" />
@@ -158,9 +158,9 @@ export default function Header() {
               background: "transparent",
               border: "1.5px solid #14355a",
               color: "#C7DDF2",
-              borderRadius: "10px",
-              width: "42px",
-              height: "42px",
+              borderRadius: "6px",
+              width: "32px",
+              height: "32px",
               cursor: "pointer",
               display: "flex",
               alignItems: "center",
@@ -197,8 +197,8 @@ export default function Header() {
               border: "none",
               color: "#0A2540",
               borderRadius: "50%",
-              width: "42px",
-              height: "42px",
+              width: "32px",
+              height: "32px",
               cursor: "pointer",
               display: "flex",
               alignItems: "center",
