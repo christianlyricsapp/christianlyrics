@@ -1135,12 +1135,12 @@ select {
 .premium-hero-search-wrapper .browse-search-input {
   background: rgba(255, 255, 255, 0.07) !important;
   backdrop-filter: blur(16px);
-  border: 1.5px solid rgba(255, 255, 255, 0.15) !important;
+  border: 1.5px solid var(--accent) !important;
   color: #ffffff !important;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25) !important;
+  box-shadow: 0 0 15px rgba(197, 157, 79, 0.15), 0 12px 32px rgba(0, 0, 0, 0.25) !important;
   padding-left: 54px !important;
-  padding-right: 60px !important;
-  border-radius: 14px !important;
+  padding-right: 54px !important;
+  border-radius: 9999px !important;
   height: 56px !important;
   font-size: 1rem !important;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
@@ -1151,14 +1151,15 @@ select {
 }
 
 .premium-hero-search-wrapper .browse-search-input:hover {
-  border-color: rgba(255, 255, 255, 0.3) !important;
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 20px rgba(197, 157, 79, 0.25), 0 12px 32px rgba(0, 0, 0, 0.25) !important;
 }
 
 .premium-hero-search-wrapper .browse-search-input:focus {
   border-color: var(--accent) !important;
-  background: rgba(255, 255, 255, 0.12) !important;
+  background: rgba(255, 255, 255, 0.1) !important;
   /* Gold glow highlight drop shadow */
-  box-shadow: 0 0 25px rgba(197, 157, 79, 0.35), 0 12px 36px rgba(0, 0, 0, 0.35) !important;
+  box-shadow: 0 0 25px rgba(197, 157, 79, 0.45), 0 12px 36px rgba(0, 0, 0, 0.35) !important;
 }
 
 /* ==========================================================================
@@ -1465,11 +1466,10 @@ select {
 }
 
 .quick-access-label {
-  color: #C7DDF2;
+  color: #ffffff !important;
   font-size: 1.05rem !important; /* Bigger Quick Access heading label */
   font-weight: 800 !important;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
+  text-transform: none !important;
   margin-bottom: 16px;
 }
 
@@ -1489,9 +1489,9 @@ select {
 }
 
 .quick-access-chip {
-  background: rgba(255, 255, 255, 0.06) !important;
-  color: rgba(255, 255, 255, 0.8) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background: #051224 !important; /* Dark background */
+  color: #ffffff !important; /* White text */
+  border: 1px solid rgba(197, 157, 79, 0.4) !important; /* Thin gold outline border */
   padding: 8px 18px !important; /* Bigger tag chips padding */
   border-radius: 30px !important; /* Pill chip shape */
   font-size: 0.92rem !important; /* Bigger tag chips font size */
@@ -1502,14 +1502,14 @@ select {
 }
 
 .quick-access-chip:hover {
-  background: rgba(255, 255, 255, 0.15) !important;
+  background: rgba(197, 157, 79, 0.1) !important;
   color: #ffffff !important;
-  border-color: rgba(255, 255, 255, 0.25) !important;
+  border-color: var(--accent) !important;
 }
 
 .quick-access-chip.active {
   background: var(--accent) !important;
-  color: #061325 !important;
+  color: #051224 !important;
   border-color: var(--accent) !important;
   box-shadow: 0 4px 12px rgba(197, 157, 79, 0.3) !important;
   font-weight: 800 !important;
@@ -1536,9 +1536,9 @@ select {
     left: 0;
     right: 0;
     height: 68px;
-    background: rgba(10, 37, 64, 0.94) !important; /* Midnight blue translucent */
+    background: #051224 !important; /* Solid dark color matching mockup theme */
     backdrop-filter: blur(20px) !important;
-    border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-top: 1px solid rgba(255, 255, 255, 0.05) !important;
     justify-content: space-around;
     align-items: center;
     z-index: 100;

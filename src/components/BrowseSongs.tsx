@@ -79,6 +79,40 @@ function SearchIcon({ className, style }: { className?: string; style?: React.CS
   );
 }
 
+function MicIcon({ style }: { style?: React.CSSProperties }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="var(--accent)"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      style={style}
+      aria-hidden="true"
+    >
+      <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+      <path d="M19 10v1a7 7 0 0 1-14 0v-1" />
+      <line x1="12" x2="12" y1="19" y2="22" />
+    </svg>
+  );
+}
+
+function PlayIcon({ style }: { style?: React.CSSProperties }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      style={style}
+      aria-hidden="true"
+    >
+      <polygon points="6 3 20 12 6 21 6 3" />
+    </svg>
+  );
+}
+
 /* ─── Music Note Icon SVG ──────────────────────────── */
 function MusicIcon({ className, style }: { className?: string; style?: React.CSSProperties }) {
   return (
@@ -293,6 +327,13 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
       return true;
     });
   }, [activeLetter, selectedCategories, selectedLanguages, selectedArtists, searchQuery, songsList]);
+
+  const isHomeDefaultState =
+    !searchQuery &&
+    selectedCategories.length === 0 &&
+    selectedLanguages.length === 0 &&
+    selectedArtists.length === 0 &&
+    activeLetter === ALL_KEY;
 
   /* Group filtered songs alphabetically */
   const groupedSongs = useMemo(() => {
@@ -547,7 +588,7 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
 
               <div className="premium-hero-content-inner">
                 <h1 className="premium-hero-title">
-                  <strong>Christian</strong> Lyrics Library
+                  Christian <span style={{ fontFamily: "var(--font-serif)", fontStyle: "italic", color: "var(--accent)", textTransform: "none" }}>Lyrics</span> Library
                 </h1>
                 
                 {/* Search bar (glassmorphic look) */}
@@ -558,9 +599,9 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
                       left: "20px",
                       top: "50%",
                       transform: "translateY(-50%)",
-                      width: "20px",
-                      height: "20px",
-                      color: "#8fa8c4",
+                      width: "18px",
+                      height: "18px",
+                      color: "var(--accent)",
                       pointerEvents: "none",
                       zIndex: 2,
                     }}
@@ -569,48 +610,26 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
                     type="search"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search songs, lyrics, artist, language, or theme…"
+                    placeholder="Search your gospel lyrics here"
                     className="browse-search-input"
                     id="browse-search"
                     aria-label="Search songs"
+                    style={{ width: "100%" }}
                   />
-                  <button
-                    type="button"
-                    aria-label="Submit search"
+                  <div
                     style={{
                       position: "absolute",
-                      right: "10px",
+                      right: "20px",
                       top: "50%",
                       transform: "translateY(-50%)",
-                      background: "var(--accent)",
-                      border: "none",
-                      borderRadius: "10px",
-                      width: "36px",
-                      height: "36px",
                       display: "flex",
                       alignItems: "center",
-                      justifyContent: "center",
-                      cursor: "pointer",
-                      color: "#051424",
-                      transition: "all 0.2s ease",
                       zIndex: 2,
+                      pointerEvents: "none",
                     }}
-                    className="search-submit-btn"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      style={{ width: "16px", height: "16px" }}
-                    >
-                      <path d="M5 12h14" />
-                      <path d="m12 5 7 7-7 7" />
-                    </svg>
-                  </button>
+                    <MicIcon style={{ width: "18px", height: "18px" }} />
+                  </div>
                 </div>
 
                 {/* Quick Access Categories */}
@@ -700,8 +719,223 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
               )}
             </div>
 
+            {isHomeDefaultState && (
+              <div className="premium-dashboard-sections" style={{ width: "100%", paddingInline: "16px", margin: "24px auto", boxSizing: "border-box" }}>
+                
+                {/* ─── SECTION 1: Featured Songs ─── */}
+                <div style={{ marginBottom: "28px" }}>
+                  <h2 style={{ fontSize: "1.2rem", fontWeight: 800, color: "#ffffff", marginBottom: "16px" }}>
+                    Featured Songs
+                  </h2>
+                  <div 
+                    style={{ 
+                      display: "flex", 
+                      gap: "12px", 
+                      overflowX: "auto", 
+                      scrollbarWidth: "none", 
+                      paddingBottom: "8px" 
+                    }}
+                    className="quick-access-scroll-row"
+                  >
+                    {songsList.slice(0, 4).map((song) => (
+                      <div
+                        key={`featured-${song.slug}`}
+                        onClick={() => router.push(`/songs/${song.slug}`)}
+                        style={{
+                          flexShrink: 0,
+                          width: "220px",
+                          background: "rgba(10, 37, 64, 0.45)",
+                          border: "1px solid rgba(255, 255, 255, 0.08)",
+                          borderRadius: "14px",
+                          padding: "12px",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "12px",
+                          cursor: "pointer",
+                          transition: "transform 0.2s ease, border-color 0.2s ease"
+                        }}
+                        className="premium-featured-card"
+                      >
+                        <div style={{
+                          width: "48px",
+                          height: "48px",
+                          borderRadius: "8px",
+                          background: "linear-gradient(135deg, #14355a 0%, #051224 100%)",
+                          border: "1px solid rgba(199, 157, 79, 0.3)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          flexShrink: 0
+                        }}>
+                          <MusicIcon style={{ width: "18px", height: "18px", color: "var(--accent)" }} />
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ 
+                            fontSize: "0.95rem", 
+                            fontWeight: 700, 
+                            color: "#ffffff", 
+                            whiteSpace: "nowrap", 
+                            overflow: "hidden", 
+                            textOverflow: "ellipsis" 
+                          }}>
+                            {song.title}
+                          </div>
+                          <div style={{ fontSize: "0.78rem", color: "var(--accent)", marginTop: "2px" }}>
+                            Featured Songs
+                          </div>
+                        </div>
+                        <div style={{
+                          width: "26px",
+                          height: "26px",
+                          borderRadius: "50%",
+                          background: "var(--accent)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          color: "#051224",
+                          flexShrink: 0
+                        }}>
+                          <PlayIcon style={{ width: "10px", height: "10px", marginLeft: "1px" }} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* ─── SECTION 2: New Releases ─── */}
+                <div style={{ marginBottom: "28px" }}>
+                  <h2 style={{ fontSize: "1.2rem", fontWeight: 800, color: "#ffffff", marginBottom: "16px" }}>
+                    New Releases
+                  </h2>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                    {songsList.slice(4, 8).map((song) => (
+                      <div
+                        key={`new-${song.slug}`}
+                        onClick={() => router.push(`/songs/${song.slug}`)}
+                        style={{
+                          background: "rgba(10, 37, 64, 0.45)",
+                          border: "1px solid rgba(255, 255, 255, 0.08)",
+                          borderRadius: "14px",
+                          padding: "14px",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "14px",
+                          cursor: "pointer",
+                          transition: "transform 0.2s ease, border-color 0.2s ease"
+                        }}
+                        className="premium-new-card"
+                      >
+                        <div style={{
+                          width: "52px",
+                          height: "52px",
+                          borderRadius: "10px",
+                          background: "linear-gradient(135deg, #051224 0%, #14355a 100%)",
+                          border: "1px solid rgba(199, 157, 79, 0.3)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          flexShrink: 0
+                        }}>
+                          <MusicIcon style={{ width: "20px", height: "20px", color: "var(--accent)" }} />
+                        </div>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ 
+                            fontSize: "1rem", 
+                            fontWeight: 700, 
+                            color: "#ffffff",
+                            whiteSpace: "nowrap",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis"
+                          }}>
+                            {song.title}
+                          </div>
+                          <div style={{ fontSize: "0.8rem", color: "var(--accent)", marginTop: "2px" }}>
+                            New Releases
+                          </div>
+                        </div>
+                        <div style={{
+                          width: "28px",
+                          height: "28px",
+                          borderRadius: "50%",
+                          background: "var(--accent)",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          color: "#051224",
+                          flexShrink: 0
+                        }}>
+                          <PlayIcon style={{ width: "12px", height: "12px", marginLeft: "1px" }} />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* ─── SECTION 3: Trending Playlists ─── */}
+                <div style={{ marginBottom: "32px" }}>
+                  <h2 style={{ fontSize: "1.2rem", fontWeight: 800, color: "#ffffff", marginBottom: "16px" }}>
+                    Trending Playlists
+                  </h2>
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
+                    {[
+                      { title: "Praise & Worship", cat: "worship", gradient: "linear-gradient(135deg, #1d3557 0%, #457b9d 100%)" },
+                      { title: "Sunday Communion", cat: "communion", gradient: "linear-gradient(135deg, #2b2d42 0%, #8d99ae 100%)" },
+                      { title: "English Classics", lang: "english", gradient: "linear-gradient(135deg, #4a5759 0%, #dedbd2 100%)" },
+                      { title: "All Time Favorites", cat: "praise", gradient: "linear-gradient(135deg, #14213d 0%, #fca311 100%)" },
+                    ].map((playlist, idx) => (
+                      <div
+                        key={`playlist-${idx}`}
+                        onClick={() => {
+                          if (playlist.cat) handleCategoryToggle(playlist.cat);
+                          if (playlist.lang) handleLanguageToggle(playlist.lang);
+                        }}
+                        style={{
+                          height: "100px",
+                          borderRadius: "14px",
+                          background: playlist.gradient,
+                          position: "relative",
+                          overflow: "hidden",
+                          cursor: "pointer",
+                          border: "1px solid rgba(255, 255, 255, 0.1)",
+                          boxShadow: "0 8px 16px rgba(0,0,0,0.15)",
+                          display: "flex",
+                          flexDirection: "column",
+                          justifyContent: "flex-end",
+                          padding: "12px",
+                          transition: "transform 0.2s ease"
+                        }}
+                        className="premium-playlist-card"
+                      >
+                        <div style={{
+                          position: "absolute",
+                          top: "0",
+                          left: "0",
+                          right: "0",
+                          bottom: "0",
+                          background: "linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 80%)",
+                          zIndex: 1
+                        }} />
+                        <div style={{ position: "relative", zIndex: 2 }}>
+                          <div style={{ fontSize: "0.95rem", fontWeight: 800, color: "#ffffff" }}>
+                            {playlist.title}
+                          </div>
+                          <div style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.7)", marginTop: "2px" }}>
+                            Curated Collection
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <h2 style={{ fontSize: "1.2rem", fontWeight: 800, color: "#ffffff", marginTop: "40px", marginBottom: "8px" }}>
+                  All Songs Library
+                </h2>
+              </div>
+            )}
+
             {/* Subtle separator line */}
-            <hr className="browse-divider" style={{ marginBlock: "32px", opacity: 0.7 }} />
+            <hr className="browse-divider" style={{ marginBlock: "32px", opacity: 0.5 }} />
             
             {/* ─── Mobile Filters Drawer Toggle ─────────── */}
             <div className="mobile-filter-bar">
