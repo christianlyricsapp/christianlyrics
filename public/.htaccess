@@ -12,4 +12,9 @@
   RewriteCond %{REQUEST_URI} !^/admin/songs/placeholder/edit/?$
   RewriteRule ^admin/songs/([^/]+)/edit/?$ admin/songs/placeholder/edit/index.html [L]
 
+  # 3. Rewrite all dynamic song detail routes that don't exist to the placeholder index.html
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^songs/([^/]+)/?$ /songs/placeholder/index.html [L]
+
 </IfModule>

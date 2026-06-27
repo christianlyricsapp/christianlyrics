@@ -37,10 +37,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function SongPage({ params }: Props) {
   const { slug } = await params;
-  const song = await getSongBySlug(slug);
+  let song = await getSongBySlug(slug);
 
+  // If the song doesn't exist at build-time (e.g. placeholder route or new song),
+  // return a loading skeleton to let the client component mount and fetch from Supabase dynamically
   if (!song) {
-    notFound();
+    song = {
+      slug: slug,
+      title: "Loading...",
+      lyrics: "Loading song details...",
+      category: "worship",
+      language: "english",
+      isPopular: false,
+      addedDate: new Date().toISOString(),
+      excerpt: "Loading...",
+    };
   }
 
   const allSongs = await getAllSongs();
