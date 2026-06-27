@@ -183,6 +183,20 @@ export default function AdminSongsList() {
     setIsProcessing(false);
   }
 
+  const hasNeedsReviewSelected = useMemo(() => {
+    return Array.from(selected).some((id) => {
+      const song = songs.find((s) => s.id === id);
+      return song && song.status === "needs-review";
+    });
+  }, [selected, songs]);
+
+  const hasApprovedSelected = useMemo(() => {
+    return Array.from(selected).some((id) => {
+      const song = songs.find((s) => s.id === id);
+      return song && song.status === "approved";
+    });
+  }, [selected, songs]);
+
   const selectedCount = selected.size;
   const isTrashView = tab === "trashed";
 
@@ -261,20 +275,24 @@ export default function AdminSongsList() {
               <>
                 {role === "admin" && (
                   <>
-                    <button
-                      onClick={handleBulkApprove}
-                      disabled={isProcessing}
-                      className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 cursor-pointer disabled:opacity-55"
-                    >
-                      👍 Approve Selected
-                    </button>
-                    <button
-                      onClick={handleBulkPublish}
-                      disabled={isProcessing}
-                      className="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-green-700 cursor-pointer disabled:opacity-55"
-                    >
-                      🚀 Publish Selected
-                    </button>
+                    {hasNeedsReviewSelected && (
+                      <button
+                        onClick={handleBulkApprove}
+                        disabled={isProcessing}
+                        className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-blue-700 cursor-pointer disabled:opacity-55"
+                      >
+                        👍 Approve Selected
+                      </button>
+                    )}
+                    {hasApprovedSelected && (
+                      <button
+                        onClick={handleBulkPublish}
+                        disabled={isProcessing}
+                        className="rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-green-700 cursor-pointer disabled:opacity-55"
+                      >
+                        🚀 Publish Selected
+                      </button>
+                    )}
                   </>
                 )}
                 <button
