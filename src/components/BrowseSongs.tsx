@@ -4,7 +4,8 @@ import { useMemo, useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { getCategoryName, getLanguageName, type Song } from "@/lib/demo-data";
-import { getAllSongs } from "@/lib/supabase-db";
+import { getAllSongs, mapDbSongToSong } from "@/lib/supabase-db";
+import { supabase } from "@/lib/supabase";
 
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 const ALL_KEY = "*";
@@ -108,13 +109,55 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
 
   useEffect(() => {
     let active = true;
+
+    // 1. Initial load
     getAllSongs().then((latest) => {
       if (active && latest && latest.length > 0) {
         setSongsList(latest);
       }
     });
+
+    // 2. Real-time channel listener for published status changes
+    const channel = supabase
+      .channel("public-songs-changes")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "songs",
+        },
+        (payload) => {
+          const { eventType, new: newRecord, old: oldRecord } = payload;
+          
+          setSongsList((currentSongs) => {
+            if (eventType === "DELETE") {
+              return currentSongs.filter((song) => song.slug !== oldRecord.slug);
+            }
+
+            const updatedSong = mapDbSongToSong(newRecord);
+
+            if (newRecord.status !== "published") {
+              // Remove if draft or needs review
+              return currentSongs.filter((song) => song.slug !== updatedSong.slug);
+            }
+
+            const exists = currentSongs.some((song) => song.slug === updatedSong.slug);
+            if (exists) {
+              return currentSongs.map((song) =>
+                song.slug === updatedSong.slug ? updatedSong : song
+              );
+            } else {
+              return [...currentSongs, updatedSong];
+            }
+          });
+        }
+      )
+      .subscribe();
+
     return () => {
       active = false;
+      supabase.removeChannel(channel);
     };
   }, []);
 

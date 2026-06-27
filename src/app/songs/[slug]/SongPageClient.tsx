@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import LyricsDisplay from "@/components/LyricsDisplay";
 import { getCategoryName, type Song } from "@/lib/demo-data";
-import { getSongBySlug, getAllSongs, getRelatedSongs } from "@/lib/supabase-db";
+import { getSongBySlug, getAllSongs, getRelatedSongs, mapDbSongToSong } from "@/lib/supabase-db";
+import { supabase } from "@/lib/supabase";
 
 type SongPageClientProps = {
   initialSong: Song;
@@ -17,22 +18,50 @@ export default function SongPageClient({ initialSong, initialAllSongs }: SongPag
   const [isDeleted, setIsDeleted] = useState(false);
 
   useEffect(() => {
-    // 1. Fetch the latest song status in real-time to handle edits or deletes
+    // 1. Initial fetch of latest song details and total catalog
     getSongBySlug(initialSong.slug).then((latestSong) => {
       if (!latestSong) {
-        // Song is deleted or no longer published in Supabase
         setIsDeleted(true);
       } else {
         setSong(latestSong);
       }
     });
 
-    // 2. Fetch all songs for related songs real-time update
     getAllSongs().then((latestAllSongs) => {
       if (latestAllSongs && latestAllSongs.length > 0) {
         setAllSongs(latestAllSongs);
       }
     });
+
+    // 2. Real-time subscription to database changes for this specific song
+    const channel = supabase
+      .channel(`song-detail-${initialSong.slug}`)
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "songs",
+          filter: `slug=eq.${initialSong.slug}`,
+        },
+        (payload) => {
+          const { eventType, new: newRecord } = payload;
+          if (eventType === "DELETE") {
+            setIsDeleted(true);
+          } else {
+            if (newRecord.status !== "published") {
+              setIsDeleted(true);
+            } else {
+              setSong(mapDbSongToSong(newRecord));
+            }
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [initialSong.slug]);
 
   const relatedSongs = getRelatedSongs(song, allSongs);
