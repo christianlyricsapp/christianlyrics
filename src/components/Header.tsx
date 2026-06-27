@@ -48,6 +48,24 @@ function CloseIcon() {
   );
 }
 
+function UserIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      style={{ width: "20px", height: "20px" }}
+    >
+      <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
+    </svg>
+  );
+}
+
 function PhoneIcon({ style }: { style?: React.CSSProperties }) {
   return (
     <svg
@@ -136,32 +154,8 @@ export default function Header() {
           alignItems: "center",
         }}
       >
-        <div
-          style={{
-            width: "100%",
-            maxWidth: "100%",
-            margin: "0 auto",
-            padding: "0 24px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        >
-          {/* Logo */}
-          <Link
-            href="/"
-            style={{
-              fontWeight: 800,
-              fontSize: "1.4rem",
-              color: "#ffffff",
-              textDecoration: "none",
-              letterSpacing: "-0.02em",
-            }}
-          >
-            Christian Lyrics
-          </Link>
-
-          {/* Styled Hamburger Button */}
+        <div className="header-inner">
+          {/* Menu Button (Left on Mobile) */}
           <button
             type="button"
             onClick={() => setIsOpen(true)}
@@ -178,11 +172,49 @@ export default function Header() {
               justifyContent: "center",
               transition: "all 0.2s ease",
             }}
-            className="hamburger-btn-dark browse-reset-btn"
+            className="header-menu-btn hamburger-btn-dark browse-reset-btn"
             aria-label="Open menu drawer"
           >
             <HamburgerIcon />
           </button>
+
+          {/* Logo / Brand Name (Centered on Mobile) */}
+          <div className="header-logo-container">
+            <Link
+              href="/"
+              style={{
+                fontWeight: 800,
+                fontSize: "1.4rem",
+                color: "#ffffff",
+                textDecoration: "none",
+                letterSpacing: "-0.02em",
+              }}
+            >
+              Christian Lyrics
+            </Link>
+          </div>
+
+          {/* Admin / Login Avatar (Right on Mobile) */}
+          <Link
+            href="/admin/login"
+            style={{
+              background: "transparent",
+              border: "1.5px solid #14355a",
+              color: "#C7DDF2",
+              borderRadius: "10px",
+              width: "42px",
+              height: "42px",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              transition: "all 0.2s ease",
+            }}
+            className="header-login-btn browse-reset-btn"
+            aria-label="Admin login"
+          >
+            <UserIcon />
+          </Link>
         </div>
       </header>
 

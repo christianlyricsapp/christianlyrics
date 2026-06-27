@@ -625,6 +625,26 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
                 </button>
               </div>
 
+              {/* Quick Access Categories */}
+              <div className="quick-access-container">
+                <span className="quick-access-label">Quick Access</span>
+                <div className="quick-access-scroll-row">
+                  {CATEGORIES.map((cat) => {
+                    const isSelected = selectedCategories.includes(cat);
+                    return (
+                      <button
+                        key={cat}
+                        type="button"
+                        onClick={() => handleCategoryToggle(cat)}
+                        className={`quick-access-chip ${isSelected ? "active" : ""}`}
+                      >
+                        {CATEGORY_NAMES[cat]}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
               {/* Browse by Letter Card */}
               {/* Temporarily hidden letter search card per user request */}
               {false && (
