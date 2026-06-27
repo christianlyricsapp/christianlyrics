@@ -1086,6 +1086,7 @@ select {
 
 @media (max-width: 767px) {
   .premium-hero-container {
+    background: #0A2540 !important; /* Solid color matching the navbar exactly on mobile for seamless flow */
     min-height: calc(100vh - 76px) !important; /* Spans full height of first viewport */
     border-radius: 0 !important; /* Completely squared on mobile - no white curves showing on bottom sides! */
     border: none !important;
