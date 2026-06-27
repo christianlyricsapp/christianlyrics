@@ -166,7 +166,7 @@ export default function LyricsBlockEditor({
                     : "Other"
                 }
                 onChange={(e) => updateBlock(index, { label: e.target.value })}
-                className="rounded-xl border border-border bg-section px-3 py-2 text-base font-medium"
+                className="rounded-xl border border-border bg-card text-foreground px-3 py-2 text-base font-medium focus:border-[var(--accent)] focus:outline-none"
               >
                 {SECTION_LABELS.map((l) => (
                   <option key={l} value={l}>
@@ -187,7 +187,7 @@ export default function LyricsBlockEditor({
                     })
                   }
                   placeholder="Custom label"
-                  className="min-w-[120px] flex-1 rounded-xl border border-border px-3 py-2 text-base"
+                  className="min-w-[120px] flex-1 rounded-xl border border-border bg-card text-foreground px-3 py-2 text-base focus:border-[var(--accent)] focus:outline-none"
                 />
               )}
             </div>

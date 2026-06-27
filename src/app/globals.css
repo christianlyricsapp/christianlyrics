@@ -794,29 +794,31 @@ h4 {
 
 /* Utility compatibility mappings */
 .glass, .glass-strong {
-  background: #ffffff !important;
-  border: 1px solid var(--navy-border) !important;
-  box-shadow: 0 8px 24px rgba(8, 43, 102, 0.04) !important;
-  color: var(--navy) !important;
+  background: var(--card-bg) !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15) !important;
+  color: var(--foreground-color) !important;
+  backdrop-filter: blur(12px);
 }
 .text-foreground-dim {
-  color: var(--navy-muted) !important;
+  color: var(--muted-color) !important;
 }
 .text-muted {
-  color: var(--navy-muted) !important;
+  color: var(--muted-color) !important;
 }
 .bg-section {
-  background: #ffffff !important;
+  background: var(--section-bg) !important;
 }
 .btn-glow {
-  background: var(--navy) !important;
-  color: #ffffff !important;
-  border: 1px solid var(--navy) !important;
+  background: var(--accent) !important;
+  color: #051224 !important;
+  border: 1px solid var(--accent) !important;
   transition: all 0.2s ease !important;
+  font-weight: 700 !important;
 }
 .btn-glow:hover {
-  background: var(--navy-light) !important;
-  box-shadow: 0 4px 12px rgba(8, 43, 102, 0.12) !important;
+  background: var(--accent-hover) !important;
+  box-shadow: 0 4px 12px rgba(199, 157, 79, 0.25) !important;
 }
 
 /* ─── Premium Refinements V1 ──────────────────────── */
