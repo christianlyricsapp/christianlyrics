@@ -18,7 +18,7 @@ import type { AdminSong } from "@/lib/admin-types";
 type TabType = "draft" | "needs-review" | "published" | "all" | "trashed";
 
 /* ── Password required for permanent delete ── */
-const PERMANENT_DELETE_PASSWORD = "Sachin@786";
+const PERMANENT_DELETE_PASSWORD = "sachin@786";
 
 function formatFullPublishedDate(dateStr: string): string {
   const date = new Date(dateStr);
@@ -167,7 +167,7 @@ export default function AdminSongsList() {
   }
 
   async function handlePermanentDelete() {
-    if (deletePassword !== PERMANENT_DELETE_PASSWORD) {
+    if (deletePassword !== "sachin@786" && deletePassword !== "Sachin@786") {
       setPasswordError("Incorrect password. Only Sachin can permanently delete songs.");
       return;
     }

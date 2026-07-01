@@ -39,83 +39,82 @@ export default function AdminDashboard() {
   }
 
   const statCards = [
-    { label: "Total Songs", value: stats.total, color: "text-foreground", icon: "🎵" },
-    { label: "Published", value: stats.published, color: "text-green-400", icon: "✅" },
-    { label: "Drafts", value: stats.draft, color: "text-muted", icon: "📝" },
-    { label: "Needs Review", value: stats.needsReview, color: "text-amber-400", icon: "⏳" },
-    { label: "Categories", value: stats.totalCategories, color: "text-blue-400", icon: "📂" },
-    { label: "Artists", value: stats.totalArtists, color: "text-purple-400", icon: "🎤" },
+    { label: "Total Songs", value: stats.total, colorClass: "text-primary", bgClass: "bg-primary/5", icon: "🎵" },
+    { label: "Published", value: stats.published, colorClass: "text-green-600", bgClass: "bg-green-50", icon: "✅" },
+    { label: "Drafts", value: stats.draft, colorClass: "text-muted", bgClass: "bg-section", icon: "📝" },
+    { label: "Needs Review", value: stats.needsReview, colorClass: "text-amber-600", bgClass: "bg-amber-50", icon: "⏳" },
+    { label: "Categories", value: stats.totalCategories, colorClass: "text-blue-600", bgClass: "bg-blue-50", icon: "📂" },
+    { label: "Artists", value: stats.totalArtists, colorClass: "text-purple-600", bgClass: "bg-purple-50", icon: "🎤" },
   ];
 
-
-
-  function statusColor(status: string): string {
+  function statusBadge(status: string) {
     switch (status) {
-      case "published": return "text-green-400";
-      case "draft": return "text-slate-400";
-      case "needs-review": return "text-amber-400";
-      case "approved": return "text-blue-400";
-      default: return "text-muted";
+      case "published": return "bg-green-100 text-green-700";
+      case "draft": return "bg-slate-100 text-slate-600";
+      case "needs-review": return "bg-amber-100 text-amber-700";
+      case "approved": return "bg-blue-100 text-blue-700";
+      default: return "bg-section text-muted";
     }
   }
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
-      {/* Header Row */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+
+      {/* ── Header Row ── */}
+      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
         <div>
-          <h1 className="text-2xl font-extrabold text-white sm:text-3xl">
+          <h1 className="text-2xl font-extrabold text-foreground sm:text-3xl">
             {userName ? `${userName}'s Dashboard` : role === "admin" ? "Admin Dashboard" : "Volunteer Dashboard"}
           </h1>
-          <p className="mt-2 text-base text-muted">
+          <p className="mt-1.5 text-base text-muted">
             {role === "admin"
               ? `Welcome back, ${userName || "Admin"}! Manage your Christian Lyrics library.`
               : `Welcome, ${userName || "Volunteer"}! Thank you for contributing.`}
           </p>
         </div>
 
-        {/* Publish Live Button (Admins only) */}
+        {/* Publish Live Button — Admin only */}
         {role === "admin" && (
           <div className="w-full md:w-auto flex flex-col items-stretch md:items-end gap-1.5">
             <button
               onClick={handlePublish}
               disabled={rebuildStatus === "loading"}
-              className={`rounded-xl px-5 py-3 text-base font-bold transition-all focus:outline-none focus:ring-2 focus:ring-gold/20 cursor-pointer shadow-lg w-full md:w-auto ${
+              className={`rounded-xl px-5 py-3 text-sm font-bold transition-all focus:outline-none focus:ring-2 cursor-pointer shadow-sm w-full md:w-auto border ${
                 rebuildStatus === "loading"
-                  ? "bg-slate-800 text-slate-500 cursor-not-allowed"
+                  ? "bg-section border-border text-muted cursor-not-allowed"
                   : rebuildStatus === "success"
-                    ? "bg-green-600 hover:bg-green-700 text-white"
+                    ? "bg-green-600 border-green-600 hover:bg-green-700 text-white"
                     : rebuildStatus === "error"
-                      ? "bg-red-600 hover:bg-red-700 text-white"
-                      : "bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-[#051224]"
+                      ? "bg-red-600 border-red-600 hover:bg-red-700 text-white"
+                      : "bg-primary border-primary hover:bg-primary-light text-white"
               }`}
             >
-              {rebuildStatus === "loading" && "⏳ Triggering Rebuild..."}
+              {rebuildStatus === "loading" && "⏳ Triggering..."}
               {rebuildStatus === "success" && "🚀 Live Update Dispatched!"}
-              {rebuildStatus === "error" && "❌ Failed to Trigger"}
+              {rebuildStatus === "error" && "❌ Failed — Try Again"}
               {rebuildStatus === "idle" && "📢 Publish Changes Live"}
             </button>
             <span className="text-xs text-muted text-left md:text-right">
-              {rebuildStatus === "idle" && "Already live for users! Click to update static HTML for Google/SEO."}
+              {rebuildStatus === "idle" && "Updates SEO/static HTML for Google."}
               {rebuildStatus === "loading" && "Connecting to rebuild pipeline..."}
-              {rebuildStatus === "success" && "SEO update running. (Song changes are already live for users!)"}
+              {rebuildStatus === "success" && "SEO update running. Song changes are already live!"}
             </span>
           </div>
         )}
       </div>
 
-      {/* Stats Cards */}
+      {/* ── Stat Cards (Admin only) ── */}
       {role === "admin" && (
         <div className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-3">
           {statCards.map((card) => (
             <div
               key={card.label}
-              className="rounded-2xl border border-[rgba(199,157,79,0.15)] bg-[rgba(10,37,64,0.45)] backdrop-blur-md p-5 shadow-sm"
+              className={`rounded-2xl border border-border bg-card p-5 shadow-sm ${card.bgClass}`}
             >
               <p className="text-sm text-muted flex items-center gap-2">
                 <span>{card.icon}</span> {card.label}
               </p>
-              <p className={`mt-2 text-2xl font-bold ${card.color}`}>
+              <p className={`mt-2 text-2xl font-bold ${card.colorClass}`}>
                 {card.value}
               </p>
             </div>
@@ -123,10 +122,10 @@ export default function AdminDashboard() {
         </div>
       )}
 
-      {/* Volunteer Welcome Card */}
+      {/* ── Volunteer Welcome Card ── */}
       {role === "volunteer" && (
-        <div className="mt-8 rounded-2xl border border-[rgba(199,157,79,0.15)] bg-[rgba(10,37,64,0.45)] backdrop-blur-md p-6 shadow-sm">
-          <h2 className="text-xl font-bold text-white">Thank you for contributing! 🎵</h2>
+        <div className="mt-8 rounded-2xl border border-border bg-card p-6 shadow-sm">
+          <h2 className="text-xl font-bold text-foreground">Thank you for contributing! 🎵</h2>
           <p className="mt-2 text-base text-muted leading-relaxed">
             Your volunteer account lets you paste and format new lyrics directly from your mobile phone.
             Once you submit a song, our administrators will review, correct, and publish it live to the website!
@@ -134,85 +133,86 @@ export default function AdminDashboard() {
         </div>
       )}
 
-      {/* Quick Action Buttons */}
-      <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+      {/* ── Quick Action Buttons ── */}
+      <div className="mt-8 flex flex-col gap-3 sm:flex-row">
         <Link
           href="/admin/songs/new"
-          className="inline-flex w-full items-center justify-center rounded-xl bg-[var(--accent)] hover:bg-[var(--accent-hover)] px-6 py-4 text-lg font-bold text-[#051224] transition-all shadow-lg shadow-gold/10 sm:w-auto active:scale-95 cursor-pointer"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-accent hover:bg-accent-hover px-6 py-3.5 text-base font-bold text-white transition-all shadow-sm sm:w-auto active:scale-95"
         >
           ➕ Add New Lyrics
         </Link>
-        <Link
-          href="/admin/songs/import"
-          className="inline-flex w-full items-center justify-center rounded-xl border border-[rgba(199,157,79,0.3)] bg-[rgba(10,37,64,0.35)] backdrop-blur-md px-6 py-4 text-lg font-bold text-white transition-all shadow-lg hover:border-[var(--accent)] hover:bg-[rgba(10,37,64,0.6)] sm:w-auto active:scale-95 cursor-pointer"
-        >
-          📦 Bulk Import (Docs/PDFs/PPTs)
-        </Link>
+        {role === "admin" && (
+          <Link
+            href="/admin/bulk-upload"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-border bg-card hover:bg-section px-6 py-3.5 text-base font-semibold text-foreground transition-all shadow-sm sm:w-auto active:scale-95"
+          >
+            📄 Bulk Upload (.docx / .txt)
+          </Link>
+        )}
       </div>
 
-      {/* Recent Songs (Admins only) */}
+      {/* ── Recent Songs (Admin only) ── */}
       {role === "admin" && stats.recentSongs.length > 0 && (
         <div className="mt-8">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-bold text-white">Recent Songs</h2>
-            <Link href="/admin/songs" className="text-sm text-[var(--accent)] hover:underline">
+            <h2 className="text-lg font-bold text-foreground">Recent Songs</h2>
+            <Link href="/admin/songs" className="text-sm font-medium text-accent hover:underline">
               View all →
             </Link>
           </div>
-          <div className="rounded-2xl border border-[rgba(199,157,79,0.15)] bg-[rgba(10,37,64,0.45)] backdrop-blur-md overflow-hidden">
+          <div className="rounded-2xl border border-border bg-card overflow-hidden shadow-sm">
             {stats.recentSongs.map((song, i) => (
               <Link
                 key={song.id}
                 href={`/admin/songs/edit?id=${song.id}`}
-                className={`flex items-center justify-between px-4 py-2.5 hover:bg-[rgba(199,157,79,0.08)] transition-colors ${
-                  i < stats.recentSongs.length - 1 ? "border-b border-[rgba(255,255,255,0.06)]" : ""
+                className={`flex items-center justify-between px-4 py-3 hover:bg-section transition-colors ${
+                  i < stats.recentSongs.length - 1 ? "border-b border-border" : ""
                 }`}
               >
-                <div className="flex items-center gap-2 min-w-0 flex-1">
-                  <span className="text-sm font-semibold text-white truncate">{song.title}</span>
-                  <span className="text-xs text-muted/60">—</span>
-                  <span className={`text-xs font-semibold ${statusColor(song.status)} shrink-0`}>
+                <div className="flex items-center gap-3 min-w-0 flex-1">
+                  <span className="text-sm font-semibold text-foreground truncate">{song.title}</span>
+                  <span className={`text-xs font-semibold px-2 py-0.5 rounded-full shrink-0 ${statusBadge(song.status)}`}>
                     {getSongStatusLabel(song.status)}
                   </span>
                 </div>
-                <span className="text-xs text-[var(--accent)] font-bold ml-2">Edit →</span>
+                <span className="text-xs font-bold text-accent ml-3 shrink-0">Edit →</span>
               </Link>
             ))}
           </div>
         </div>
       )}
 
-      {/* Navigation Cards */}
+      {/* ── Navigation Cards ── */}
       <div className="mt-8 grid gap-4 sm:grid-cols-2">
         <Link
           href="/admin/songs"
-          className="group rounded-2xl border border-[rgba(199,157,79,0.15)] bg-[rgba(10,37,64,0.45)] backdrop-blur-md p-6 transition-all hover:border-[var(--accent)] hover:bg-[#0A2540] hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow-md flex items-center justify-between"
+          className="group rounded-2xl border border-border bg-card p-6 transition-all hover:border-accent hover:shadow-md flex items-center justify-between shadow-sm active:scale-[0.98]"
         >
           <div>
-            <p className="text-xl font-bold text-white group-hover:text-[var(--accent)] transition-colors">
+            <p className="text-base font-bold text-foreground group-hover:text-accent transition-colors">
               📂 {role === "admin" ? "Manage Songs" : "View My Submissions"}
             </p>
-            <p className="mt-2 text-base text-muted leading-relaxed">
+            <p className="mt-1.5 text-sm text-muted leading-relaxed">
               {role === "admin"
                 ? "View, edit, and preview all library songs."
                 : "See status of songs submitted for review."}
             </p>
           </div>
-          <span className="text-2xl text-muted group-hover:translate-x-1 group-hover:text-[var(--accent)] transition-all ml-4">→</span>
+          <span className="text-xl text-muted group-hover:translate-x-1 group-hover:text-accent transition-all ml-4">→</span>
         </Link>
         <Link
           href="/admin/songs/new"
-          className="group rounded-2xl border border-[rgba(199,157,79,0.15)] bg-[rgba(10,37,64,0.45)] backdrop-blur-md p-6 transition-all hover:border-[var(--accent)] hover:bg-[#0A2540] hover:scale-[1.02] active:scale-[0.98] shadow-sm hover:shadow-md flex items-center justify-between"
+          className="group rounded-2xl border border-border bg-card p-6 transition-all hover:border-accent hover:shadow-md flex items-center justify-between shadow-sm active:scale-[0.98]"
         >
           <div>
-            <p className="text-xl font-bold text-white group-hover:text-[var(--accent)] transition-colors">
+            <p className="text-base font-bold text-foreground group-hover:text-accent transition-colors">
               ⚡ Quick Add Lyrics
             </p>
-            <p className="mt-2 text-base text-muted leading-relaxed">
+            <p className="mt-1.5 text-sm text-muted leading-relaxed">
               Paste lyrics from your phone and save.
             </p>
           </div>
-          <span className="text-2xl text-muted group-hover:translate-x-1 group-hover:text-[var(--accent)] transition-all ml-4">→</span>
+          <span className="text-xl text-muted group-hover:translate-x-1 group-hover:text-accent transition-all ml-4">→</span>
         </Link>
       </div>
     </div>

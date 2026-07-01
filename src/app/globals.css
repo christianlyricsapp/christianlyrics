@@ -26,31 +26,32 @@
 }
 
 .admin-theme {
-  /* Premium Dark Gold Admin Layout matching homepage exactly */
-  background-color: #051224 !important;
-  color: #ffffff !important;
+  /* Clean white admin theme — matches public website design language */
+  background-color: #F4F6F9 !important;
+  color: #0A2540 !important;
 
-  --bg-page: #051224;
-  --card-bg: rgba(10, 37, 64, 0.45);
-  --section-bg: #0A2540;
-  --border-color: rgba(255, 255, 255, 0.08);
-  --foreground-color: #ffffff;
-  --muted-color: #8fa8c4;
-  
-  --primary: var(--accent);
-  --primary-light: #d6b265;
-  --primary-dark: #b48c3f;
-  
+  --bg-page: #F4F6F9;
+  --card-bg: #ffffff;
+  --section-bg: #F4F6F9;
+  --border-color: #D8E6F2;
+  --foreground-color: #0A2540;
+  --muted-color: #4B6B88;
+
+  --primary: #0A2540;
+  --primary-light: #153457;
+  --primary-dark: #06182D;
+
   --accent: #C59D4F;
   --accent-hover: #B48C3F;
 
-  --navy: #ffffff;
-  --navy-light: #C7DDF2;
-  --navy-muted: #8fa8c4;
-  --navy-faded: #4B6B88;
-  --navy-border: rgba(255, 255, 255, 0.08);
-  --navy-bg-subtle: #0A2540;
+  --navy: #0A2540;
+  --navy-light: #153457;
+  --navy-muted: #4B6B88;
+  --navy-faded: #8EA0B4;
+  --navy-border: #D8E6F2;
+  --navy-bg-subtle: #F5F8FC;
 }
+
 
 @theme inline {
   --color-navy: var(--navy);

@@ -20,7 +20,7 @@ const SESSION_ID_KEY = "christian-lyrics-volunteer-session-id";
 const localStorage = typeof window !== "undefined" ? window.sessionStorage : null as unknown as Storage;
 
 const DEMO_EMAIL = "admin@christianlyrics.app";
-const DEMO_PASSWORD = "admin123";
+const DEMO_PASSWORD = "Admin@777!!..";
 const VOLUNTEER_EMAIL = "volunteer@christianlyrics.app";
 const VOLUNTEER_PASSWORD = "volunteer123";
 

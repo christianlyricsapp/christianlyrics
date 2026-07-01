@@ -80,7 +80,7 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="admin-theme flex min-h-screen bg-bg-page text-foreground">
+    <div className="admin-theme flex min-h-screen bg-section text-foreground">
       <AdminSidebar
         open={sidebarOpen}
         onClose={() => setSidebarOpen(false)}
