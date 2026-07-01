@@ -26,6 +26,8 @@ export default function AdminSidebar({ open, onClose }: AdminSidebarProps) {
         { href: "/admin/songs", label: "Songs", icon: "🎵" },
         { href: "/admin/songs/new", label: "Add Lyrics", icon: "➕" },
         { href: "/admin/songs/import", label: "Bulk Import", icon: "📦" },
+        { href: "/admin/categories", label: "Categories", icon: "📂" },
+        { href: "/admin/artists", label: "Artists", icon: "🎤" },
         { href: "/admin/volunteers", label: "Volunteers", icon: "👥" },
       ];
     }

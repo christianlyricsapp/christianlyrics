@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getAdminStats, getAdminRole, triggerRebuild, getLoggedInUserName } from "@/lib/admin-store";
 import type { AdminStats } from "@/lib/admin-types";
+import { getSongStatusLabel } from "@/lib/admin-types";
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState<AdminStats>({
@@ -11,6 +12,9 @@ export default function AdminDashboard() {
     published: 0,
     draft: 0,
     needsReview: 0,
+    totalCategories: 0,
+    totalArtists: 0,
+    recentSongs: [],
   });
   const [role, setRole] = useState<"admin" | "volunteer">("volunteer");
   const [userName, setUserName] = useState("");
@@ -35,14 +39,36 @@ export default function AdminDashboard() {
   }
 
   const statCards = [
-    { label: "Total Songs", value: stats.total, color: "text-foreground" },
-    { label: "Published", value: stats.published, color: "text-green-400" },
-    { label: "Drafts", value: stats.draft, color: "text-muted" },
-    { label: "Needs Review", value: stats.needsReview, color: "text-amber-400" },
+    { label: "Total Songs", value: stats.total, color: "text-foreground", icon: "🎵" },
+    { label: "Published", value: stats.published, color: "text-green-400", icon: "✅" },
+    { label: "Drafts", value: stats.draft, color: "text-muted", icon: "📝" },
+    { label: "Needs Review", value: stats.needsReview, color: "text-amber-400", icon: "⏳" },
+    { label: "Categories", value: stats.totalCategories, color: "text-blue-400", icon: "📂" },
+    { label: "Artists", value: stats.totalArtists, color: "text-purple-400", icon: "🎤" },
   ];
+
+  function formatDate(dateStr: string): string {
+    try {
+      const d = new Date(dateStr);
+      return d.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+    } catch {
+      return dateStr;
+    }
+  }
+
+  function statusColor(status: string): string {
+    switch (status) {
+      case "published": return "text-green-400";
+      case "draft": return "text-slate-400";
+      case "needs-review": return "text-amber-400";
+      case "approved": return "text-blue-400";
+      default: return "text-muted";
+    }
+  }
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
+      {/* Header Row */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
         <div>
           <h1 className="text-2xl font-extrabold text-white sm:text-3xl">
@@ -85,15 +111,17 @@ export default function AdminDashboard() {
         )}
       </div>
 
-      {/* Stats Cards (Admins only) */}
+      {/* Stats Cards */}
       {role === "admin" && (
-        <div className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-4 animate-fade-in">
+        <div className="mt-8 grid grid-cols-2 gap-4 lg:grid-cols-3">
           {statCards.map((card) => (
             <div
               key={card.label}
               className="rounded-2xl border border-[rgba(199,157,79,0.15)] bg-[rgba(10,37,64,0.45)] backdrop-blur-md p-5 shadow-sm"
             >
-              <p className="text-sm text-muted">{card.label}</p>
+              <p className="text-sm text-muted flex items-center gap-2">
+                <span>{card.icon}</span> {card.label}
+              </p>
               <p className={`mt-2 text-2xl font-bold ${card.color}`}>
                 {card.value}
               </p>
@@ -104,7 +132,7 @@ export default function AdminDashboard() {
 
       {/* Volunteer Welcome Card */}
       {role === "volunteer" && (
-        <div className="mt-8 rounded-2xl border border-[rgba(199,157,79,0.15)] bg-[rgba(10,37,64,0.45)] backdrop-blur-md p-6 shadow-sm animate-fade-in">
+        <div className="mt-8 rounded-2xl border border-[rgba(199,157,79,0.15)] bg-[rgba(10,37,64,0.45)] backdrop-blur-md p-6 shadow-sm">
           <h2 className="text-xl font-bold text-white">Thank you for contributing! 🎵</h2>
           <p className="mt-2 text-base text-muted leading-relaxed">
             Your volunteer account lets you paste and format new lyrics directly from your mobile phone.
@@ -113,6 +141,7 @@ export default function AdminDashboard() {
         </div>
       )}
 
+      {/* Quick Action Buttons */}
       <div className="mt-8 flex flex-col gap-4 sm:flex-row">
         <Link
           href="/admin/songs/new"
@@ -128,6 +157,38 @@ export default function AdminDashboard() {
         </Link>
       </div>
 
+      {/* Recent Songs (Admins only) */}
+      {role === "admin" && stats.recentSongs.length > 0 && (
+        <div className="mt-8">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-bold text-white">Recent Songs</h2>
+            <Link href="/admin/songs" className="text-sm text-[var(--accent)] hover:underline">
+              View all →
+            </Link>
+          </div>
+          <div className="rounded-2xl border border-[rgba(199,157,79,0.15)] bg-[rgba(10,37,64,0.45)] backdrop-blur-md overflow-hidden">
+            {stats.recentSongs.map((song, i) => (
+              <Link
+                key={song.id}
+                href={`/admin/songs/edit?id=${song.id}`}
+                className={`flex items-center justify-between px-5 py-4 hover:bg-[rgba(199,157,79,0.08)] transition-colors ${
+                  i < stats.recentSongs.length - 1 ? "border-b border-[rgba(255,255,255,0.06)]" : ""
+                }`}
+              >
+                <div className="flex-1 min-w-0">
+                  <p className="text-base font-semibold text-white truncate">{song.title}</p>
+                  <p className="text-xs text-muted mt-1">{formatDate(song.updatedAt)}</p>
+                </div>
+                <span className={`text-xs font-medium ${statusColor(song.status)} ml-3 shrink-0`}>
+                  {getSongStatusLabel(song.status)}
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Navigation Cards */}
       <div className="mt-8 grid gap-4 sm:grid-cols-2">
         <Link
           href="/admin/songs"

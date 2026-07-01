@@ -27,17 +27,17 @@ export default function VolunteersList() {
   const [volunteers, setVolunteers] = useState<VolunteerStats[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    loadVolunteers();
-  }, []);
-
-  function loadVolunteers() {
+  const loadVolunteers = () => {
     setLoading(true);
     getVolunteerStats().then((data) => {
       setVolunteers(data);
       setLoading(false);
     });
-  }
+  };
+
+  useEffect(() => {
+    loadVolunteers();
+  }, []);
 
   function handleToggleStatus(id: string, currentStatus: "active" | "inactive") {
     toggleVolunteerStatus(id, currentStatus).then((success) => {

@@ -17,7 +17,7 @@ const VOLUNTEER_NAME_KEY = "christian-lyrics-volunteer-name";
 const SESSION_ID_KEY = "christian-lyrics-volunteer-session-id";
 
 // Shadow localStorage with sessionStorage to enforce temporary login lifetimes (clears on tab close)
-const localStorage = typeof window !== "undefined" ? window.sessionStorage : null as any;
+const localStorage = typeof window !== "undefined" ? window.sessionStorage : null as unknown as Storage;
 
 const DEMO_EMAIL = "admin@christianlyrics.app";
 const DEMO_PASSWORD = "admin123";
@@ -152,20 +152,79 @@ export async function getAdminSongById(id: string): Promise<AdminSong | null> {
 export async function getAdminStats(): Promise<AdminStats> {
   const { data, error } = await supabase
     .from("songs")
-    .select("status");
+    .select("id, title, status, category, artist, updated_at")
+    .is("deleted_at", null)
+    .order("updated_at", { ascending: false });
 
   if (error) {
     console.error("Error fetching admin stats:", error);
-    return { total: 0, published: 0, draft: 0, needsReview: 0 };
+    return { total: 0, published: 0, draft: 0, needsReview: 0, totalCategories: 0, totalArtists: 0, recentSongs: [] };
   }
 
   const songs = data || [];
+
+  // Count unique categories across all songs
+  const categorySet = new Set<string>();
+  songs.forEach((s) => {
+    if (s.category) {
+      s.category.split(",").map((c: string) => c.trim()).filter(Boolean).forEach((c: string) => categorySet.add(c));
+    }
+  });
+
+  // Count unique artists
+  const artistSet = new Set<string>();
+  songs.forEach((s) => {
+    if (s.artist && s.artist.trim()) {
+      artistSet.add(s.artist.trim().toLowerCase());
+    }
+  });
+
+  // Recent 5 songs
+  const recentSongs = songs.slice(0, 5).map((s) => ({
+    id: s.id,
+    title: s.title,
+    status: (s.status || "draft") as import("./admin-types").SongStatus,
+    updatedAt: s.updated_at || new Date().toISOString(),
+  }));
+
   return {
     total: songs.length,
     published: songs.filter((s) => s.status === "published").length,
     draft: songs.filter((s) => s.status === "draft").length,
     needsReview: songs.filter((s) => s.status === "needs-review").length,
+    totalCategories: categorySet.size,
+    totalArtists: artistSet.size,
+    recentSongs,
   };
+}
+
+export type ArtistInfo = {
+  name: string;
+  songCount: number;
+};
+
+export async function getUniqueArtists(): Promise<ArtistInfo[]> {
+  const { data, error } = await supabase
+    .from("songs")
+    .select("artist")
+    .is("deleted_at", null);
+
+  if (error) {
+    console.error("Error fetching artists:", error);
+    return [];
+  }
+
+  const artistMap = new Map<string, number>();
+  (data || []).forEach((s) => {
+    if (s.artist && s.artist.trim()) {
+      const name = s.artist.trim();
+      artistMap.set(name, (artistMap.get(name) || 0) + 1);
+    }
+  });
+
+  return Array.from(artistMap.entries())
+    .map(([name, songCount]) => ({ name, songCount }))
+    .sort((a, b) => a.name.localeCompare(b.name));
 }
 
 export async function createAdminSong(data: AdminSongFormData): Promise<AdminSong | null> {
@@ -189,7 +248,7 @@ export async function createAdminSong(data: AdminSongFormData): Promise<AdminSon
   const { data: existingSongs } = await supabase.from("songs").select("slug");
   const existingSlugs = new Set((existingSongs || []).map((s) => s.slug));
 
-  let baseSlug = data.slug || generateSlug(data.title);
+  const baseSlug = data.slug || generateSlug(data.title);
   let finalSlug = baseSlug;
   let counter = 1;
   while (existingSlugs.has(finalSlug)) {
@@ -254,7 +313,7 @@ export async function updateAdminSong(
     .neq("id", id);
   const existingSlugs = new Set((existingSongs || []).map((s) => s.slug));
 
-  let baseSlug = data.slug || generateSlug(data.title);
+  const baseSlug = data.slug || generateSlug(data.title);
   let finalSlug = baseSlug;
   let counter = 1;
   while (existingSlugs.has(finalSlug)) {
@@ -262,7 +321,7 @@ export async function updateAdminSong(
     counter++;
   }
 
-  const dbData: Record<string, any> = {
+  const dbData: Record<string, unknown> = {
     title: data.title,
     slug: finalSlug,
     artist: data.artist || "",
@@ -318,7 +377,7 @@ export async function createAdminSongsBatch(songs: AdminSongFormData[]): Promise
         ? data.categories.join(",")
         : "worship";
 
-    let baseSlug = data.slug || generateSlug(data.title);
+    const baseSlug = data.slug || generateSlug(data.title);
     let finalSlug = baseSlug;
     let counter = 1;
     while (existingSlugs.has(finalSlug)) {

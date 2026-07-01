@@ -45,11 +45,21 @@ export type AdminSongFormData = Omit<
   "id" | "createdAt" | "updatedAt" | "deletedAt" | "createdByName" | "lastModifiedByName"
 >;
 
+export type RecentSong = {
+  id: string;
+  title: string;
+  status: SongStatus;
+  updatedAt: string;
+};
+
 export type AdminStats = {
   total: number;
   published: number;
   draft: number;
   needsReview: number;
+  totalCategories: number;
+  totalArtists: number;
+  recentSongs: RecentSong[];
 };
 
 export function generateSlug(title: string): string {
