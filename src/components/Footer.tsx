@@ -83,11 +83,12 @@ export default function Footer() {
   return (
     <footer
       style={{
-        background: "#0A2540",
-        borderTop: "1px solid #14355a",
+        background: "#f8fafc",
+        borderTop: "1.5px solid #e2e8f0",
         padding: "32px 24px",
         marginTop: "32px",
       }}
+      className="site-footer"
     >
       <div
         style={{
@@ -117,14 +118,13 @@ export default function Footer() {
                 height: "24px",
                 width: "auto",
                 objectFit: "contain",
-                filter: "brightness(0) invert(1)"
               }}
             />
             <p
               style={{
                 fontSize: "1.25rem",
                 fontWeight: 800,
-                color: "#ffffff",
+                color: "#0A2540",
                 margin: 0,
                 letterSpacing: "-0.015em",
               }}
@@ -139,7 +139,7 @@ export default function Footer() {
               display: "flex",
               alignItems: "center",
               gap: "16px",
-              color: "#8fa8c4",
+              color: "#3a5a7c",
               fontSize: "0.85rem",
             }}
           >
@@ -174,7 +174,7 @@ export default function Footer() {
         </div>
 
         {/* Separator line */}
-        <hr style={{ border: "none", borderTop: "1px solid #14355a", margin: 0 }} />
+        <hr style={{ border: "none", borderTop: "1px solid #e2e8f0", margin: 0 }} />
 
         {/* Bottom Row: Links and Copyright */}
         <div
@@ -203,7 +203,7 @@ export default function Footer() {
                 style={{
                   fontSize: "0.9rem",
                   fontWeight: 600,
-                  color: "#C7DDF2",
+                  color: "#3a5a7c",
                   textDecoration: "none",
                   transition: "all 0.15s ease",
                 }}
@@ -217,7 +217,7 @@ export default function Footer() {
           <p
             style={{
               fontSize: "0.8rem",
-              color: "#8fa8c4",
+              color: "#64748b",
               margin: 0,
             }}
           >

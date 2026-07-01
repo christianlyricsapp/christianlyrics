@@ -180,20 +180,14 @@ export default function Header() {
               style={{
                 display: "inline-flex",
                 alignItems: "center",
-                gap: "8px",
-                fontWeight: 800,
-                fontSize: "1.4rem",
-                color: "var(--foreground-color)",
                 textDecoration: "none",
-                letterSpacing: "-0.02em",
               }}
             >
               <img
                 src="/logo.png"
                 alt="Logo"
-                style={{ height: "26px", width: "auto", objectFit: "contain" }}
+                style={{ height: "30px", width: "auto", objectFit: "contain" }}
               />
-              <span>Christian Lyrics</span>
             </Link>
           </div>
 

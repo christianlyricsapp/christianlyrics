@@ -35,13 +35,24 @@ export default function AdminHeader({ onMenuOpen }: AdminHeaderProps) {
     : "?";
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-card/95 backdrop-blur-sm">
+    <header className="sticky top-0 z-40 border-b border-[#e2e8f0] bg-white">
       <div className="flex items-center justify-between px-4 py-3 sm:px-6">
         <div className="flex items-center gap-3">
           <button
             type="button"
             onClick={onMenuOpen}
-            className="rounded-xl border border-border p-2.5 md:hidden"
+            style={{
+              background: "transparent",
+              border: "1.5px solid #e2e8f0",
+              color: "#0A2540",
+              borderRadius: "6px",
+              width: "32px",
+              height: "32px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+            className="md:hidden browse-reset-btn"
             aria-label="Open menu"
           >
             <svg
@@ -58,7 +69,7 @@ export default function AdminHeader({ onMenuOpen }: AdminHeaderProps) {
           </button>
           <Link
             href="/admin/dashboard"
-            className="font-serif text-lg font-semibold text-primary sm:text-xl"
+            className="font-serif text-lg font-semibold text-[#0A2540] sm:text-xl"
           >
             Christian Lyrics Admin
           </Link>
@@ -67,7 +78,7 @@ export default function AdminHeader({ onMenuOpen }: AdminHeaderProps) {
         <div className="flex items-center gap-3">
           <Link
             href="/"
-            className="hidden rounded-xl px-3 py-2 text-sm font-medium text-muted transition-colors hover:bg-section hover:text-foreground sm:inline-block"
+            className="hidden rounded-xl px-3 py-2 text-sm font-medium text-[#3a5a7c] transition-colors hover:bg-[#f8fafc] hover:text-[#0A2540] sm:inline-block"
           >
             View Site
           </Link>
@@ -87,10 +98,10 @@ export default function AdminHeader({ onMenuOpen }: AdminHeaderProps) {
               {initials}
             </div>
             <div className="hidden flex-col sm:flex">
-              <span className="text-sm font-semibold leading-tight text-foreground">
+              <span className="text-sm font-semibold leading-tight text-[#0A2540]">
                 {userName}
               </span>
-              <span className="text-[10px] font-medium uppercase tracking-wider text-muted">
+              <span className="text-[10px] font-medium uppercase tracking-wider text-[#64748b]">
                 {role}
               </span>
             </div>
@@ -99,7 +110,7 @@ export default function AdminHeader({ onMenuOpen }: AdminHeaderProps) {
           <button
             type="button"
             onClick={handleLogout}
-            className="rounded-xl border border-border px-4 py-2.5 text-sm font-medium transition-colors hover:bg-section"
+            className="rounded-xl border border-[#e2e8f0] px-4 py-2.5 text-sm font-medium text-[#0A2540] transition-colors hover:bg-[#f8fafc]"
           >
             Logout
           </button>
