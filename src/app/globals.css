@@ -879,6 +879,16 @@ h4 {
   box-shadow: 0 0 0 3px rgba(199, 157, 79, 0.25), 0 6px 16px rgba(0, 0, 0, 0.15) !important;
 }
 
+/* Override webkit autofill styles for dark theme form elements */
+.form-input-premium:-webkit-autofill,
+.form-input-premium:-webkit-autofill:hover,
+.form-input-premium:-webkit-autofill:focus {
+  -webkit-text-fill-color: #ffffff !important;
+  -webkit-box-shadow: 0 0 0px 1000px #0a2540 inset !important;
+  box-shadow: 0 0 0px 1000px #0a2540 inset !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
 .song-category-txt {
   font-size: 0.85rem;
   color: var(--navy-muted);

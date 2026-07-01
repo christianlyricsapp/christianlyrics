@@ -29,7 +29,7 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#051224] px-4">
+    <div className="admin-theme flex min-h-screen items-center justify-center bg-[#051224] px-4">
       <div className="w-full max-w-md rounded-2xl border border-[rgba(199,157,79,0.25)] bg-[rgba(10,37,64,0.45)] backdrop-blur-md p-6 shadow-xl sm:p-8">
         <h1 className="text-center text-2xl font-extrabold text-white sm:text-3xl">
           Admin Login

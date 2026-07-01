@@ -8,4 +8,10 @@ if (!supabaseUrl || !supabaseAnonKey) {
   console.warn("Supabase credentials not found. Database features will fallback to empty data.");
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    persistSession: true,
+    storage: typeof window !== "undefined" ? window.sessionStorage : undefined,
+    detectSessionInUrl: true,
+  }
+});

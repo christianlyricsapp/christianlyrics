@@ -214,12 +214,20 @@ export default function AdminSongsList() {
             )}
           </p>
         </div>
-        <Link
-          href="/admin/songs/new"
-          className="rounded-xl bg-primary px-5 py-3 text-base font-medium text-white transition-colors hover:bg-primary-light"
-        >
-          Add New
-        </Link>
+        <div className="flex gap-2">
+          <Link
+            href="/admin/songs/import"
+            className="rounded-xl border border-[rgba(199,157,79,0.3)] bg-[rgba(10,37,64,0.35)] px-5 py-3 text-base font-medium text-white transition-colors hover:border-[var(--accent)] hover:bg-[rgba(10,37,64,0.6)] cursor-pointer"
+          >
+            Bulk Import (Docs/PDFs/PPTs)
+          </Link>
+          <Link
+            href="/admin/songs/new"
+            className="rounded-xl bg-primary px-5 py-3 text-base font-medium text-white transition-colors hover:bg-primary-light"
+          >
+            Add New
+          </Link>
+        </div>
       </div>
 
       {/* ── Tabs ── */}
