@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Header from "./Header";
 import Footer from "./Footer";
+import { getAllSongs } from "@/lib/supabase-db";
+import { type Song } from "@/lib/demo-data";
 
 /* ─── Floating WhatsApp Icon SVG Component ────────── */
 function WhatsappIcon({ style }: { style?: React.CSSProperties }) {
@@ -82,6 +84,20 @@ export default function SiteChrome({
   const router = useRouter();
   const isAdmin = pathname.startsWith("/admin");
   const [modalContent, setModalContent] = useState<{ title: string; message: string } | null>(null);
+  
+  const [allSongs, setAllSongs] = useState<Song[]>([]);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+
+  useEffect(() => {
+    if (isSearchOpen && allSongs.length === 0) {
+      getAllSongs().then((songs) => {
+        if (songs) {
+          setAllSongs(songs);
+        }
+      });
+    }
+  }, [isSearchOpen, allSongs]);
 
   if (isAdmin) {
     return <>{children}</>;
@@ -107,46 +123,185 @@ export default function SiteChrome({
       {/* Mobile Bottom Tab Navigation */}
       <nav className="mobile-bottom-nav" aria-label="Mobile bottom tabs">
         <button
-          onClick={() => router.push("/")}
-          className={`nav-tab ${pathname === "/" ? "active" : ""}`}
+          onClick={() => {
+            setIsSearchOpen(false);
+            router.push("/");
+          }}
+          className={`nav-tab ${pathname === "/" && !isSearchOpen ? "active" : ""}`}
           type="button"
         >
           <HomeIcon />
           <span>Home</span>
         </button>
         <button
-          onClick={() => router.push("/browse")}
-          className={`nav-tab ${pathname.startsWith("/browse") ? "active" : ""}`}
+          onClick={() => setIsSearchOpen(true)}
+          className={`nav-tab ${isSearchOpen ? "active" : ""}`}
           type="button"
         >
           <SearchIcon />
-          <span>Browse</span>
+          <span>Search</span>
         </button>
         <button
-          onClick={() => router.push("/library")}
-          className={`nav-tab ${pathname.startsWith("/library") ? "active" : ""}`}
+          onClick={() => {
+            setIsSearchOpen(false);
+            router.push("/library");
+          }}
+          className={`nav-tab ${pathname.startsWith("/library") && !isSearchOpen ? "active" : ""}`}
           type="button"
         >
           <LibraryIcon />
           <span>Library</span>
         </button>
         <button
-          onClick={() => router.push("/bible")}
-          className={`nav-tab ${pathname.startsWith("/bible") ? "active" : ""}`}
+          onClick={() => {
+            setIsSearchOpen(false);
+            router.push("/bible");
+          }}
+          className={`nav-tab ${pathname.startsWith("/bible") && !isSearchOpen ? "active" : ""}`}
           type="button"
         >
           <BibleIcon />
           <span>Bible</span>
         </button>
         <button
-          onClick={() => router.push("/community")}
-          className={`nav-tab ${pathname.startsWith("/community") ? "active" : ""}`}
+          onClick={() => {
+            setIsSearchOpen(false);
+            router.push("/community");
+          }}
+          className={`nav-tab ${pathname.startsWith("/community") && !isSearchOpen ? "active" : ""}`}
           type="button"
         >
           <UsersIcon />
           <span>Community</span>
         </button>
       </nav>
+
+      {/* Global Search Overlay Modal */}
+      {isSearchOpen && (
+        <div
+          onClick={() => setIsSearchOpen(false)}
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: "rgba(0, 0, 0, 0.3)",
+            backdropFilter: "blur(8px)",
+            WebkitBackdropFilter: "blur(8px)",
+            zIndex: 1000,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "flex-start",
+            paddingTop: "60px",
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              width: "90%",
+              maxWidth: "500px",
+              background: "var(--card-bg)",
+              backdropFilter: "blur(20px)",
+              border: "1px solid var(--border-color)",
+              borderRadius: "16px",
+              boxShadow: "0 20px 45px rgba(0, 0, 0, 0.18)",
+              padding: "16px",
+              display: "flex",
+              flexDirection: "column",
+              gap: "14px",
+            }}
+          >
+            {/* Header / Input Row */}
+            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+              <div style={{ display: "flex", flex: 1, alignItems: "center", gap: "8px", background: "var(--bg-page)", border: "1.5px solid var(--border-color)", borderRadius: "10px", padding: "8px 12px" }}>
+                <SearchIcon />
+                <input
+                  type="text"
+                  placeholder="Search your gospel lyrics here"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  autoFocus
+                  style={{
+                    background: "transparent",
+                    border: "none",
+                    outline: "none",
+                    width: "100%",
+                    fontSize: "0.95rem",
+                    color: "var(--foreground-color)",
+                  }}
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsSearchOpen(false)}
+                className="browse-reset-btn"
+                style={{
+                  fontSize: "1.2rem",
+                  fontWeight: "bold",
+                  color: "var(--muted-color)",
+                  padding: "4px 8px",
+                  cursor: "pointer",
+                }}
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Suggestions list */}
+            {searchQuery.trim().length > 0 && (
+              <div style={{ display: "flex", flexDirection: "column", gap: "2px", maxHeight: "300px", overflowY: "auto" }}>
+                {allSongs
+                  .filter((song) => {
+                    const q = searchQuery.toLowerCase();
+                    const titleMatch = song.title?.toLowerCase().includes(q);
+                    const artistMatch = song.artist?.toLowerCase().includes(q);
+                    const lyricsMatch = song.lyrics?.toLowerCase().includes(q);
+                    return titleMatch || artistMatch || lyricsMatch;
+                  })
+                  .slice(0, 8)
+                  .map((song) => (
+                    <div
+                      key={song.slug}
+                      onClick={() => {
+                        router.push(`/songs/${song.slug}`);
+                        setIsSearchOpen(false);
+                        setSearchQuery("");
+                      }}
+                      style={{
+                        padding: "10px 12px",
+                        cursor: "pointer",
+                        borderRadius: "8px",
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "2px",
+                        transition: "background 0.15s ease",
+                      }}
+                      className="public-list-row hover:bg-[var(--bg-page)]"
+                    >
+                      <span style={{ fontSize: "0.95rem", fontWeight: 700, color: "#007aff" }}>
+                        {song.title}
+                      </span>
+                      {song.artist && (
+                        <span style={{ fontSize: "0.8rem", color: "var(--muted-color)" }}>
+                          by {song.artist}
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                {allSongs.filter((song) => {
+                  const q = searchQuery.toLowerCase();
+                  return song.title?.toLowerCase().includes(q) || song.artist?.toLowerCase().includes(q) || song.lyrics?.toLowerCase().includes(q);
+                }).length === 0 && (
+                  <div style={{ padding: "16px", textAlign: "center", color: "var(--muted-color)", fontSize: "0.9rem" }}>
+                    No matching songs found
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Interactive Coming Soon Modals */}
       {modalContent && (

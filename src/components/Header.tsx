@@ -178,6 +178,9 @@ export default function Header() {
             <Link
               href="/"
               style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
                 fontWeight: 800,
                 fontSize: "1.4rem",
                 color: "var(--foreground-color)",
@@ -185,7 +188,12 @@ export default function Header() {
                 letterSpacing: "-0.02em",
               }}
             >
-              Christian Lyrics
+              <img
+                src="/logo.png"
+                alt="Logo"
+                style={{ height: "26px", width: "auto", objectFit: "contain" }}
+              />
+              <span>Christian Lyrics</span>
             </Link>
           </div>
 
@@ -231,9 +239,16 @@ export default function Header() {
         {/* Top Header inside Drawer */}
         <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <span style={{ fontSize: "1.2rem", fontWeight: 800, color: "var(--foreground-color)", letterSpacing: "-0.015em" }}>
-              Christian Lyrics
-            </span>
+            <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <img
+                src="/logo.png"
+                alt="Logo"
+                style={{ height: "22px", width: "auto", objectFit: "contain" }}
+              />
+              <span style={{ fontSize: "1.2rem", fontWeight: 800, color: "var(--foreground-color)", letterSpacing: "-0.015em" }}>
+                Christian Lyrics
+              </span>
+            </div>
             <button
               type="button"
               className="drawer-close-btn browse-reset-btn"

@@ -86,7 +86,7 @@ export default function Footer() {
         background: "#0A2540",
         borderTop: "1px solid #14355a",
         padding: "32px 24px",
-        marginTop: "auto",
+        marginTop: "32px",
       }}
     >
       <div
@@ -109,7 +109,17 @@ export default function Footer() {
           }}
         >
           {/* Brand Info */}
-          <div>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <img
+              src="/logo.png"
+              alt="Logo"
+              style={{
+                height: "24px",
+                width: "auto",
+                objectFit: "contain",
+                filter: "brightness(0) invert(1)"
+              }}
+            />
             <p
               style={{
                 fontSize: "1.25rem",

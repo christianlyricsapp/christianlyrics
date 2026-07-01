@@ -47,14 +47,7 @@ export default function AdminDashboard() {
     { label: "Artists", value: stats.totalArtists, color: "text-purple-400", icon: "🎤" },
   ];
 
-  function formatDate(dateStr: string): string {
-    try {
-      const d = new Date(dateStr);
-      return d.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
-    } catch {
-      return dateStr;
-    }
-  }
+
 
   function statusColor(status: string): string {
     switch (status) {
@@ -171,17 +164,18 @@ export default function AdminDashboard() {
               <Link
                 key={song.id}
                 href={`/admin/songs/edit?id=${song.id}`}
-                className={`flex items-center justify-between px-5 py-4 hover:bg-[rgba(199,157,79,0.08)] transition-colors ${
+                className={`flex items-center justify-between px-4 py-2.5 hover:bg-[rgba(199,157,79,0.08)] transition-colors ${
                   i < stats.recentSongs.length - 1 ? "border-b border-[rgba(255,255,255,0.06)]" : ""
                 }`}
               >
-                <div className="flex-1 min-w-0">
-                  <p className="text-base font-semibold text-white truncate">{song.title}</p>
-                  <p className="text-xs text-muted mt-1">{formatDate(song.updatedAt)}</p>
+                <div className="flex items-center gap-2 min-w-0 flex-1">
+                  <span className="text-sm font-semibold text-white truncate">{song.title}</span>
+                  <span className="text-xs text-muted/60">—</span>
+                  <span className={`text-xs font-semibold ${statusColor(song.status)} shrink-0`}>
+                    {getSongStatusLabel(song.status)}
+                  </span>
                 </div>
-                <span className={`text-xs font-medium ${statusColor(song.status)} ml-3 shrink-0`}>
-                  {getSongStatusLabel(song.status)}
-                </span>
+                <span className="text-xs text-[var(--accent)] font-bold ml-2">Edit →</span>
               </Link>
             ))}
           </div>
