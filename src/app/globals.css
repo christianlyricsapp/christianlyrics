@@ -93,6 +93,17 @@ h4 {
   letter-spacing: -0.02em;
 }
 
+/* ─── Lord Name Highlight ─────────────────────────── */
+.lord-highlight {
+  background: transparent;
+  color: #A67C2E;           /* warm gold — same family as accent */
+  font-weight: 600;
+  font-style: normal;
+  border-bottom: 1.5px solid #C59D4F40;
+  padding-bottom: 1px;
+  border-radius: 0;
+}
+
 /* ─── Layout Grid & Spacing ───────────────────────── */
 
 .browse-layout {

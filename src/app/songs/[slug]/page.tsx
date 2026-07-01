@@ -7,6 +7,9 @@ import {
 } from "@/lib/supabase-db";
 import SongPageClient from "./SongPageClient";
 
+const BASE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL || "https://christianlyrics.app";
+
 type Props = {
   params: Promise<{ slug: string }>;
 };
@@ -27,11 +30,34 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: "Song Not Found" };
   }
 
+  const title = `${song.title} Lyrics`;
+  const description = `Read the full lyrics for "${song.title}"${
+    song.artist ? ` by ${song.artist}` : ""
+  }. Categorized under ${getCategoryName(song.category)}.`;
+  const url = `${BASE_URL}/songs/${song.slug}`;
+
   return {
-    title: `${song.title} Lyrics`,
-    description: `Read the full lyrics for "${song.title}" ${
-      song.artist ? `by ${song.artist}` : ""
-    }. Categorized under ${getCategoryName(song.category)}.`,
+    title,
+    description,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      type: "article",
+      url,
+      title,
+      description,
+      siteName: "Christian Lyrics",
+    },
+    twitter: {
+      card: "summary",
+      title,
+      description,
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
   };
 }
 
@@ -59,20 +85,17 @@ export default async function SongPage({ params }: Props) {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "MusicComposition",
-    "name": song.title,
-    "composer": {
-      "@type": "MusicGroup",
-      "name": song.artist || "Unknown Artist"
-    },
-    "lyricist": {
-      "@type": "Person",
-      "name": song.artist || "Unknown Artist"
-    },
-    "lyrics": {
+    name: song.title,
+    ...(song.artist && {
+      composer: { "@type": "MusicGroup", name: song.artist },
+      lyricist: { "@type": "Person", name: song.artist },
+    }),
+    lyrics: {
       "@type": "CreativeWork",
-      "text": song.lyrics
+      text: song.lyrics,
     },
-    "genre": getCategoryName(song.category)
+    genre: getCategoryName(song.category),
+    url: `${BASE_URL}/songs/${song.slug}`,
   };
 
   return (

@@ -6,6 +6,10 @@ export const metadata: Metadata = {
     default: "Admin",
     template: "%s | Christian Lyrics Admin",
   },
+  robots: {
+    index: false,
+    follow: false,
+  },
 };
 
 export default function AdminRootLayout({

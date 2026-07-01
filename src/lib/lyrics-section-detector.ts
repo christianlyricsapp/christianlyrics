@@ -1,14 +1,18 @@
 export const SECTION_LABELS = [
+  "Intro",
   "Verse 1",
   "Verse 2",
   "Verse 3",
-  "Chorus",
-  "Bridge",
-  "Pre-Chorus",
-  "Tag",
-  "Ending",
+  "Verse 4",
+  "Verse 5",
+  "Chorus 1",
+  "Chorus 2",
+  "Chorus 3",
+  "Bridge 1",
+  "Bridge 2",
+  "Interlude",
+  "Outro",
   "Other",
-  "Intro",
 ] as const;
 
 export type SectionLabel = (typeof SECTION_LABELS)[number];

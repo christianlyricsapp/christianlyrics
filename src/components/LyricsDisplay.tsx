@@ -12,6 +12,41 @@ type LyricsDisplayProps = {
   lyrics: string;
 };
 
+/* ── Lord / God name highlighting ───────────────────────────── */
+const LORD_NAMES = [
+  "Jesus", "Yeshu", "Yeshua", "Yahweh", "Jehovah",
+  "God", "Lord", "Christ", "Krist", "Krista",
+  "Prabhu", "Ishwar", "Khuda", "Masih", "Masiha",
+  "Holy Spirit", "Pavitra Atma", "Pavitra Aatma",
+];
+
+// Build a regex that matches any of the names, case-insensitive, whole-word
+const LORD_REGEX = new RegExp(
+  `(${LORD_NAMES.map((n) => n.replace(/ /g, "\\s+")).join("|")})`,
+  "gi"
+);
+
+function highlightLordNames(line: string): React.ReactNode {
+  if (!LORD_REGEX.test(line)) return line;
+  LORD_REGEX.lastIndex = 0;
+  const parts: React.ReactNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+  while ((match = LORD_REGEX.exec(line)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(line.slice(lastIndex, match.index));
+    }
+    parts.push(
+      <mark key={match.index} className="lord-highlight">
+        {match[0]}
+      </mark>
+    );
+    lastIndex = LORD_REGEX.lastIndex;
+  }
+  if (lastIndex < line.length) parts.push(line.slice(lastIndex));
+  return <>{parts}</>;
+}
+
 export default function LyricsDisplay({
   title,
   artist,
@@ -345,12 +380,12 @@ export default function LyricsDisplay({
                 fontWeight: line.startsWith("[") ? 700 : 400,
                 color: line.startsWith("[") ? "#082B66" : "#0A2540",
                 opacity: line.startsWith("[") ? 0.75 : 1,
-                marginTop: line.startsWith("[") ? "24px" : line === "" ? "0px" : "0px",
+                marginTop: line.startsWith("[") ? "24px" : "0px",
                 height: line === "" ? "16px" : "auto",
                 letterSpacing: line.startsWith("[") ? "0.02em" : "normal",
               }}
             >
-              {line}
+              {line.startsWith("[") ? line : highlightLordNames(line)}
             </p>
           ))}
         </div>
