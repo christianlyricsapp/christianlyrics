@@ -141,8 +141,8 @@ export default function Header() {
           position: "sticky",
           top: 0,
           zIndex: 80,
-          background: "#0A2540",
-          borderBottom: "none",
+          background: "var(--card-bg)",
+          borderBottom: "1px solid var(--border-color)",
           boxShadow: "none",
           height: "76px",
           display: "flex",
@@ -156,8 +156,8 @@ export default function Header() {
             onClick={() => setIsOpen(true)}
             style={{
               background: "transparent",
-              border: "1.5px solid #14355a",
-              color: "#C7DDF2",
+              border: "1.5px solid var(--border-color)",
+              color: "var(--foreground-color)",
               borderRadius: "6px",
               width: "32px",
               height: "32px",
@@ -180,7 +180,7 @@ export default function Header() {
               style={{
                 fontWeight: 800,
                 fontSize: "1.4rem",
-                color: "#ffffff",
+                color: "var(--foreground-color)",
                 textDecoration: "none",
                 letterSpacing: "-0.02em",
               }}
@@ -193,9 +193,9 @@ export default function Header() {
           <Link
             href="/admin/login"
             style={{
-              background: "var(--accent)",
+              background: "var(--navy-bg-subtle)",
               border: "none",
-              color: "#0A2540",
+              color: "var(--card-bg)",
               borderRadius: "50%",
               width: "32px",
               height: "32px",
@@ -231,7 +231,7 @@ export default function Header() {
         {/* Top Header inside Drawer */}
         <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <span style={{ fontSize: "1.2rem", fontWeight: 800, color: "#ffffff", letterSpacing: "-0.015em" }}>
+            <span style={{ fontSize: "1.2rem", fontWeight: 800, color: "var(--foreground-color)", letterSpacing: "-0.015em" }}>
               Christian Lyrics
             </span>
             <button
@@ -240,8 +240,8 @@ export default function Header() {
               onClick={() => setIsOpen(false)}
               style={{
                 background: "transparent",
-                border: "1.5px solid #14355a",
-                color: "#C7DDF2",
+                border: "1.5px solid var(--border-color)",
+                color: "var(--muted-color)",
                 borderRadius: "10px",
                 width: "40px",
                 height: "40px",
@@ -257,7 +257,7 @@ export default function Header() {
             </button>
           </div>
 
-          <hr style={{ border: "none", borderTop: "1px solid #14355a", opacity: 0.5, margin: 0 }} />
+          <hr style={{ border: "none", borderTop: "1px solid var(--border-color)", opacity: 0.5, margin: 0 }} />
 
           {/* Login / Sign in premium card */}
           <Link
@@ -279,10 +279,10 @@ export default function Header() {
               <circle cx="12" cy="7" r="4" />
             </svg>
             <div style={{ display: "flex", flexDirection: "column", gap: "2px", flex: 1, textAlign: "left" }}>
-              <span style={{ fontSize: "1rem", fontWeight: 700, color: "#ffffff" }}>
+              <span style={{ fontSize: "1rem", fontWeight: 700, color: "var(--foreground-color)" }}>
                 Login / Sign in
               </span>
-              <span style={{ fontSize: "0.85rem", color: "#8fa8c4" }}>
+              <span style={{ fontSize: "0.85rem", color: "var(--muted-color)" }}>
                 Access your account
               </span>
             </div>
@@ -331,7 +331,7 @@ export default function Header() {
             gap: "24px",
             marginTop: "auto",
             paddingTop: "24px",
-            borderTop: "1px solid #14355a",
+            borderTop: "1px solid var(--border-color)",
           }}
         >
           <div>
@@ -356,7 +356,7 @@ export default function Header() {
                 alignItems: "center",
                 gap: "10px",
                 textDecoration: "none",
-                color: "#ffffff",
+                color: "var(--foreground-color)",
                 fontSize: "1.2rem",
                 fontWeight: 700,
               }}
@@ -370,7 +370,7 @@ export default function Header() {
           <div>
             <h4
               style={{
-                color: "#8fa8c4",
+                color: "var(--muted-color)",
                 fontSize: "0.75rem",
                 textTransform: "uppercase",
                 letterSpacing: "0.08em",

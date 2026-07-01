@@ -118,15 +118,15 @@ h4 {
   .browse-sidebar {
     display: block;
     position: sticky;
-    top: 76px !important; /* Sticky top spacing directly below header */
-    height: calc(100vh - 76px) !important; /* Spans from bottom of header to bottom of screen */
+    top: 76px !important;
+    height: calc(100vh - 76px) !important;
     max-height: calc(100vh - 76px) !important;
     overflow: hidden;
-    background: #0A2540; /* Match header and footer color */
-    border: 1px solid #14355a;
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
     border-radius: 12px;
     padding: 24px;
-    box-shadow: 0 10px 28px rgba(10, 37, 64, 0.04);
+    box-shadow: 0 10px 28px rgba(10, 37, 64, 0.01);
   }
 }
 
@@ -143,7 +143,7 @@ h4 {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--accent); /* Premium gold header */
+  color: var(--accent);
   margin-top: 0;
   margin-bottom: 12px;
 }
@@ -156,7 +156,7 @@ h4 {
   gap: 10px;
   font-size: 0.95rem;
   font-weight: 500;
-  color: #C7DDF2; /* readable light blue text */
+  color: var(--foreground-color);
   padding: 6px 8px;
   border-radius: 6px;
   cursor: pointer;
@@ -165,13 +165,13 @@ h4 {
 }
 
 .filter-checkbox-label:hover {
-  background-color: #102A43; /* slightly lighter navy hover highlight */
-  color: #ffffff;
+  background-color: var(--bg-page);
+  color: var(--foreground-color);
 }
 
 .filter-checkbox-label.is-checked {
-  background-color: #14355a; /* active filter item background */
-  color: #ffffff;
+  background-color: var(--navy-bg-subtle);
+  color: var(--foreground-color);
   font-weight: 600;
 }
 
@@ -180,9 +180,9 @@ h4 {
   appearance: none;
   width: 18px;
   height: 18px;
-  border: 1.5px solid #3E5C76;
+  border: 1.5px solid var(--border-color);
   border-radius: 5px;
-  background-color: #102A43;
+  background-color: var(--card-bg);
   cursor: pointer;
   display: inline-flex;
   align-items: center;
@@ -192,8 +192,8 @@ h4 {
 }
 
 .filter-checkbox-input:checked {
-  background-color: var(--accent);
-  border-color: var(--accent);
+  background-color: #007aff;
+  border-color: #007aff;
 }
 
 .filter-checkbox-input:checked::after {
@@ -513,9 +513,9 @@ h4 {
   width: 360px;
   max-width: 100%;
   z-index: 110;
-  background-color: #0A2540;
-  border-left: 1px solid #14355a;
-  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.25);
+  background-color: var(--card-bg);
+  border-left: 1px solid var(--border-color);
+  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.08);
   padding: 32px 24px;
   display: flex;
   flex-direction: column;
@@ -533,8 +533,8 @@ h4 {
   display: flex;
   align-items: center;
   gap: 16px;
-  background-color: #102a43;
-  border: 1px solid #14355a;
+  background-color: var(--bg-page);
+  border: 1px solid var(--border-color);
   border-radius: 18px;
   padding: 20px 24px;
   text-decoration: none;
@@ -545,7 +545,7 @@ h4 {
 }
 
 .drawer-login-card:hover {
-  background-color: #14355a;
+  background-color: var(--border-color);
   border-color: var(--accent);
 }
 
@@ -591,7 +591,7 @@ h4 {
   padding: 14px 18px;
   border-radius: 12px;
   text-decoration: none;
-  color: #C7DDF2;
+  color: var(--muted-color);
   font-size: 1.25rem;
   font-weight: 600;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -600,8 +600,8 @@ h4 {
 }
 
 .drawer-link-premium:hover {
-  background-color: #102A43;
-  color: #ffffff;
+  background-color: var(--bg-page);
+  color: var(--foreground-color);
   padding-left: 24px;
 }
 
@@ -635,13 +635,13 @@ h4 {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background-color: #102A43;
-  color: #C7DDF2;
+  background-color: var(--bg-page);
+  color: var(--foreground-color);
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 1px solid #14355a;
+  border: 1px solid var(--border-color);
 }
 
 .drawer-social-icon-btn:hover {
@@ -725,22 +725,22 @@ h4 {
   height: 34px;
   padding-left: 28px;
   padding-right: 10px;
-  border: 1px solid #3E5C76;
+  border: 1px solid var(--border-color);
   border-radius: 8px;
-  background-color: #102A43;
-  color: #ffffff;
+  background-color: var(--card-bg);
+  color: var(--foreground-color);
   font-size: 0.8rem;
   outline: none;
   font-family: inherit;
   transition: all 0.2s ease;
 }
 .filter-search-input::placeholder {
-  color: #7B8794;
-  opacity: 0.8;
+  color: var(--muted-color);
+  opacity: 0.7;
 }
 .filter-search-input:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(181, 138, 69, 0.25);
+  border-color: #007aff;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.15);
 }
 
 /* ─── Empty State ─────────────────────────────────── */
@@ -1048,8 +1048,8 @@ select {
    ========================================================================== */
 
 .main-header {
-  background: #0A2540 !important;
-  border-bottom: none !important;
+  background: var(--card-bg) !important;
+  border-bottom: 1.5px solid var(--border-color) !important;
   box-shadow: none !important;
 }
 
@@ -1081,12 +1081,14 @@ select {
 .premium-hero-container {
   position: relative;
   width: 100%;
-  background: linear-gradient(to bottom, #0A2540 0%, #051224 100%) !important; /* Flow seamlessly from navbar color */
+  background: var(--card-bg) !important;
+  background-image: radial-gradient(rgba(197, 157, 79, 0.15) 1.5px, transparent 1.5px) !important;
+  background-size: 24px 24px !important;
   border-radius: 24px;
   padding: 56px 24px !important;
   margin-bottom: 32px !important;
-  box-shadow: 0 20px 40px rgba(6, 20, 39, 0.12) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 10px 30px rgba(0, 122, 255, 0.02) !important;
+  border: 1px solid var(--border-color) !important;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1098,26 +1100,29 @@ select {
 
 @media (max-width: 767px) {
   .premium-hero-container {
-    background: #0A2540 !important; /* Solid color matching the navbar exactly on mobile for seamless flow */
-    min-height: calc(100vh - 76px) !important; /* Spans full height of first viewport */
-    border-radius: 0 !important; /* Completely squared on mobile - no white curves showing on bottom sides! */
+    background: var(--card-bg) !important;
+    background-image: radial-gradient(rgba(197, 157, 79, 0.15) 1.5px, transparent 1.5px) !important;
+    background-size: 24px 24px !important;
+    min-height: auto !important;
+    border-radius: 0 !important;
     border: none !important;
-    padding: 48px 16px 32px !important; /* More padding top, aligned top */
+    border-bottom: 1px solid var(--border-color) !important;
+    padding: 32px 16px !important;
     margin-bottom: 20px !important;
-    justify-content: flex-start !important; /* Take content to the top instead of middle */
+    justify-content: center !important;
   }
 
   .premium-hero-blob {
-    display: none !important; /* Hide glowing background blobs on mobile to prevent color gradient lines */
+    display: none !important;
   }
 }
 
 .premium-hero-title {
-  font-size: clamp(2.32rem, 8.4vw, 3.01rem) !important; /* Technical alignment scaling to match search bar corners flush */
+  font-size: clamp(2.32rem, 8.4vw, 3.01rem) !important;
   font-weight: 800 !important;
-  color: #ffffff !important;
-  margin: 0 0 16px 0 !important; /* Spacing below title */
-  letter-spacing: -0.024em !important; /* Technical spacing tracking */
+  color: var(--foreground-color) !important;
+  margin: 0 0 16px 0 !important;
+  letter-spacing: -0.024em !important;
   line-height: 1.15 !important;
   position: relative;
   z-index: 2;
@@ -1125,8 +1130,8 @@ select {
 
 .premium-hero-tagline {
   font-size: clamp(0.95rem, 3vw, 1.1rem) !important;
-  color: #C7DDF2 !important;
-  margin: 0 0 28px 0 !important; /* Pull up to title */
+  color: var(--muted-color) !important;
+  margin: 0 0 28px 0 !important;
   max-width: 540px;
   line-height: 1.5 !important;
   position: relative;
@@ -1136,7 +1141,7 @@ select {
 
 .premium-hero-search-wrapper {
   width: 100%;
-  max-width: 540px; /* Centered narrow width for dynamic focus */
+  max-width: 540px;
   position: relative;
   margin-bottom: 28px;
   display: flex;
@@ -1145,11 +1150,10 @@ select {
 }
 
 .premium-hero-search-wrapper .browse-search-input {
-  background: rgba(255, 255, 255, 0.07) !important;
-  backdrop-filter: blur(16px);
-  border: 1.5px solid var(--accent) !important;
-  color: #ffffff !important;
-  box-shadow: 0 0 15px rgba(197, 157, 79, 0.15), 0 12px 32px rgba(0, 0, 0, 0.25) !important;
+  background: var(--card-bg) !important;
+  border: 1.5px solid var(--border-color) !important;
+  color: var(--foreground-color) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02) !important;
   padding-left: 54px !important;
   padding-right: 54px !important;
   border-radius: 9999px !important;
@@ -1159,19 +1163,19 @@ select {
 }
 
 .premium-hero-search-wrapper .browse-search-input::placeholder {
-  color: rgba(255, 255, 255, 0.5) !important;
+  color: var(--muted-color) !important;
+  opacity: 0.7;
 }
 
 .premium-hero-search-wrapper .browse-search-input:hover {
-  border-color: var(--accent) !important;
-  box-shadow: 0 0 20px rgba(197, 157, 79, 0.25), 0 12px 32px rgba(0, 0, 0, 0.25) !important;
+  border-color: var(--navy-muted) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04) !important;
 }
 
 .premium-hero-search-wrapper .browse-search-input:focus {
-  border-color: var(--accent) !important;
-  background: rgba(255, 255, 255, 0.1) !important;
-  /* Gold glow highlight drop shadow */
-  box-shadow: 0 0 25px rgba(197, 157, 79, 0.45), 0 12px 36px rgba(0, 0, 0, 0.35) !important;
+  border-color: #007aff !important;
+  background: var(--card-bg) !important;
+  box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.15) !important;
 }
 
 /* ==========================================================================
@@ -1181,21 +1185,20 @@ select {
 .browse-letter-card {
   width: 92%;
   max-width: 860px;
-  background: rgba(255, 255, 255, 0.05) !important;
-  backdrop-filter: blur(14px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background: var(--card-bg) !important;
+  border: 1px solid var(--border-color) !important;
   border-radius: 18px;
   padding: 12px 18px !important;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15) !important;
+  box-shadow: 0 10px 30px rgba(0, 122, 255, 0.01) !important;
   box-sizing: border-box;
   position: relative;
   z-index: 2;
 }
 
 .browse-letter-card .browse-alpha-btn {
-  background: rgba(255, 255, 255, 0.06) !important;
-  color: rgba(255, 255, 255, 0.85) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background: var(--bg-page) !important;
+  color: var(--foreground-color) !important;
+  border: 1px solid var(--border-color) !important;
   border-radius: 8px !important;
   width: 40px !important;
   height: 40px !important;
@@ -1208,10 +1211,10 @@ select {
 }
 
 .browse-letter-card .browse-alpha-btn:hover {
-  transform: scale(1.22) !important; /* Becomes big on hover/cursor */
-  background: rgba(255, 255, 255, 0.16) !important;
-  border-color: rgba(255, 255, 255, 0.2) !important;
-  color: #ffffff !important;
+  transform: scale(1.15) !important;
+  background: var(--border-color) !important;
+  border-color: var(--navy-muted) !important;
+  color: var(--foreground-color) !important;
 }
 
 .browse-letter-card .browse-alpha-btn:active {
@@ -1219,10 +1222,10 @@ select {
 }
 
 .browse-letter-card .browse-alpha-active {
-  background: var(--accent) !important;
-  color: #061325 !important;
-  border-color: var(--accent) !important;
-  box-shadow: 0 4px 14px rgba(197, 157, 79, 0.4) !important;
+  background: #007aff !important;
+  color: #ffffff !important;
+  border-color: #007aff !important;
+  box-shadow: 0 4px 14px rgba(0, 122, 255, 0.25) !important;
   font-weight: 700 !important;
 }
 
@@ -1239,53 +1242,53 @@ select {
 /* Spacing layout of columns */
 @media (min-width: 768px) {
   .browse-sidebar {
-    background: linear-gradient(135deg, #0A2540 0%, #061325 100%) !important;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    background: var(--card-bg) !important;
+    border: 1px solid var(--border-color) !important;
     border-radius: 16px !important;
-    box-shadow: 0 15px 35px rgba(6, 19, 37, 0.1) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.01) !important;
   }
 }
 
 .mobile-filter-drawer {
-  background: linear-gradient(135deg, #0A2540 0%, #061325 100%) !important;
-  border: 1.5px solid rgba(197, 157, 79, 0.2) !important;
+  background: var(--card-bg) !important;
+  border: 1.5px solid var(--border-color) !important;
   border-radius: 16px !important;
-  box-shadow: 0 12px 30px rgba(6, 19, 37, 0.2) !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05) !important;
 }
 
 .filter-checkbox-label {
-  background: rgba(255, 255, 255, 0.03) !important;
-  border: 1px solid rgba(255, 255, 255, 0.04) !important;
+  background: var(--bg-page) !important;
+  border: 1px solid var(--border-color) !important;
   padding: 8px 12px !important;
   border-radius: 8px !important;
   margin-bottom: 4px !important;
   transition: all 0.2s ease !important;
+  color: var(--foreground-color) !important;
 }
 
 .filter-checkbox-label:hover {
-  background: rgba(255, 255, 255, 0.08) !important;
-  border-color: rgba(255, 255, 255, 0.1) !important;
+  background: var(--border-color) !important;
 }
 
 .filter-checkbox-label.is-checked {
-  background: rgba(197, 157, 79, 0.15) !important;
-  color: #ffffff !important;
-  border-color: var(--accent) !important;
+  background: rgba(0, 122, 255, 0.08) !important;
+  color: #007aff !important;
+  border-color: #007aff !important;
 }
 
 .filter-checkbox-input {
-  border: 1.5px solid rgba(255, 255, 255, 0.3) !important;
-  background-color: rgba(255, 255, 255, 0.05) !important;
+  border: 1.5px solid var(--border-color) !important;
+  background-color: var(--card-bg) !important;
   border-radius: 6px !important;
 }
 
 .filter-checkbox-input:checked {
-  background-color: var(--accent) !important;
-  border-color: var(--accent) !important;
+  background-color: #007aff !important;
+  border-color: #007aff !important;
 }
 
 .filter-checkbox-input:checked::after {
-  color: #061325 !important;
+  color: #ffffff !important;
 }
 
 /* Dynamic Cards for individual table rows */
@@ -1501,12 +1504,12 @@ select {
 }
 
 .quick-access-chip {
-  background: #051224 !important; /* Dark background */
-  color: #ffffff !important; /* White text */
-  border: 1px solid rgba(197, 157, 79, 0.4) !important; /* Thin gold outline border */
-  padding: 8px 18px !important; /* Bigger tag chips padding */
-  border-radius: 30px !important; /* Pill chip shape */
-  font-size: 0.92rem !important; /* Bigger tag chips font size */
+  background: var(--card-bg) !important;
+  color: var(--foreground-color) !important;
+  border: 1px solid var(--border-color) !important;
+  padding: 8px 18px !important;
+  border-radius: 30px !important;
+  font-size: 0.92rem !important;
   font-weight: 600 !important;
   white-space: nowrap;
   cursor: pointer;
@@ -1514,16 +1517,16 @@ select {
 }
 
 .quick-access-chip:hover {
-  background: rgba(197, 157, 79, 0.1) !important;
-  color: #ffffff !important;
+  background: var(--bg-page) !important;
+  color: var(--foreground-color) !important;
   border-color: var(--accent) !important;
 }
 
 .quick-access-chip.active {
-  background: var(--accent) !important;
-  color: #051224 !important;
-  border-color: var(--accent) !important;
-  box-shadow: 0 4px 12px rgba(197, 157, 79, 0.3) !important;
+  background: #007aff !important;
+  color: #ffffff !important;
+  border-color: #007aff !important;
+  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.25) !important;
   font-weight: 800 !important;
 }
 
@@ -1673,6 +1676,72 @@ select {
 @keyframes scaleIn {
   from { transform: scale(0.92); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
+}
+
+/* ==========================================================================
+   HOMEPAGE LIGHT-THEME CARD OVERRIDES
+   ========================================================================== */
+
+.premium-dashboard-sections h2 {
+  color: var(--foreground-color) !important;
+}
+
+.premium-featured-card {
+  background: var(--card-bg) !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02) !important;
+}
+.premium-featured-card:hover {
+  border-color: var(--accent) !important;
+  transform: translateY(-2px);
+}
+.premium-featured-card div {
+  color: var(--foreground-color) !important;
+}
+.premium-featured-card > div:first-child {
+  background: var(--bg-page) !important;
+  border: 1px solid var(--border-color) !important;
+}
+.premium-featured-card > div:last-child {
+  background: #007aff !important;
+  color: #ffffff !important;
+}
+
+.premium-new-card {
+  background: var(--card-bg) !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02) !important;
+}
+.premium-new-card:hover {
+  border-color: var(--accent) !important;
+  transform: translateY(-2px);
+}
+.premium-new-card div {
+  color: var(--foreground-color) !important;
+}
+.premium-new-card > div:first-child {
+  background: var(--bg-page) !important;
+  border: 1px solid var(--border-color) !important;
+}
+.premium-new-card > div:last-child {
+  background: #007aff !important;
+  color: #ffffff !important;
+}
+
+.premium-playlist-card {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04) !important;
+}
+.premium-playlist-card:hover {
+  transform: translateY(-2px);
+}
+
+.browse-sidebar span,
+.mobile-filter-drawer span {
+  color: var(--foreground-color) !important;
+}
+
+.browse-sidebar hr {
+  border-top-color: var(--border-color) !important;
 }
 
 

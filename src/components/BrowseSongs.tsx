@@ -653,9 +653,7 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
                 </div>
               </div>
 
-              {/* Browse by Letter Card */}
-              {/* Temporarily hidden letter search card per user request */}
-              {false && (
+              {true && (
                 <div className="browse-letter-card">
                   {/* A–Z Alphabet scroll wrapper */}
                   <div className="alphabet-row-wrapper">

@@ -11,7 +11,7 @@ export function mapDbSongToSong(dbSong: any): Song {
     title: dbSong.title,
     category: dbSong.category,
     language: dbSong.language,
-    artist: dbSong.artist || undefined,
+    artist: dbSong.artist || "",
     excerpt: dbSong.excerpt,
     lyrics: dbSong.lyrics,
     addedDate: dbSong.created_at || new Date().toISOString(),
@@ -47,27 +47,28 @@ export async function getAllSongs(): Promise<Song[]> {
 
 // Fetch single song by slug from Supabase (published only)
 export async function getSongBySlug(slug: string): Promise<Song | null> {
+  const cleanSlug = slug.replace(/\/+$/, "").trim().toLowerCase();
   if (isPlaceholder) {
-    return demoSongs.find((s) => s.slug === slug) || null;
+    return demoSongs.find((s) => s.slug === cleanSlug) || null;
   }
 
   try {
     const { data, error } = await supabase
       .from("songs")
       .select("*")
-      .eq("slug", slug)
+      .eq("slug", cleanSlug)
       .eq("status", "published")
       .maybeSingle();
 
     if (error) {
-      console.error(`Error fetching song ${slug} from Supabase:`, error);
-      return demoSongs.find((s) => s.slug === slug) || null;
+      console.error(`Error fetching song ${cleanSlug} from Supabase:`, error);
+      return demoSongs.find((s) => s.slug === cleanSlug) || null;
     }
 
     return data ? mapDbSongToSong(data) : null;
   } catch (err) {
     console.error("Unexpected error fetching song:", err);
-    return demoSongs.find((s) => s.slug === slug) || null;
+    return demoSongs.find((s) => s.slug === cleanSlug) || null;
   }
 }
 
