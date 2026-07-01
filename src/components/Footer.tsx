@@ -85,7 +85,7 @@ export default function Footer() {
       style={{
         background: "#0A2540",
         borderTop: "1px solid #14355a",
-        padding: "24px 24px",
+        padding: "32px 24px",
         marginTop: "auto",
       }}
     >
@@ -95,24 +95,24 @@ export default function Footer() {
           margin: "0 auto",
           display: "flex",
           flexDirection: "column",
-          gap: "16px",
+          gap: "24px",
         }}
       >
-        {/* Top Row: Brand Info and Links */}
+        {/* Top Row: Brand on Left, Social Icons on Right */}
         <div
           style={{
             display: "flex",
-            flexWrap: "wrap",
             justifyContent: "space-between",
             alignItems: "center",
-            gap: "24px",
+            flexWrap: "wrap",
+            gap: "16px",
           }}
         >
           {/* Brand Info */}
-          <div style={{ textAlign: "left" }}>
+          <div>
             <p
               style={{
-                fontSize: "1.2rem",
+                fontSize: "1.25rem",
                 fontWeight: 800,
                 color: "#ffffff",
                 margin: 0,
@@ -123,6 +123,59 @@ export default function Footer() {
             </p>
           </div>
 
+          {/* Social Icons / christianpraiseworship */}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "16px",
+              color: "#8fa8c4",
+              fontSize: "0.85rem",
+            }}
+          >
+            <a
+              href="https://facebook.com/christianpraiseworship"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="footer-social-link"
+              aria-label="Facebook"
+            >
+              <FacebookIcon style={{ width: "18px", height: "18px" }} />
+            </a>
+            <a
+              href="https://instagram.com/christianpraiseworship"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="footer-social-link"
+              aria-label="Instagram"
+            >
+              <InstagramIcon style={{ width: "18px", height: "18px" }} />
+            </a>
+            <a
+              href="https://www.youtube.com/channel/UCxmtIe7shk_5dy1077YRILg"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="footer-social-link"
+              aria-label="YouTube"
+            >
+              <YoutubeIcon style={{ width: "18px", height: "18px" }} />
+            </a>
+          </div>
+        </div>
+
+        {/* Separator line */}
+        <hr style={{ border: "none", borderTop: "1px solid #14355a", margin: 0 }} />
+
+        {/* Bottom Row: Links and Copyright */}
+        <div
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: "16px 24px",
+          }}
+        >
           {/* Nav Links */}
           <nav
             style={{
@@ -150,20 +203,7 @@ export default function Footer() {
               </Link>
             ))}
           </nav>
-        </div>
 
-        {/* Separator line removed */}
-
-        {/* Bottom Row: Copyright & Socials */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            flexWrap: "wrap",
-            gap: "12px",
-          }}
-        >
           <p
             style={{
               fontSize: "0.8rem",
@@ -173,45 +213,6 @@ export default function Footer() {
           >
             © 2026 Christian Lyrics. All rights reserved.
           </p>
-
-          {/* Social Icons / christianpraiseworship */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "12px",
-              color: "#8fa8c4",
-              fontSize: "0.85rem",
-            }}
-          >
-            <a
-              href="https://facebook.com/christianpraiseworship"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="footer-social-link"
-              aria-label="Facebook"
-            >
-              <FacebookIcon style={{ width: "16px", height: "16px" }} />
-            </a>
-            <a
-              href="https://instagram.com/christianpraiseworship"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="footer-social-link"
-              aria-label="Instagram"
-            >
-              <InstagramIcon style={{ width: "16px", height: "16px" }} />
-            </a>
-            <a
-              href="https://www.youtube.com/channel/UCxmtIe7shk_5dy1077YRILg"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="footer-social-link"
-              aria-label="YouTube"
-            >
-              <YoutubeIcon style={{ width: "16px", height: "16px" }} />
-            </a>
-          </div>
         </div>
       </div>
     </footer>

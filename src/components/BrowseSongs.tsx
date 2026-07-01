@@ -702,7 +702,7 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
             )}
 
             {/* ─── D. Category & Language Filter Chips ─── */}
-            <div className="quick-access-container" style={{ marginBlock: "12px 28px", width: "100%" }}>
+            <div className="quick-access-container" style={{ marginBlock: "12px 20px", width: "100%" }}>
               <div className="quick-access-scroll-row">
                 {/* Primary Categories */}
                 {["praise", "worship", "communion", "christmas"].map((cat) => {
@@ -718,24 +718,24 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
                     </button>
                   );
                 })}
-                {/* Primary Languages */}
-                {["english", "hindi", "assamese", "bodo"].map((lang) => {
-                  const isSelected = selectedLanguages.includes(lang);
-                  return (
-                    <button
-                      key={lang}
-                      type="button"
-                      onClick={() => handleLanguageToggle(lang)}
-                      className={`quick-access-chip ${isSelected ? "active" : ""}`}
-                    >
-                      {LANGUAGE_NAMES[lang] || lang}
-                    </button>
-                  );
-                })}
+                {/* Languages Page Redirect Button */}
+                <button
+                  type="button"
+                  onClick={() => router.push("/languages")}
+                  className="quick-access-chip"
+                  style={{
+                    border: "1px solid #007aff",
+                    color: "#007aff",
+                    background: "rgba(0, 122, 255, 0.04)",
+                    fontWeight: 700,
+                  }}
+                >
+                  🌐 Languages
+                </button>
               </div>
             </div>
             {/* Subtle separator line */}
-            <hr className="browse-divider" style={{ display: "block", marginBlock: "32px", opacity: 0.5 }} />
+            <hr className="browse-divider" style={{ display: "block", marginBlock: "20px", opacity: 0.5 }} />
             
             <div style={{ display: "block" }}>
               {/* ─── Mobile Filters Drawer Toggle ─────────── */}
@@ -851,66 +851,73 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
 
             {/* ─── Song Listings Table ─── */}
             {filteredSongs.length > 0 ? (
-              <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+              <div 
+                style={{ 
+                  display: "flex", 
+                  flexDirection: "column", 
+                  background: "var(--card-bg)",
+                  border: "1px solid var(--border-color)",
+                  borderRadius: "14px",
+                  overflow: "hidden"
+                }}
+              >
                 {[...filteredSongs]
                   .sort((a, b) => a.title.localeCompare(b.title))
-                  .map((song) => (
-                    <div
-                      key={song.slug}
-                      onClick={() => router.push(`/songs/${song.slug}`)}
-                      style={{
-                        background: "var(--card-bg)",
-                        border: "1px solid var(--border-color)",
-                        borderRadius: "12px",
-                        padding: "16px",
-                        cursor: "pointer",
-                        transition: "all 0.2s ease",
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "8px",
-                      }}
-                      className="public-song-card hover:translate-y-[-2px] hover:shadow-md"
-                    >
-                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "12px" }}>
-                        <span style={{ fontSize: "1.08rem", fontWeight: 700, color: "var(--foreground-color)" }}>
-                          {song.title}
+                  .map((song, index) => {
+                    const isLast = index === filteredSongs.length - 1;
+                    return (
+                      <div
+                        key={song.slug}
+                        onClick={() => router.push(`/songs/${song.slug}`)}
+                        style={{
+                          padding: "16px 20px",
+                          cursor: "pointer",
+                          transition: "all 0.15s ease",
+                          display: "flex",
+                          alignItems: "flex-start",
+                          gap: "14px",
+                          borderBottom: isLast ? "none" : "1px solid var(--border-color)",
+                        }}
+                        className="public-list-row hover:bg-[var(--bg-page)]"
+                      >
+                        <span style={{ fontSize: "1.05rem", fontWeight: 700, color: "var(--accent)", width: "24px", flexShrink: 0, textAlign: "right" }}>
+                          {index + 1}.
                         </span>
-                        {song.artist && (
-                          <span style={{ fontSize: "0.85rem", color: "var(--muted-color)", fontWeight: 500 }}>
-                            by {song.artist}
+                        
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <span 
+                            style={{ 
+                              fontSize: "1.08rem", 
+                              fontWeight: 700, 
+                              color: "#007aff", 
+                              textDecoration: "none",
+                            }}
+                            className="hover:underline"
+                          >
+                            {song.title}
                           </span>
-                        )}
+                          
+                          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "6px", marginTop: "4px", fontSize: "0.82rem", color: "var(--muted-color)" }}>
+                            {song.artist && (
+                              <>
+                                <span>Artist: <strong>{song.artist}</strong></span>
+                                <span>•</span>
+                              </>
+                            )}
+                            {song.category && (
+                              <>
+                                <span>Category: <strong>{CATEGORY_NAMES[song.category] || song.category}</strong></span>
+                                {song.language && <span>•</span>}
+                              </>
+                            )}
+                            {song.language && (
+                              <span>Language: <strong>{LANGUAGE_NAMES[song.language] || song.language}</strong></span>
+                            )}
+                          </div>
+                        </div>
                       </div>
-                      <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
-                        {song.category && (
-                          <span style={{
-                            fontSize: "0.75rem",
-                            fontWeight: 600,
-                            color: "var(--accent)",
-                            background: "rgba(197, 157, 79, 0.08)",
-                            padding: "2px 8px",
-                            borderRadius: "6px",
-                            textTransform: "capitalize",
-                          }}>
-                            {CATEGORY_NAMES[song.category] || song.category}
-                          </span>
-                        )}
-                        {song.language && (
-                          <span style={{
-                            fontSize: "0.75rem",
-                            fontWeight: 600,
-                            color: "#007aff",
-                            background: "rgba(0, 122, 255, 0.08)",
-                            padding: "2px 8px",
-                            borderRadius: "6px",
-                            textTransform: "capitalize",
-                          }}>
-                            {LANGUAGE_NAMES[song.language] || song.language}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
               </div>
             ) : (
               /* ─── Empty State ──────────────────────────── */
@@ -947,18 +954,18 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
             )}
 
             {isHomeDefaultState && (
-              <div className="premium-dashboard-sections" style={{ width: "100%", paddingInline: "0", margin: "40px auto 20px", boxSizing: "border-box" }}>
+              <div className="premium-dashboard-sections" style={{ width: "100%", paddingInline: "0", margin: "24px auto 0", boxSizing: "border-box" }}>
                 {/* ─── SECTION: Collections ─── */}
-                <div style={{ marginBottom: "32px" }}>
+                <div style={{ marginBottom: "20px" }}>
                   <h2 style={{ fontSize: "1.25rem", fontWeight: 800, color: "var(--foreground-color)", marginBottom: "16px" }}>
                     Collections
                   </h2>
                   <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
                     {[
-                      { title: "Praise & Worship", cat: "worship", gradient: "linear-gradient(135deg, #1d3557 0%, #457b9d 100%)" },
-                      { title: "Sunday Communion", cat: "communion", gradient: "linear-gradient(135deg, #2b2d42 0%, #8d99ae 100%)" },
-                      { title: "English Classics", lang: "english", gradient: "linear-gradient(135deg, #4a5759 0%, #dedbd2 100%)" },
-                      { title: "Christmas Songs", cat: "christmas", gradient: "linear-gradient(135deg, #14213d 0%, #fca311 100%)" },
+                      { title: "Praise & Worship", cat: "worship", gradient: "linear-gradient(135deg, #E6F0FA 0%, #C9E2F8 100%)", textColor: "#0B3A60" },
+                      { title: "Sunday Communion", cat: "communion", gradient: "linear-gradient(135deg, #FBF3E6 0%, #F3E2C9 100%)", textColor: "#6D4E12" },
+                      { title: "Hindi Classics", lang: "hindi", gradient: "linear-gradient(135deg, #EBF8EE 0%, #D1F2D9 100%)", textColor: "#1E5B2E" },
+                      { title: "Top Songs", cat: "praise", gradient: "linear-gradient(135deg, #F9EBF8 0%, #F2D1F0 100%)", textColor: "#5F1E5B" },
                     ].map((playlist, idx) => (
                       <div
                         key={`playlist-${idx}`}
@@ -967,14 +974,14 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
                           if (playlist.lang) handleLanguageToggle(playlist.lang);
                         }}
                         style={{
-                          height: "100px",
+                          height: "90px",
                           borderRadius: "14px",
                           background: playlist.gradient,
                           position: "relative",
                           overflow: "hidden",
                           cursor: "pointer",
-                          border: "1px solid rgba(255, 255, 255, 0.1)",
-                          boxShadow: "0 8px 16px rgba(0,0,0,0.1)",
+                          border: "1px solid var(--border-color)",
+                          boxShadow: "0 4px 12px rgba(0,0,0,0.03)",
                           display: "flex",
                           flexDirection: "column",
                           justifyContent: "flex-end",
@@ -983,20 +990,11 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
                         }}
                         className="premium-playlist-card"
                       >
-                        <div style={{
-                          position: "absolute",
-                          top: "0",
-                          left: "0",
-                          right: "0",
-                          bottom: "0",
-                          background: "linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 80%)",
-                          zIndex: 1
-                        }} />
                         <div style={{ position: "relative", zIndex: 2 }}>
-                          <div style={{ fontSize: "0.95rem", fontWeight: 800, color: "#ffffff" }}>
+                          <div style={{ fontSize: "0.95rem", fontWeight: 800, color: playlist.textColor }}>
                             {playlist.title}
                           </div>
-                          <div style={{ fontSize: "0.72rem", color: "rgba(255,255,255,0.75)", marginTop: "2px" }}>
+                          <div style={{ fontSize: "0.72rem", color: playlist.textColor, opacity: 0.8, marginTop: "2px" }}>
                             Curated Collection
                           </div>
                         </div>
