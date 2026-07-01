@@ -508,25 +508,30 @@ h4 {
 .side-drawer {
   position: fixed;
   top: 0;
-  right: 0;
+  left: 0;
   bottom: 0;
   width: 360px;
   max-width: 100%;
   z-index: 110;
   background-color: var(--card-bg);
-  border-left: 1px solid var(--border-color);
-  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.08);
+  border-right: 1px solid var(--border-color);
+  box-shadow: 10px 0 40px rgba(0, 0, 0, 0.08);
   padding: 32px 24px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   transform: translateX(0);
   transition: transform 0.3s ease;
-  animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: slideInLeft 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .side-drawer-closed {
-  transform: translateX(100%);
+  transform: translateX(-100%) !important;
+}
+
+@keyframes slideInLeft {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
 }
 
 .drawer-login-card {
@@ -1742,6 +1747,51 @@ select {
 
 .browse-sidebar hr {
   border-top-color: var(--border-color) !important;
+}
+
+/* ─── Mobile Bottom Nav & Layout Overrides ─────────── */
+
+@media (max-width: 767px) {
+  .mobile-bottom-nav {
+    background: var(--card-bg) !important;
+    border-top: 1px solid var(--border-color) !important;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.05) !important;
+  }
+
+  .mobile-bottom-nav .nav-tab {
+    color: var(--muted-color) !important;
+  }
+
+  .mobile-bottom-nav .nav-tab:hover,
+  .mobile-bottom-nav .nav-tab:active {
+    color: var(--foreground-color) !important;
+  }
+
+  .mobile-bottom-nav .nav-tab.active {
+    color: #007aff !important;
+  }
+
+  .mobile-bottom-nav .nav-tab.active svg {
+    stroke: #007aff !important;
+  }
+
+  /* Footer Padding Offset to avoid bottom nav overlay */
+  footer {
+    padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+
+  /* Stacked Floating Action Buttons above the bottom navigation bar */
+  .whatsapp-float-btn {
+    bottom: calc(84px + env(safe-area-inset-bottom, 0px)) !important;
+    right: 20px !important;
+    z-index: 95 !important;
+  }
+
+  .back-to-top-btn {
+    bottom: calc(144px + env(safe-area-inset-bottom, 0px)) !important;
+    right: 20px !important;
+    z-index: 95 !important;
+  }
 }
 
 

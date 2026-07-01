@@ -193,9 +193,9 @@ export default function Header() {
           <Link
             href="/admin/login"
             style={{
-              background: "var(--navy-bg-subtle)",
-              border: "none",
-              color: "var(--card-bg)",
+              background: "var(--bg-page)",
+              border: "1.5px solid var(--border-color)",
+              color: "var(--foreground-color)",
               borderRadius: "50%",
               width: "32px",
               height: "32px",
