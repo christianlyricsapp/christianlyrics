@@ -870,51 +870,37 @@ export default function BrowseSongs({ initialSongs = [] }: { initialSongs?: Song
                         key={song.slug}
                         onClick={() => router.push(`/songs/${song.slug}`)}
                         style={{
-                          padding: "16px 20px",
+                          padding: "12px 20px",
                           cursor: "pointer",
                           transition: "all 0.15s ease",
                           display: "flex",
-                          alignItems: "flex-start",
+                          alignItems: "center",
                           gap: "14px",
                           borderBottom: isLast ? "none" : "1px solid var(--border-color)",
                         }}
                         className="public-list-row hover:bg-[var(--bg-page)]"
                       >
-                        <span style={{ fontSize: "1.05rem", fontWeight: 700, color: "var(--accent)", width: "24px", flexShrink: 0, textAlign: "right" }}>
+                        <span style={{ fontSize: "1.02rem", fontWeight: 700, color: "var(--accent)", width: "28px", flexShrink: 0, textAlign: "left" }}>
                           {index + 1}.
                         </span>
                         
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          <span 
-                            style={{ 
-                              fontSize: "1.08rem", 
-                              fontWeight: 700, 
-                              color: "#007aff", 
-                              textDecoration: "none",
-                            }}
-                            className="hover:underline"
-                          >
-                            {song.title}
-                          </span>
-                          
-                          <div style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "6px", marginTop: "4px", fontSize: "0.82rem", color: "var(--muted-color)" }}>
-                            {song.artist && (
-                              <>
-                                <span>Artist: <strong>{song.artist}</strong></span>
-                                <span>•</span>
-                              </>
-                            )}
-                            {song.category && (
-                              <>
-                                <span>Category: <strong>{CATEGORY_NAMES[song.category] || song.category}</strong></span>
-                                {song.language && <span>•</span>}
-                              </>
-                            )}
-                            {song.language && (
-                              <span>Language: <strong>{LANGUAGE_NAMES[song.language] || song.language}</strong></span>
-                            )}
-                          </div>
-                        </div>
+                        <Link 
+                          href={`/songs/${song.slug}`}
+                          style={{ 
+                            fontSize: "1.06rem", 
+                            fontWeight: 700, 
+                            color: "#007aff", 
+                            textDecoration: "none",
+                            flex: 1,
+                            minWidth: 0,
+                          }}
+                          className="hover:underline"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                          }}
+                        >
+                          {song.title}
+                        </Link>
                       </div>
                     );
                   })}

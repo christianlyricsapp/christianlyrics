@@ -87,9 +87,6 @@ export default function SiteChrome({
     return <>{children}</>;
   }
 
-  const isHomeActive = pathname === "/";
-  const isBrowseActive = pathname.startsWith("/songs");
-
   return (
     <div className="flex min-h-screen flex-col bg-[var(--bg-page)]">
       <Header />
@@ -111,51 +108,44 @@ export default function SiteChrome({
       <nav className="mobile-bottom-nav" aria-label="Mobile bottom tabs">
         <button
           onClick={() => router.push("/")}
-          className={`nav-tab ${isHomeActive && !isBrowseActive ? "active" : ""}`}
+          className={`nav-tab ${pathname === "/" ? "active" : ""}`}
           type="button"
         >
           <HomeIcon />
           <span>Home</span>
         </button>
         <button
-          onClick={() => router.push("/?search=")}
-          className={`nav-tab ${isBrowseActive ? "active" : ""}`}
+          onClick={() => router.push("/browse")}
+          className={`nav-tab ${pathname.startsWith("/browse") ? "active" : ""}`}
           type="button"
         >
           <SearchIcon />
           <span>Browse</span>
         </button>
         <button
-          onClick={() => setModalContent({
-            title: "Worship Library",
-            message: "Your personal library, custom bookmarks, and user worship playlists are coming soon in our next update!"
-          })}
-          className="nav-tab"
+          onClick={() => router.push("/library")}
+          className={`nav-tab ${pathname.startsWith("/library") ? "active" : ""}`}
           type="button"
         >
           <LibraryIcon />
           <span>Library</span>
         </button>
         <button
-          onClick={() => setModalContent({
-            title: "Holy Bible",
-            message: "Daily devotionals, cross-referenced scripture reading plans, and verse-of-the-day are coming soon!"
-          })}
-          className="nav-tab"
+          onClick={() => router.push("/bible")}
+          className={`nav-tab ${pathname.startsWith("/bible") ? "active" : ""}`}
           type="button"
         >
           <BibleIcon />
           <span>Bible</span>
         </button>
-        <a
-          href="https://wa.me/919920360570"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="nav-tab"
+        <button
+          onClick={() => router.push("/community")}
+          className={`nav-tab ${pathname.startsWith("/community") ? "active" : ""}`}
+          type="button"
         >
           <UsersIcon />
           <span>Community</span>
-        </a>
+        </button>
       </nav>
 
       {/* Interactive Coming Soon Modals */}

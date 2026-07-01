@@ -4,11 +4,11 @@ import { useState } from "react";
 import Link from "next/link";
 
 const drawerLinks = [
+  { href: "/contact", label: "Add New Lyrics" },
   { href: "/", label: "Browse Songs" },
   { href: "/about", label: "About Us" },
   { href: "/contact", label: "Contact Us" },
-  { href: "/contact", label: "Add New Lyrics" },
-  { href: "/policies-terms", label: "Policies & Terms" },
+  { href: "/policies-terms", label: "Policy & Terms" },
 ];
 
 function HamburgerIcon() {

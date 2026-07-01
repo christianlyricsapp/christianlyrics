@@ -1060,7 +1060,7 @@ select {
 
 .browse-page-wrapper {
   background: var(--bg-page);
-  min-height: 100vh;
+  min-height: auto;
   padding-left: 24px;
   padding-right: 24px;
 }
